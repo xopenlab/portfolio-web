@@ -1,7 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
 
-@import "tailwindcss";
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Configuración de dark mode con estrategia de clase */
+@variant dark (&:where(.dark, .dark *));
+
+/* Variantes personalizadas de Tailwind v4 */
+@custom-variant optional (&:optional);
+@custom-variant invalid (&:invalid);
+@custom-variant valid (&:valid);
+@custom-variant has-tooltip (&[data-tooltip]);
+@custom-variant interactive (&:is(button, a, [role="button"]));
+
+/* Selectores personalizados de Tailwind v4 */
+@custom-selector :--heading h1, h2, h3, h4, h5, h6;
+@custom-selector :--button button, [type="button"], [type="submit"], [type="reset"], [role="button"];
 
 /* Configuración de tema en CSS (Tailwind v4) */
 @theme {
@@ -94,22 +110,35 @@
   }
 }
 
+/* Estilos base */
 @layer base {
   * {
     @apply scroll-smooth;
   }
 
   body {
-    @apply font-sans text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 transition-colors duration-300;
+    font-family: var(--font-sans);
+    @apply text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 transition-colors duration-300;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /* Uso de @custom-selector para headings */
+  :--heading {
     @apply font-bold;
+  }
+
+  /* Estilos base para botones */
+  :--button {
+    @apply cursor-pointer select-none;
+  }
+
+  /* Alpine.js cloak para prevenir parpadeo */
+  [x-cloak] {
+    display: none !important;
   }
 }
 
+/* Componentes personalizados */
 @layer components {
-  /* Botones personalizados */
   .btn-primary {
     @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold 
            hover:bg-primary-700 active:scale-95 transition-all duration-200 
@@ -129,13 +158,11 @@
            active:scale-95 transition-all duration-200;
   }
 
-  /* Cards */
   .card {
     @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 
            transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
   }
 
-  /* Sections */
   .section {
     @apply py-20 px-4 md:px-8;
   }
@@ -150,7 +177,6 @@
     @apply text-lg md:text-xl text-center text-gray-600 dark:text-gray-400 mb-12;
   }
 
-  /* Timeline */
   .timeline-item {
     @apply relative pl-8 pb-8 border-l-2 border-primary-200 dark:border-primary-800;
   }
@@ -165,7 +191,6 @@
     @apply scale-125 transition-transform duration-200;
   }
 
-  /* Progress bars */
   .progress-bar {
     @apply w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden;
   }
@@ -175,7 +200,6 @@
            rounded-full transition-all duration-1000 ease-out;
   }
 
-  /* Navigation */
   .nav-link {
     @apply text-gray-700 dark:text-gray-300 hover:text-primary-600 
            dark:hover:text-primary-400 transition-colors duration-200 
@@ -192,7 +216,6 @@
     @apply w-full;
   }
 
-  /* Formulario */
   .form-input {
     @apply w-full px-4 py-3 rounded-lg border-2 border-gray-300 
            dark:border-gray-600 bg-white dark:bg-gray-800 
@@ -206,13 +229,11 @@
     @apply block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2;
   }
 
-  /* Badge */
   .badge {
     @apply inline-block px-3 py-1 text-sm font-semibold rounded-full 
            bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100;
   }
 
-  /* Gradientes de fondo */
   .gradient-bg {
     @apply bg-gradient-to-br from-primary-50 via-white to-secondary-50 
            dark:from-gray-900 dark:via-gray-800 dark:to-gray-900;
@@ -224,8 +245,38 @@
   }
 }
 
+/* Utilidades personalizadas */
 @layer utilities {
-  /* Animaciones personalizadas */
+  /* Utilidades de animación usando variables de @theme */
+  .animate-fade-in {
+    animation: var(--animate-fade-in);
+  }
+
+  .animate-fade-in-up {
+    animation: var(--animate-fade-in-up);
+  }
+
+  .animate-fade-in-down {
+    animation: var(--animate-fade-in-down);
+  }
+
+  .animate-slide-in-left {
+    animation: var(--animate-slide-in-left);
+  }
+
+  .animate-slide-in-right {
+    animation: var(--animate-slide-in-right);
+  }
+
+  .animate-bounce-slow {
+    animation: var(--animate-bounce-slow);
+  }
+
+  .animate-pulse-slow {
+    animation: var(--animate-pulse-slow);
+  }
+
+  /* Animación progresiva para scroll */
   .animate-on-scroll {
     @apply opacity-0 translate-y-8;
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -237,14 +288,23 @@
 
   /* Glassmorphism */
   .glass {
-    @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg 
+    @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg
            border border-white/20 dark:border-gray-700/20;
   }
 
-  /* Texto gradiente */
+  /* Texto con gradiente */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary-600 to-secondary-600 
+    @apply bg-gradient-to-r from-primary-600 to-secondary-600
            bg-clip-text text-transparent;
+  }
+
+  /* Utilidades para estados de formulario usando @custom-variant */
+  .form-field-valid {
+    @apply valid:border-green-500 valid:ring-green-200;
+  }
+
+  .form-field-invalid {
+    @apply invalid:border-red-500 invalid:ring-red-200;
   }
 }
 

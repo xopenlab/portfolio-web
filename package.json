@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "build:css": "npx @tailwindcss/cli -i ./public/css/styles.css -o ./public/css/output.css --watch",
-    "build:css:prod": "npx @tailwindcss/cli -i ./public/css/styles.css -o ./public/css/output.css --minify",
+    "build:css": "npx tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch",
+    "build:css:prod": "npx tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --minify",
     "dev:all": "concurrently \"npm run dev\" \"npm run build:css\""
   },
   "keywords": [
@@ -30,8 +30,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.7",
-    "tailwindcss": "^4.1.0",
-    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.17",
+    "@tailwindcss/cli": "^4.1.17",
+    "@tailwindcss/postcss": "^4.1.17",
     "concurrently": "^9.1.0"
   },
   "engines": {

@@ -37,9 +37,15 @@
 
 <!-- Alpine.js (defer loaded in body) -->
 <script>
-  // Cargar tema guardado antes de renderizar
-  if (localStorage.getItem('darkMode') === 'true' || 
-      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-  }
+  // Aplicar tema inmediatamente para evitar flash
+  (function() {
+    const isDark = localStorage.getItem('darkMode') === 'true' || 
+                   (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  })();
 </script>
