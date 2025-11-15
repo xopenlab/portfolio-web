@@ -1,0 +1,45 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- SEO Meta Tags -->
+<title><%= title %></title>
+<meta name="description" content="Portfolio profesional de Josevi Pérez, Programador Web Senior especializado en Node.js, Express, JavaScript y desarrollo de aplicaciones web.">
+<meta name="keywords" content="programador web, nodejs, express, javascript, typescript, desarrollo web, fullstack, valencia, almussafes">
+<meta name="author" content="Josevi Pérez">
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content="<%= title %>">
+<meta property="og:description" content="Programador Web Senior con más de 7 años de experiencia en desarrollo de aplicaciones web y APIs RESTful.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jperegir.github.io/">
+<meta property="og:image" content="/images/og-image.jpg">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= title %>">
+<meta name="twitter:description" content="Programador Web Senior especializado en Node.js y desarrollo de aplicaciones web.">
+<meta name="twitter:image" content="/images/og-image.jpg">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Tailwind CSS -->
+<link rel="stylesheet" href="/css/output.css">
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#0ea5e9">
+
+<!-- Alpine.js (defer loaded in body) -->
+<script>
+  // Cargar tema guardado antes de renderizar
+  if (localStorage.getItem('darkMode') === 'true' || 
+      (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+</script>

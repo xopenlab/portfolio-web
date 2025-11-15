@@ -1,0 +1,74 @@
+<section id="about" class="section bg-white dark:bg-gray-900">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="section-title">Sobre mí</h2>
+    <p class="section-subtitle">Conoce más sobre mi trayectoria y enfoque profesional</p>
+
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Columna izquierda: Imagen o ilustración -->
+      <div class="animate-on-scroll">
+        <div class="relative">
+          <div class="aspect-square rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 p-1">
+            <div class="w-full h-full rounded-2xl bg-white dark:bg-gray-800 flex items-center justify-center">
+              <!-- Aquí puedes añadir una foto o mantener un ícono -->
+              <svg class="w-48 h-48 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Elemento decorativo -->
+          <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-secondary-500 rounded-full blur-2xl opacity-30"></div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Contenido -->
+      <div class="animate-on-scroll animation-delay-200">
+        <h3 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+          Transformando ideas en soluciones digitales
+        </h3>
+        
+        <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+          <%= data.about.description %>
+        </p>
+
+        <div class="space-y-4 mb-8">
+          <% data.about.highlights.forEach((highlight, index) => { %>
+            <div class="flex items-start">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="ml-3 text-gray-700 dark:text-gray-300">
+                <%= highlight %>
+              </p>
+            </div>
+          <% }); %>
+        </div>
+
+        <!-- Valores o características -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="card text-center">
+            <div class="text-3xl mb-2">🎯</div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Orientado a resultados</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Enfocado en la calidad y eficiencia</p>
+          </div>
+          <div class="card text-center">
+            <div class="text-3xl mb-2">🚀</div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Innovación constante</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Siempre aprendiendo nuevas tecnologías</p>
+          </div>
+          <div class="card text-center">
+            <div class="text-3xl mb-2">🤝</div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Trabajo en equipo</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Colaboración y comunicación efectiva</p>
+          </div>
+          <div class="card text-center">
+            <div class="text-3xl mb-2">💡</div>
+            <h4 class="font-semibold text-gray-900 dark:text-white mb-1">Soluciones creativas</h4>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Pensamiento crítico y analítico</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,40 @@
+{
+  "name": "portfolio-josevi-perez",
+  "version": "1.0.0",
+  "description": "Portfolio profesional de Josevi Pérez - Programador Web",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "build:css": "npx @tailwindcss/cli -i ./public/css/styles.css -o ./public/css/output.css --watch",
+    "build:css:prod": "npx @tailwindcss/cli -i ./public/css/styles.css -o ./public/css/output.css --minify",
+    "dev:all": "concurrently \"npm run dev\" \"npm run build:css\""
+  },
+  "keywords": [
+    "portfolio",
+    "nodejs",
+    "express",
+    "alpinejs",
+    "tailwind"
+  ],
+  "author": "Josevi Pérez",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.0.1",
+    "ejs": "^3.1.10",
+    "dotenv": "^16.4.5",
+    "compression": "^1.7.4",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/cli": "^4.1.0",
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

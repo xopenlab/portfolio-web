@@ -1,0 +1,111 @@
+<section id="hero" class="min-h-screen flex items-center gradient-bg relative overflow-hidden">
+  <!-- Elementos decorativos de fondo -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-primary-300 dark:bg-primary-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-30 animate-pulse-slow"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-secondary-300 dark:bg-secondary-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-30 animate-pulse-slow animation-delay-2000"></div>
+  </div>
+
+  <div class="container mx-auto px-4 py-20 relative z-10">
+    <div class="max-w-4xl mx-auto text-center">
+      <!-- Saludo animado -->
+      <div class="animate-fade-in-down mb-6">
+        <span class="inline-block px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-800 dark:text-primary-200 font-semibold text-sm">
+          👋 ¡Hola! Bienvenido a mi portfolio
+        </span>
+      </div>
+
+      <!-- Nombre y título -->
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-fade-in-up">
+        <span class="block text-gray-900 dark:text-white">
+          <%= data.personalInfo.name %>
+        </span>
+        <span class="block mt-2 gradient-text">
+          <%= data.personalInfo.title %>
+        </span>
+      </h1>
+
+      <!-- Descripción -->
+      <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 animate-fade-in-up animation-delay-200 max-w-3xl mx-auto">
+        <%= data.about.description %>
+      </p>
+
+      <!-- Stack tecnológico destacado -->
+      <div class="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-400">
+        <span class="badge">Node.js</span>
+        <span class="badge">Express.js</span>
+        <span class="badge">JavaScript</span>
+        <span class="badge">TypeScript</span>
+        <span class="badge">Vue.js</span>
+        <span class="badge">Docker</span>
+        <span class="badge">SQL Server</span>
+      </div>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-600">
+        <a href="#contact" class="btn-primary">
+          <span class="flex items-center">
+            Contáctame
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </span>
+        </a>
+        <a href="#projects" class="btn-outline">
+          <span class="flex items-center">
+            Ver proyectos
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+
+      <!-- Estadísticas rápidas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 animate-fade-in-up animation-delay-800">
+        <div class="text-center">
+          <div class="text-4xl font-bold gradient-text mb-2">7+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Años de experiencia</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold gradient-text mb-2">30+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Proyectos completados</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold gradient-text mb-2">5</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Empresas</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold gradient-text mb-2">12+</div>
+          <div class="text-sm text-gray-600 dark:text-gray-400">Tecnologías</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
+    <a href="#about" aria-label="Desplazar hacia abajo">
+      <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+  .animation-delay-800 {
+    animation-delay: 0.8s;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+</style>
