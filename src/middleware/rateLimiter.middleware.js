@@ -20,18 +20,6 @@ export const contactFormLimiter = rateLimit({
   legacyHeaders: false, // Desactiva headers `X-RateLimit-*`
 
   /**
-   * Función para generar la clave de identificación
-   * Usa la IP del cliente para rastrear solicitudes
-   */
-  keyGenerator: (req) => {
-    // Obtener IP real incluso detrás de proxies (Nginx, Cloudflare, etc.)
-    return req.ip ||
-           req.headers['x-forwarded-for']?.split(',')[0] ||
-           req.headers['x-real-ip'] ||
-           req.connection.remoteAddress;
-  },
-
-  /**
    * Handler personalizado cuando se excede el límite
    */
   handler: (req, res) => {
@@ -69,13 +57,6 @@ export const strictContactFormLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-
-  keyGenerator: (req) => {
-    return req.ip ||
-           req.headers['x-forwarded-for']?.split(',')[0] ||
-           req.headers['x-real-ip'] ||
-           req.connection.remoteAddress;
-  },
 
   handler: (req, res) => {
     console.error(`🚨 Rate limit estricto excedido para IP: ${req.ip}`);

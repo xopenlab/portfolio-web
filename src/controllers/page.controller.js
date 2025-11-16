@@ -196,6 +196,48 @@ export const getHome = (req, res) => {
   }
 };
 
+// Controlador para la página de Aviso Legal
+export const getLegalNotice = (req, res) => {
+  try {
+    res.render("pages/legal-notice", {
+      title: `Aviso Legal - ${portfolioData.personalInfo.name}`,
+      currentYear: new Date().getFullYear(),
+      data: portfolioData,
+    });
+  } catch (error) {
+    console.error("Error al renderizar aviso legal:", error);
+    res.status(500).send("Error al cargar la página");
+  }
+};
+
+// Controlador para la página de Política de Privacidad
+export const getPrivacyPolicy = (req, res) => {
+  try {
+    res.render("pages/privacy-policy", {
+      title: `Política de Privacidad - ${portfolioData.personalInfo.name}`,
+      currentYear: new Date().getFullYear(),
+      data: portfolioData,
+    });
+  } catch (error) {
+    console.error("Error al renderizar política de privacidad:", error);
+    res.status(500).send("Error al cargar la página");
+  }
+};
+
+// Controlador para la página de Política de Cookies
+export const getCookiesPolicy = (req, res) => {
+  try {
+    res.render("pages/cookies-policy", {
+      title: `Política de Cookies - ${portfolioData.personalInfo.name}`,
+      currentYear: new Date().getFullYear(),
+      data: portfolioData,
+    });
+  } catch (error) {
+    console.error("Error al renderizar política de cookies:", error);
+    res.status(500).send("Error al cargar la página");
+  }
+};
+
 // Controlador para procesar el formulario de contacto
 export const sendContactForm = async (req, res) => {
   try {

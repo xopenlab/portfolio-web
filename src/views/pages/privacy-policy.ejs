@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+  <title>Política de Privacidad - <%= data.personalInfo.name %></title>
+</head>
+<body class="antialiased" x-data>
+  <%- include('../partials/header') %>
+
+  <main class="pt-20">
+    <section class="section">
+      <div class="container mx-auto max-w-4xl px-4">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Política de Privacidad</h1>
+
+        <div class="prose prose-lg dark:prose-invert max-w-none">
+          <p class="text-gray-600 dark:text-gray-400 mb-8">
+            Última actualización: <%= new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+          </p>
+
+          <h2>1. Responsable del Tratamiento de Datos</h2>
+          <p>
+            De conformidad con lo establecido en el Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016 (RGPD) y la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD), se informa:
+          </p>
+          <ul>
+            <li><strong>Responsable:</strong> <%= data.personalInfo.name %></li>
+            <li><strong>Email de contacto:</strong> <%= data.personalInfo.email %></li>
+            <li><strong>Domicilio:</strong> <%= data.personalInfo.location %></li>
+          </ul>
+
+          <h2>2. Finalidad del Tratamiento</h2>
+          <p>
+            Los datos personales que se recogen a través del formulario de contacto de este sitio web serán utilizados exclusivamente para las siguientes finalidades:
+          </p>
+          <ul>
+            <li>Gestionar y responder a las consultas o solicitudes de información recibidas.</li>
+            <li>Mantener la comunicación profesional solicitada por el usuario.</li>
+            <li>Evaluar posibles oportunidades de colaboración profesional.</li>
+          </ul>
+
+          <h2>3. Legitimación</h2>
+          <p>
+            La base legal para el tratamiento de sus datos personales es el consentimiento expreso del usuario al enviar el formulario de contacto. El usuario acepta voluntariamente facilitar sus datos y autoriza su tratamiento al marcar la casilla de aceptación de la política de privacidad.
+          </p>
+
+          <h2>4. Datos Recopilados</h2>
+          <p>
+            A través del formulario de contacto, se recopilan los siguientes datos personales:
+          </p>
+          <ul>
+            <li><strong>Obligatorios:</strong> Nombre completo, dirección de correo electrónico y mensaje.</li>
+            <li><strong>Opcionales:</strong> Número de teléfono.</li>
+          </ul>
+          <p>
+            Además, el sitio web puede recopilar automáticamente datos técnicos como dirección IP, tipo de navegador y datos de navegación mediante el uso de cookies (consulte nuestra <a href="/cookies-policy" class="text-primary-600 dark:text-primary-400 hover:underline">Política de Cookies</a>).
+          </p>
+
+          <h2>5. Conservación de Datos</h2>
+          <p>
+            Los datos personales facilitados a través del formulario de contacto se conservarán durante el tiempo necesario para dar respuesta a la consulta y, posteriormente, durante el plazo de prescripción de las acciones legales que pudieran derivarse de la relación establecida.
+          </p>
+          <p>
+            En caso de que no se establezca una relación profesional continuada, los datos serán eliminados transcurridos 12 meses desde el último contacto.
+          </p>
+
+          <h2>6. Destinatarios de los Datos</h2>
+          <p>
+            Los datos personales no serán cedidos a terceros, salvo obligación legal. Los datos pueden ser tratados por prestadores de servicios que actúan como encargados del tratamiento, tales como:
+          </p>
+          <ul>
+            <li>Proveedores de servicios de hosting y alojamiento web.</li>
+            <li>Servicios de envío de correo electrónico.</li>
+          </ul>
+          <p>
+            En estos casos, se garantiza que dichos prestadores cumplen con la normativa vigente de protección de datos y que únicamente tratarán los datos conforme a las instrucciones del responsable.
+          </p>
+
+          <h2>7. Derechos del Usuario</h2>
+          <p>
+            El usuario tiene derecho a ejercer los siguientes derechos en relación con sus datos personales en virtud del RGPD y la LOPDGDD:
+          </p>
+
+          <h3>7.1. Derecho de Acceso</h3>
+          <p>
+            Puedes obtener confirmación sobre si estamos tratando tus datos personales y, en su caso, acceder a los mismos y obtener información sobre:
+          </p>
+          <ul>
+            <li>Finalidad del tratamiento</li>
+            <li>Categoría de datos</li>
+            <li>Destinatarios a los que se comunicaron o serán comunicados</li>
+            <li>Plazo de conservación</li>
+            <li>Origen de los datos (si no se obtuvieron directamente de ti)</li>
+          </ul>
+
+          <h3>7.2. Derecho de Rectificación</h3>
+          <p>
+            Tienes derecho a solicitar la rectificación de tus datos personales si son inexactos o incompletos. Nos comprometemos a rectificar los datos sin dilación indebida.
+          </p>
+
+          <h3>7.3. Derecho de Supresión (Derecho al Olvido)</h3>
+          <p>
+            Puedes solicitar la supresión de tus datos personales cuando concurra alguna de las siguientes circunstancias:
+          </p>
+          <ul>
+            <li>Los datos ya no sean necesarios para los fines para los que fueron recogidos</li>
+            <li>Retires el consentimiento en que se basa el tratamiento y no exista otra base legal</li>
+            <li>Te opongas al tratamiento y no prevalezcan otros motivos legítimos</li>
+            <li>Los datos hayan sido tratados ilícitamente</li>
+            <li>Los datos deban suprimirse en cumplimiento de una obligación legal</li>
+          </ul>
+          <p>
+            <strong>¿Cómo ejercer el derecho al olvido?</strong> Envía un email a <a href="mailto:<%= data.personalInfo.email %>"><%= data.personalInfo.email %></a> con el asunto "Derecho al Olvido - Supresión de Datos", indicando claramente qué datos deseas eliminar y adjuntando copia de tu DNI o documento identificativo. Procederemos a la supresión en un plazo máximo de 30 días naturales.
+          </p>
+
+          <h3>7.4. Derecho de Limitación del Tratamiento</h3>
+          <p>
+            Puedes solicitar que limitemos el tratamiento de tus datos cuando:
+          </p>
+          <ul>
+            <li>Impugnes la exactitud de los datos, durante el plazo que permita verificar su exactitud</li>
+            <li>El tratamiento sea ilícito pero te opongas a la supresión de los datos</li>
+            <li>Ya no necesitemos los datos pero tú los necesites para reclamaciones</li>
+            <li>Te hayas opuesto al tratamiento mientras verificamos si nuestros motivos prevalecen sobre los tuyos</li>
+          </ul>
+
+          <h3>7.5. Derecho de Portabilidad</h3>
+          <p>
+            Tienes derecho a recibir los datos personales que nos hayas facilitado en un formato estructurado, de uso común y lectura mecánica (por ejemplo, CSV, JSON o PDF), y a transmitirlos a otro responsable.
+          </p>
+
+          <h3>7.6. Derecho de Oposición</h3>
+          <p>
+            Puedes oponerte en cualquier momento al tratamiento de tus datos por motivos relacionados con tu situación particular. Dejaremos de tratar los datos salvo que acreditemos motivos legítimos imperiosos que prevalezcan sobre tus intereses, derechos y libertades, o para la formulación, ejercicio o defensa de reclamaciones.
+          </p>
+
+          <h3>7.7. Derecho a Retirar el Consentimiento</h3>
+          <p>
+            Tienes derecho a retirar el consentimiento prestado en cualquier momento, sin que ello afecte a la licitud del tratamiento basado en el consentimiento previo a su retirada. La retirada del consentimiento implica que cesaremos el tratamiento de tus datos.
+          </p>
+
+          <h3>7.8. ¿Cómo Ejercer tus Derechos?</h3>
+          <p>
+            Para ejercer cualquiera de los derechos mencionados, sigue estos pasos:
+          </p>
+          <ol>
+            <li>Envía un email a <a href="mailto:<%= data.personalInfo.email %>" class="text-primary-600 dark:text-primary-400 hover:underline"><%= data.personalInfo.email %></a></li>
+            <li>Indica en el asunto: <strong>"Protección de Datos - [Tipo de Derecho]"</strong> (ej: "Protección de Datos - Derecho de Acceso")</li>
+            <li>En el cuerpo del mensaje, describe claramente tu solicitud</li>
+            <li>Adjunta una copia de tu DNI, NIE, pasaporte o documento identificativo equivalente</li>
+          </ol>
+          <p>
+            <strong>Plazo de respuesta:</strong> Atenderemos tu solicitud en un plazo máximo de 30 días naturales desde la recepción de la misma. Si la solicitud es compleja o numerosa, podremos prorrogar este plazo otros 60 días, informándote de ello.
+          </p>
+          <p>
+            <strong>Gratuidad:</strong> El ejercicio de estos derechos es gratuito. Solo cobraremos un canon razonable si las solicitudes son manifiestamente infundadas o excesivas, especialmente si son repetitivas.
+          </p>
+
+          <h3>7.9. Derecho a Presentar una Reclamación</h3>
+          <p>
+            Si consideras que el tratamiento de tus datos personales vulnera la normativa vigente o que no hemos atendido debidamente el ejercicio de tus derechos, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD):
+          </p>
+          <ul>
+            <li><strong>Web:</strong> <a href="https://www.aepd.es" target="_blank" rel="noopener noreferrer" class="text-primary-600 dark:text-primary-400 hover:underline">www.aepd.es</a></li>
+            <li><strong>Sede electrónica:</strong> <a href="https://sedeagpd.gob.es" target="_blank" rel="noopener noreferrer" class="text-primary-600 dark:text-primary-400 hover:underline">sedeagpd.gob.es</a></li>
+            <li><strong>Dirección postal:</strong> C/ Jorge Juan, 6, 28001 Madrid</li>
+            <li><strong>Teléfono:</strong> 901 100 099 / 91 266 35 17</li>
+          </ul>
+          <p>
+            También puedes acudir al Defensor del Pueblo o a la jurisdicción competente si lo consideras necesario.
+          </p>
+
+          <h2>8. Medidas de Seguridad</h2>
+          <p>
+            <%= data.personalInfo.name %> ha adoptado las medidas técnicas y organizativas necesarias para garantizar la seguridad de los datos personales y evitar su alteración, pérdida, tratamiento o acceso no autorizado, teniendo en cuenta el estado de la tecnología, la naturaleza de los datos almacenados y los riesgos a que están expuestos.
+          </p>
+          <p>
+            Entre las medidas de seguridad implementadas se incluyen:
+          </p>
+          <ul>
+            <li>Cifrado de las comunicaciones mediante protocolo HTTPS.</li>
+            <li>Protección contra ataques automatizados mediante sistemas honeypot y validación temporal.</li>
+            <li>Limitación de tasa (rate limiting) en formularios para prevenir spam y abusos.</li>
+            <li>Controles de acceso y auditoría de accesos a los sistemas.</li>
+          </ul>
+
+          <h2>9. Transferencias Internacionales</h2>
+          <p>
+            En principio, no se realizan transferencias internacionales de datos. En caso de que fuera necesario transferir datos fuera del Espacio Económico Europeo (EEE), se garantizará que la transferencia se realiza a países con un nivel adecuado de protección o mediante las garantías apropiadas reconocidas por la normativa vigente.
+          </p>
+
+          <h2>10. Exactitud y Veracidad de los Datos</h2>
+          <p>
+            El usuario es el único responsable de la veracidad y exactitud de los datos facilitados. <%= data.personalInfo.name %> queda exonerado de cualquier responsabilidad derivada de la falsedad o inexactitud de la información proporcionada.
+          </p>
+
+          <h2>11. Modificaciones de la Política de Privacidad</h2>
+          <p>
+            <%= data.personalInfo.name %> se reserva el derecho de modificar la presente Política de Privacidad para adaptarla a novedades legislativas o jurisprudenciales, así como a prácticas de la industria. En caso de modificaciones sustanciales, se informará a los usuarios a través del sitio web.
+          </p>
+
+          <h2>12. Contacto</h2>
+          <p>
+            Para cualquier duda, consulta o ejercicio de derechos relacionados con esta Política de Privacidad, puede contactar a través de:
+          </p>
+          <ul>
+            <li><strong>Email:</strong> <a href="mailto:<%= data.personalInfo.email %>"><%= data.personalInfo.email %></a></li>
+          </ul>
+        </div>
+
+        <!-- Botón para volver -->
+        <div class="mt-12">
+          <a href="/" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Volver al inicio
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/theme.js"></script>
+</body>
+</html>

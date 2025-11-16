@@ -207,6 +207,61 @@
               </div>
             </div>
 
+            <!-- Información de Protección de Datos -->
+            <div class="animate-fade-in-up p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg" style="animation-delay: 0.4s">
+              <h4 class="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-2 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Información sobre Protección de Datos
+              </h4>
+              <div class="text-xs text-blue-800 dark:text-blue-300 space-y-2">
+                <p>
+                  <strong>Responsable:</strong> <%= data.personalInfo.name %><br>
+                  <strong>Finalidad:</strong> Gestionar tu consulta y responder a tu solicitud de contacto.<br>
+                  <strong>Legitimación:</strong> Consentimiento explícito del interesado (tú).<br>
+                  <strong>Destinatarios:</strong> Los datos no se cederán a terceros salvo obligación legal.<br>
+                  <strong>Derechos:</strong> Acceso, rectificación, portabilidad, supresión, limitación y oposición.<br>
+                  <strong>Conservación:</strong> Los datos se conservarán durante 12 meses desde el último contacto o hasta que solicites su supresión.
+                </p>
+                <p>
+                  <strong>Datos recopilados:</strong> Nombre, email, teléfono (opcional) y mensaje. Estos datos serán utilizados exclusivamente para responder a tu consulta.
+                </p>
+                <p>
+                  Puedes ejercer tus derechos enviando un email a
+                  <a href="mailto:<%= data.personalInfo.email %>" class="underline font-medium">
+                    <%= data.personalInfo.email %>
+                  </a>
+                  indicando "Protección de Datos" en el asunto.
+                </p>
+              </div>
+            </div>
+
+            <!-- Checkbox de consentimiento RGPD -->
+            <div class="animate-fade-in-up" style="animation-delay: 0.5s">
+              <label class="flex items-start cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  name="privacy"
+                  x-model="formData.privacy"
+                  @change="validatePrivacy"
+                  required
+                  class="mt-1 w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded
+                         focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800
+                         focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                >
+                <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  He leído la información sobre protección de datos, acepto la
+                  <a href="/privacy-policy" target="_blank" class="text-primary-600 dark:text-primary-400 hover:underline font-medium">
+                    Política de Privacidad
+                  </a>
+                  y doy mi consentimiento expreso para que <%= data.personalInfo.name %> trate mis datos personales con la finalidad exclusiva de responder a mi consulta. *
+                </span>
+              </label>
+              <p x-show="errors.privacy" x-text="errors.privacy" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
+            </div>
+
             <!-- Botón de envío -->
             <button 
               type="submit"
@@ -264,6 +319,7 @@
         email: '',
         phone: '',
         message: '',
+        privacy: false, // Consentimiento de privacidad
         website: '', // Campo honeypot - debe permanecer vacío
         formStartTime: Date.now() // Timestamp de cuándo se cargó el formulario
       },
@@ -271,7 +327,8 @@
         name: '',
         email: '',
         phone: '',
-        message: ''
+        message: '',
+        privacy: ''
       },
       loading: false,
       success: false,
@@ -404,6 +461,19 @@
       },
 
       /**
+       * Valida el checkbox de consentimiento de privacidad
+       */
+      validatePrivacy() {
+        if (!this.formData.privacy) {
+          this.errors.privacy = 'Debes aceptar la Política de Privacidad para continuar';
+          return false;
+        }
+
+        this.errors.privacy = '';
+        return true;
+      },
+
+      /**
        * Valida todo el formulario antes de enviarlo
        */
       validateForm() {
@@ -411,8 +481,9 @@
         const isEmailValid = this.validateEmail();
         const isPhoneValid = this.validatePhone();
         const isMessageValid = this.validateMessage();
+        const isPrivacyValid = this.validatePrivacy();
 
-        return isNameValid && isEmailValid && isPhoneValid && isMessageValid;
+        return isNameValid && isEmailValid && isPhoneValid && isMessageValid && isPrivacyValid;
       },
 
       /**
@@ -463,10 +534,11 @@
               email: '',
               phone: '',
               message: '',
+              privacy: false,
               website: '',
               formStartTime: Date.now() // Reiniciar timestamp
             };
-            this.errors = { name: '', email: '', phone: '', message: '' };
+            this.errors = { name: '', email: '', phone: '', message: '', privacy: '' };
 
             // Ocultar mensaje de éxito después de 5 segundos
             setTimeout(() => {

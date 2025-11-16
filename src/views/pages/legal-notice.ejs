@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head') %>
+  <title>Aviso Legal - <%= data.personalInfo.name %></title>
+</head>
+<body class="antialiased" x-data>
+  <%- include('../partials/header') %>
+
+  <main class="pt-20">
+    <section class="section">
+      <div class="container mx-auto max-w-4xl px-4">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Aviso Legal</h1>
+
+        <div class="prose prose-lg dark:prose-invert max-w-none">
+          <p class="text-gray-600 dark:text-gray-400 mb-8">
+            Última actualización: <%= new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+          </p>
+
+          <h2>1. Datos Identificativos</h2>
+          <p>
+            En cumplimiento del artículo 10 de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y Comercio Electrónico (LSSI-CE), se informa de los datos del responsable de este sitio web:
+          </p>
+          <ul>
+            <li><strong>Titular:</strong> <%= data.personalInfo.name %></li>
+            <li><strong>Email de contacto:</strong> <%= data.personalInfo.email %></li>
+            <li><strong>Domicilio:</strong> <%= data.personalInfo.location %></li>
+          </ul>
+
+          <h2>2. Objeto</h2>
+          <p>
+            El presente sitio web es un portfolio profesional que tiene como finalidad dar a conocer los servicios profesionales de <%= data.personalInfo.name %> como <%= data.personalInfo.title %>.
+          </p>
+
+          <h2>3. Condiciones de Uso</h2>
+          <p>
+            El acceso y uso de este sitio web atribuye la condición de usuario y supone la aceptación plena de todas las condiciones incluidas en este Aviso Legal. El usuario se compromete a hacer un uso adecuado de los contenidos y servicios que se ofrecen a través del sitio web.
+          </p>
+
+          <h2>4. Propiedad Intelectual e Industrial</h2>
+          <p>
+            Todos los contenidos del sitio web, incluyendo sin carácter limitativo, textos, fotografías, gráficos, imágenes, iconos, tecnología, software, así como su diseño gráfico y códigos fuente, constituyen una obra cuya propiedad pertenece a <%= data.personalInfo.name %>, sin que puedan entenderse cedidos al usuario ninguno de los derechos de explotación sobre los mismos más allá de lo estrictamente necesario para el correcto uso del sitio web.
+          </p>
+          <p>
+            Queda prohibida la reproducción, distribución, comunicación pública, transformación o cualquier otra actividad que se pueda realizar con los contenidos del sitio web sin la previa autorización expresa y por escrito del titular.
+          </p>
+
+          <h2>5. Limitación de Responsabilidad</h2>
+          <p>
+            <%= data.personalInfo.name %> no se hace responsable de los daños y perjuicios que pudieran derivarse de:
+          </p>
+          <ul>
+            <li>La falta de disponibilidad, mantenimiento y efectivo funcionamiento del sitio web o de sus servicios y contenidos.</li>
+            <li>La existencia de virus, programas maliciosos o lesivos en los contenidos.</li>
+            <li>El uso ilícito, negligente, fraudulento o contrario al presente Aviso Legal.</li>
+            <li>La falta de licitud, calidad, fiabilidad, utilidad y disponibilidad de los servicios prestados por terceros y puestos a disposición de los usuarios en el sitio web.</li>
+          </ul>
+
+          <h2>6. Enlaces (Links)</h2>
+          <p>
+            Este sitio web puede contener enlaces a sitios web de terceros. <%= data.personalInfo.name %> no asume ninguna responsabilidad por el contenido, exactitud o las políticas de privacidad de estos sitios web de terceros.
+          </p>
+
+          <h2>7. Modificaciones</h2>
+          <p>
+            <%= data.personalInfo.name %> se reserva el derecho de efectuar sin previo aviso las modificaciones que considere oportunas en su web, pudiendo cambiar, suprimir o añadir tanto los contenidos y servicios que se presten a través de la misma como la forma en la que éstos aparezcan presentados o localizados.
+          </p>
+
+          <h2>8. Legislación Aplicable y Jurisdicción</h2>
+          <p>
+            Las presentes condiciones se rigen por la legislación española. Para la resolución de cualquier conflicto que pueda surgir en relación con el sitio web o la interpretación y ejecución de estas condiciones, las partes se someten expresamente a la jurisdicción de los Juzgados y Tribunales de Valencia, España.
+          </p>
+
+          <h2>9. Contacto</h2>
+          <p>
+            Para cualquier consulta o reclamación relacionada con este Aviso Legal, puede contactar a través de:
+          </p>
+          <ul>
+            <li><strong>Email:</strong> <a href="mailto:<%= data.personalInfo.email %>"><%= data.personalInfo.email %></a></li>
+          </ul>
+        </div>
+
+        <!-- Botón para volver -->
+        <div class="mt-12">
+          <a href="/" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:underline">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Volver al inicio
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/theme.js"></script>
+</body>
+</html>

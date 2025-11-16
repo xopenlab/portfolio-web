@@ -1,0 +1,154 @@
+<!-- Banner de Cookies -->
+<div
+  x-data="cookieBanner()"
+  x-show="showBanner"
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 translate-y-full"
+  x-transition:enter-end="opacity-100 translate-y-0"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 translate-y-0"
+  x-transition:leave-end="opacity-0 translate-y-full"
+  class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-t-2 border-primary-500 shadow-2xl"
+  role="dialog"
+  aria-labelledby="cookie-banner-title"
+  aria-describedby="cookie-banner-description"
+  style="display: none;"
+  x-cloak
+>
+  <div class="container mx-auto max-w-6xl">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <!-- Icono y texto -->
+      <div class="flex items-start gap-4 flex-1">
+        <!-- Icono de cookie -->
+        <div class="shrink-0 w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+          <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm4-3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm4 3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-2 3c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-4 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+          </svg>
+        </div>
+
+        <!-- Contenido del banner -->
+        <div class="flex-1">
+          <h3 id="cookie-banner-title" class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Uso de Cookies
+          </h3>
+          <p id="cookie-banner-description" class="text-sm text-gray-600 dark:text-gray-400">
+            Este sitio web utiliza únicamente cookies técnicas esenciales para su correcto funcionamiento, como recordar tu preferencia de tema claro/oscuro.
+            No utilizamos cookies de terceros ni de análisis.
+            Puedes consultar más información en nuestra
+            <a href="/cookies-policy" class="text-primary-600 dark:text-primary-400 hover:underline font-medium">
+              Política de Cookies
+            </a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex gap-3 shrink-0">
+        <!-- Botón de configuración (opcional, para expandir info) -->
+        <button
+          @click="toggleDetails"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
+          aria-label="Ver más información"
+        >
+          <span x-show="!showDetails">Más información</span>
+          <span x-show="showDetails">Menos información</span>
+        </button>
+
+        <!-- Botón de aceptar -->
+        <button
+          @click="acceptCookies"
+          class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg
+                 transition-colors duration-200 shadow-md hover:shadow-lg"
+          aria-label="Aceptar cookies"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+
+    <!-- Detalles expandibles -->
+    <div
+      x-show="showDetails"
+      x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 max-h-0"
+      x-transition:enter-end="opacity-100 max-h-96"
+      x-transition:leave="transition ease-in duration-200"
+      x-transition:leave-start="opacity-100 max-h-96"
+      x-transition:leave-end="opacity-0 max-h-0"
+      class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 overflow-hidden"
+      style="display: none;"
+    >
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Cookies Técnicas (Esenciales)</h4>
+          <p class="text-gray-600 dark:text-gray-400 mb-2">
+            Estas cookies son necesarias para el funcionamiento básico del sitio web:
+          </p>
+          <ul class="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1">
+            <li><strong>theme:</strong> Guarda tu preferencia de modo claro/oscuro</li>
+            <li><strong>cookies_accepted:</strong> Registra que aceptaste esta política</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Cookies de Terceros</h4>
+          <p class="text-gray-600 dark:text-gray-400">
+            Este sitio web <strong>NO utiliza cookies de terceros</strong> para análisis, publicidad o seguimiento.
+            No recopilamos datos estadísticos mediante Google Analytics u otras herramientas similares.
+          </p>
+        </div>
+      </div>
+      <div class="mt-4 flex gap-4 text-sm">
+        <a href="/privacy-policy" class="text-primary-600 dark:text-primary-400 hover:underline">
+          Política de Privacidad
+        </a>
+        <a href="/legal-notice" class="text-primary-600 dark:text-primary-400 hover:underline">
+          Aviso Legal
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /**
+   * Alpine.js component para el banner de cookies
+   * Gestiona la aceptación y visualización del banner
+   */
+  function cookieBanner() {
+    return {
+      showBanner: false,
+      showDetails: false,
+
+      init() {
+        // Verificar si el usuario ya aceptó las cookies
+        const cookiesAccepted = localStorage.getItem('cookies_accepted');
+
+        // Si no hay consentimiento previo, mostrar el banner después de un breve delay
+        if (!cookiesAccepted) {
+          setTimeout(() => {
+            this.showBanner = true;
+          }, 1000); // Mostrar banner 1 segundo después de cargar la página
+        }
+      },
+
+      /**
+       * Acepta las cookies y oculta el banner
+       */
+      acceptCookies() {
+        // Guardar el consentimiento en localStorage
+        localStorage.setItem('cookies_accepted', 'true');
+        localStorage.setItem('cookies_accepted_date', new Date().toISOString());
+
+        // Ocultar el banner
+        this.showBanner = false;
+      },
+
+      /**
+       * Alterna la visualización de detalles adicionales
+       */
+      toggleDetails() {
+        this.showDetails = !this.showDetails;
+      }
+    }
+  }
+</script>
