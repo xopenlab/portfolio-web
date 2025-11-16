@@ -3,10 +3,10 @@ const portfolioData = {
   personalInfo: {
     name: "Josevi Pérez",
     title: "Programador Web Senior",
-    location: "Almussafes (Valencia) cp. 46440",
+    location: "Almussafes (Valencia)",
     email: "jperegir@gmail.com", // Cambiar por tu email real
     phone: "+34 667 701 362", // Cambiar por tu teléfono real
-    linkedin: "www.linkedin.com/in/jose-vicente-perez-girona-0676a9291", // Cambiar por tu perfil
+    linkedin: "linkedin.com/in/jose-vicente-perez-girona-0676a9291", // Cambiar por tu perfil
     // github: 'https://github.com/jperegir',
   },
 
@@ -199,20 +199,68 @@ export const getHome = (req, res) => {
 // Controlador para procesar el formulario de contacto
 export const sendContactForm = async (req, res) => {
   try {
-    const { name, email, message } = req.body;
+    const { name, email, message, website, timeElapsed } = req.body;
 
-    // Aquí implementarías el envío real del email
-    // Por ahora solo logueamos los datos
-    console.log("Formulario de contacto recibido:", { name, email, message });
+    // 🍯 VALIDACIÓN HONEYPOT: Si el campo 'website' está lleno, es un bot
+    if (website && website.trim() !== '') {
+      console.warn(`⚠️  Honeypot detectado - Posible bot desde IP: ${req.ip}`);
 
-    // Respuesta exitosa
-    res.json({
-      success: true,
-      message: "Mensaje enviado correctamente. Te responderé pronto.",
-    });
+      // Responder como si todo fuera bien para no alertar al bot
+      return res.json({
+        success: true,
+        message: "Mensaje enviado correctamente. Te responderé pronto.",
+      });
+    }
+
+    // ⏱️ VALIDACIÓN DE TIEMPO: Detectar envíos demasiado rápidos (menos de 3 segundos)
+    const MIN_TIME = 3000; // 3 segundos mínimo
+    if (timeElapsed && timeElapsed < MIN_TIME) {
+      console.warn(`⚠️  Envío sospechosamente rápido (${timeElapsed}ms) desde IP: ${req.ip}`);
+
+      return res.status(400).json({
+        success: false,
+        message: "Por favor, tómate un momento para revisar tu mensaje antes de enviarlo.",
+      });
+    }
+
+    // Validación básica de datos
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Todos los campos son obligatorios.",
+      });
+    }
+
+    // Validación de formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "El formato del email no es válido.",
+      });
+    }
+
+    // Importación dinámica del servicio de email
+    const { sendContactEmail } = await import('../services/email.service.js');
+
+    // Enviar el email
+    const result = await sendContactEmail({ name, email, message });
+
+    if (result.success) {
+      return res.json({
+        success: true,
+        message: "Mensaje enviado correctamente. Te responderé pronto.",
+      });
+    } else {
+      console.error("Error al enviar email:", result.error);
+      return res.status(500).json({
+        success: false,
+        message: "Error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde.",
+      });
+    }
   } catch (error) {
     console.error("Error al procesar formulario:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Error al enviar el mensaje. Inténtalo de nuevo.",
     });

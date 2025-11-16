@@ -105,11 +105,24 @@
             Envíame un mensaje
           </h3>
 
-          <form 
+          <form
             x-data="contactForm()"
             @submit.prevent="submitForm"
             class="space-y-6"
           >
+            <!-- Campo Honeypot (trampa para bots) - Invisible para usuarios reales -->
+            <div class="hidden" aria-hidden="true">
+              <label for="website">Sitio web (no completar)</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                x-model="formData.website"
+                tabindex="-1"
+                autocomplete="off"
+              >
+            </div>
+
             <!-- Nombre -->
             <div>
               <label for="name" class="form-label">
@@ -120,11 +133,14 @@
                 id="name"
                 name="name"
                 x-model="formData.name"
+                @blur="validateName"
                 required
                 minlength="3"
+                maxlength="100"
                 class="form-input form-field-valid form-field-invalid animate-fade-in-up"
                 placeholder="Tu nombre"
               >
+              <p x-show="errors.name" x-text="errors.name" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
             </div>
 
             <!-- Email -->
@@ -137,11 +153,14 @@
                 id="email"
                 name="email"
                 x-model="formData.email"
+                @blur="validateEmail"
                 required
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                 class="form-input form-field-valid form-field-invalid animate-fade-in-up"
                 style="animation-delay: 0.1s"
                 placeholder="tu@email.com"
               >
+              <p x-show="errors.email" x-text="errors.email" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
             </div>
 
             <!-- Teléfono (opcional) -->
@@ -154,10 +173,14 @@
                 id="phone"
                 name="phone"
                 x-model="formData.phone"
+                @blur="validatePhone"
+                @input="formatPhone"
+                pattern="[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}"
                 class="form-input optional:border-dashed optional:bg-gray-50 dark:optional:bg-gray-800 animate-fade-in-up"
                 style="animation-delay: 0.2s"
                 placeholder="+34 XXX XXX XXX (opcional)"
               >
+              <p x-show="errors.phone" x-text="errors.phone" class="mt-1 text-sm text-red-600 dark:text-red-400"></p>
             </div>
 
             <!-- Mensaje -->
@@ -169,13 +192,19 @@
                 id="message"
                 name="message"
                 x-model="formData.message"
+                @blur="validateMessage"
                 required
                 minlength="10"
+                maxlength="1000"
                 rows="5"
                 class="form-input resize-none form-field-valid form-field-invalid animate-fade-in-up"
                 style="animation-delay: 0.3s"
                 placeholder="Cuéntame sobre tu proyecto..."
               ></textarea>
+              <div class="flex justify-between mt-1">
+                <p x-show="errors.message" x-text="errors.message" class="text-sm text-red-600 dark:text-red-400"></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400" x-text="formData.message.length + '/1000'"></p>
+              </div>
             </div>
 
             <!-- Botón de envío -->
@@ -234,6 +263,14 @@
         name: '',
         email: '',
         phone: '',
+        message: '',
+        website: '', // Campo honeypot - debe permanecer vacío
+        formStartTime: Date.now() // Timestamp de cuándo se cargó el formulario
+      },
+      errors: {
+        name: '',
+        email: '',
+        phone: '',
         message: ''
       },
       loading: false,
@@ -241,9 +278,161 @@
       error: false,
 
       /**
+       * Valida el campo de nombre
+       */
+      validateName() {
+        const name = this.formData.name.trim();
+
+        if (!name) {
+          this.errors.name = 'El nombre es obligatorio';
+          return false;
+        }
+
+        if (name.length < 3) {
+          this.errors.name = 'El nombre debe tener al menos 3 caracteres';
+          return false;
+        }
+
+        if (name.length > 100) {
+          this.errors.name = 'El nombre no puede superar los 100 caracteres';
+          return false;
+        }
+
+        // Validar que solo contenga letras, espacios y caracteres acentuados
+        const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/;
+        if (!nameRegex.test(name)) {
+          this.errors.name = 'El nombre solo puede contener letras';
+          return false;
+        }
+
+        this.errors.name = '';
+        return true;
+      },
+
+      /**
+       * Valida el campo de email
+       */
+      validateEmail() {
+        const email = this.formData.email.trim();
+
+        if (!email) {
+          this.errors.email = 'El email es obligatorio';
+          return false;
+        }
+
+        // Regex más robusta para validar email
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+          this.errors.email = 'El formato del email no es válido';
+          return false;
+        }
+
+        this.errors.email = '';
+        return true;
+      },
+
+      /**
+       * Valida el campo de teléfono (opcional pero debe ser válido si se proporciona)
+       */
+      validatePhone() {
+        const phone = this.formData.phone.trim();
+
+        // Si está vacío, es válido (campo opcional)
+        if (!phone) {
+          this.errors.phone = '';
+          return true;
+        }
+
+        // Eliminar espacios, guiones y paréntesis para validar solo números y +
+        const cleanPhone = phone.replace(/[\s\-()\.]/g, '');
+
+        // Validar longitud mínima (al menos 9 dígitos sin contar el +)
+        const digitsOnly = cleanPhone.replace(/\+/g, '');
+        if (digitsOnly.length < 9) {
+          this.errors.phone = 'El teléfono debe tener al menos 9 dígitos';
+          return false;
+        }
+
+        // Validar longitud máxima
+        if (digitsOnly.length > 15) {
+          this.errors.phone = 'El teléfono no puede tener más de 15 dígitos';
+          return false;
+        }
+
+        // Validar formato: solo números, espacios, guiones, paréntesis y + al inicio
+        const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/;
+        if (!phoneRegex.test(phone)) {
+          this.errors.phone = 'El formato del teléfono no es válido';
+          return false;
+        }
+
+        this.errors.phone = '';
+        return true;
+      },
+
+      /**
+       * Formatea el teléfono mientras el usuario escribe
+       */
+      formatPhone() {
+        // Limpiar errores mientras el usuario escribe
+        this.errors.phone = '';
+      },
+
+      /**
+       * Valida el campo de mensaje
+       */
+      validateMessage() {
+        const message = this.formData.message.trim();
+
+        if (!message) {
+          this.errors.message = 'El mensaje es obligatorio';
+          return false;
+        }
+
+        if (message.length < 10) {
+          this.errors.message = 'El mensaje debe tener al menos 10 caracteres';
+          return false;
+        }
+
+        if (message.length > 1000) {
+          this.errors.message = 'El mensaje no puede superar los 1000 caracteres';
+          return false;
+        }
+
+        this.errors.message = '';
+        return true;
+      },
+
+      /**
+       * Valida todo el formulario antes de enviarlo
+       */
+      validateForm() {
+        const isNameValid = this.validateName();
+        const isEmailValid = this.validateEmail();
+        const isPhoneValid = this.validatePhone();
+        const isMessageValid = this.validateMessage();
+
+        return isNameValid && isEmailValid && isPhoneValid && isMessageValid;
+      },
+
+      /**
        * Envía el formulario de contacto
        */
       async submitForm() {
+        // Validar el formulario antes de enviar
+        if (!this.validateForm()) {
+          return;
+        }
+
+        // Validación anti-bot: verificar honeypot
+        if (this.formData.website) {
+          console.warn('Honeypot detectado - posible bot');
+          return; // Silenciosamente rechazar el envío
+        }
+
+        // Calcular tiempo transcurrido desde que se cargó el formulario
+        const timeElapsed = Date.now() - this.formData.formStartTime;
+
         this.loading = true;
         this.success = false;
         this.error = false;
@@ -254,15 +443,30 @@
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(this.formData)
+            body: JSON.stringify({
+              name: this.formData.name.trim(),
+              email: this.formData.email.trim().toLowerCase(),
+              phone: this.formData.phone.trim(),
+              message: this.formData.message.trim(),
+              website: this.formData.website, // Honeypot
+              timeElapsed: timeElapsed // Tiempo transcurrido
+            })
           });
 
           const data = await response.json();
 
           if (data.success) {
             this.success = true;
-            // Resetear formulario
-            this.formData = { name: '', email: '', phone: '', message: '' };
+            // Resetear formulario y errores
+            this.formData = {
+              name: '',
+              email: '',
+              phone: '',
+              message: '',
+              website: '',
+              formStartTime: Date.now() // Reiniciar timestamp
+            };
+            this.errors = { name: '', email: '', phone: '', message: '' };
 
             // Ocultar mensaje de éxito después de 5 segundos
             setTimeout(() => {
