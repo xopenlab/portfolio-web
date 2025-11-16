@@ -116,15 +116,51 @@ const portfolioData = {
 
   projects: {
     featured: [
-      "Aplicación web para el control y la gestión de plantaciones de chopos",
-      "Aplicación web para la gestión de RRHH",
-      "API RESTful para integración de SGA con plataformas de ecommerce",
-      "Aplicación web de registro de visitas a almacenes",
-      "Aplicación web de control de visitas y personal externo en almacenes",
-      "Plataforma web de control de pedidos, preavisos, stocks y trazabilidad",
-      "Servicio web (API RESTful) para la generación de códigos QR",
-      "Servicio web (API RESTful) para la consulta y formateo de datos para generación de KPI's",
-      "Motor de impresión de etiquetas de expedición en almacenes",
+      {
+        title: "Aplicación web para el control y la gestión de plantaciones de chopos",
+        company: "CATENVA GROUP S.L.",
+        logo: "/assets/images/catenva-logo.png",
+      },
+      {
+        title: "Aplicación web para la gestión de RRHH",
+        company: "CATENVA GROUP S.L.",
+        logo: "/assets/images/catenva-logo.png",
+      },
+      {
+        title: "API RESTful para integración de SGA con plataformas de ecommerce",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Aplicación web de registro de visitas a almacenes",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Aplicación web de control de visitas y personal externo en almacenes",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Plataforma web de control de pedidos, preavisos, stocks y trazabilidad",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Servicio web (API RESTful) para la generación de códigos QR",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Servicio web (API RESTful) para la consulta y formateo de datos para generación de KPI's",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
+      {
+        title: "Motor de impresión de etiquetas de expedición en almacenes",
+        company: "AZA LOGISTICS S.L.U.",
+        logo: "/assets/images/aza-logo.png",
+      },
     ],
     libraries: [
       "Alpine.js",
