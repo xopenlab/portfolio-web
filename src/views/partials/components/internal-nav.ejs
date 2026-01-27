@@ -1,0 +1,22 @@
+<!-- Navegación para páginas internas -->
+<nav class="internal-navigation" aria-label="Navegación principal">
+  <a href="/" class="nav-home" aria-label="Volver a inicio">
+    <span class="nav-home-icon">←</span>
+    <span class="nav-home-text">Inicio</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="/proyectos" class="<%= typeof pageState !== 'undefined' && pageState.includes('proyectos') ? 'active' : '' %>">
+      <span class="nav-number">01</span>
+      <span class="nav-text">Proyectos</span>
+    </a>
+    <a href="/perfil" class="<%= typeof pageState !== 'undefined' && pageState.includes('perfil') ? 'active' : '' %>">
+      <span class="nav-number">02</span>
+      <span class="nav-text">Perfil</span>
+    </a>
+    <a href="/contacto" class="<%= typeof pageState !== 'undefined' && pageState.includes('contacto') ? 'active' : '' %>">
+      <span class="nav-number">03</span>
+      <span class="nav-text">Contacto</span>
+    </a>
+  </div>
+</nav>

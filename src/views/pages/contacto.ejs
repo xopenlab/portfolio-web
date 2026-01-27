@@ -7,6 +7,9 @@
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
+  <!-- Navegación interna -->
+  <%- include('../partials/components/internal-nav') %>
+
   <!-- Page Transition Wrapper -->
   <div class="page-transition-wrapper">
     <!-- Main Content -->
@@ -117,6 +120,9 @@
 
   <!-- Banner de Cookies -->
   <%- include('../partials/cookie-banner') %>
+
+  <!-- Cortina de transición entre páginas -->
+  <%- include('../partials/components/page-curtain') %>
 
   <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
   <script src="/js/alpine-setup.js"></script>

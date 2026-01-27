@@ -5,18 +5,17 @@ import { initPageTransitions } from './utils/transitions.js';
 import { initFloatingNav } from './utils/floating-nav.js';
 import { initFloatingScrollTop } from './utils/floating-scroll-top.js';
 
-// Inicializar transiciones de página
-initPageTransitions();
-
-// Inicializar botón flotante de navegación
-initFloatingNav();
-
-// Inicializar botón flotante de scroll to top
-initFloatingScrollTop();
-
 // JavaScript principal de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 Portfolio cargado correctamente');
+
+  // Pequeño delay para asegurar que todos los elementos están renderizados
+  setTimeout(() => {
+    // Inicializar sistemas después de que el DOM esté listo
+    initPageTransitions();
+    initFloatingNav();
+    initFloatingScrollTop();
+  }, 0);
 
   // Agregar clase al body cuando el DOM esté completamente cargado
   document.body.classList.add('loaded');

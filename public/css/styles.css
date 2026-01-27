@@ -926,3 +926,205 @@
   @apply text-sm;
 }
 
+/* ===========================
+   SISTEMA DE TRANSICIONES CON CORTINA
+   =========================== */
+
+/* Cortina base - Oculta por defecto */
+.page-curtain {
+  @apply fixed inset-0 pointer-events-none;
+  z-index: 9999;
+  --curtain-color: var(--active-theme-primary, #7d97b8);
+  transform: translateY(-100%);
+  will-change: transform;
+}
+
+/* Estado: cubriendo la pantalla */
+.page-curtain.is-covering {
+  @apply pointer-events-auto;
+  transform: translateY(0);
+}
+
+/* Estado: revelando contenido */
+.page-curtain.is-revealing {
+  transform: translateY(0);
+  animation: curtainReveal 600ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+/* ===========================
+   EFECTO 1: CURTAIN DROP (Recomendado)
+   =========================== */
+.page-curtain.effect-curtain-drop {
+  @apply bg-[var(--curtain-color)];
+  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.page-curtain.effect-curtain-drop.is-covering {
+  transform: translateY(0);
+}
+
+/* ===========================
+   EFECTO 2: DOUBLE CURTAIN
+   =========================== */
+.page-curtain.effect-double-curtain::before,
+.page-curtain.effect-double-curtain::after {
+  @apply absolute inset-0;
+  content: '';
+  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translateY(-100%);
+}
+
+.page-curtain.effect-double-curtain::before {
+  @apply bg-[var(--curtain-color)];
+  opacity: 0.8;
+  transition-delay: 0ms;
+}
+
+.page-curtain.effect-double-curtain::after {
+  @apply bg-[var(--curtain-color)];
+  transition-delay: 100ms;
+}
+
+.page-curtain.effect-double-curtain.is-covering::before,
+.page-curtain.effect-double-curtain.is-covering::after {
+  transform: translateY(0);
+}
+
+/* ===========================
+   EFECTO 3: GRADIENT CURTAIN
+   =========================== */
+.page-curtain.effect-gradient-curtain {
+  background: linear-gradient(
+    180deg,
+    var(--curtain-color) 0%,
+    var(--active-theme-secondary, #0369a1) 100%
+  );
+  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+  filter: blur(0);
+}
+
+.page-curtain.effect-gradient-curtain.is-revealing {
+  filter: blur(2px);
+}
+
+/* ===========================
+   EFECTO 4: SPLIT CURTAIN
+   =========================== */
+.page-curtain.effect-split-curtain::before,
+.page-curtain.effect-split-curtain::after {
+  @apply absolute left-0 right-0 bg-[var(--curtain-color)];
+  content: '';
+  height: 50%;
+  transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.page-curtain.effect-split-curtain::before {
+  @apply top-0;
+  transform: translateY(-100%);
+}
+
+.page-curtain.effect-split-curtain::after {
+  @apply bottom-0;
+  transform: translateY(100%);
+}
+
+.page-curtain.effect-split-curtain.is-covering::before {
+  transform: translateY(0);
+}
+
+.page-curtain.effect-split-curtain.is-covering::after {
+  transform: translateY(0);
+}
+
+/* ===========================
+   ANIMACIONES
+   =========================== */
+@keyframes curtainReveal {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Opcional: Contenido de la cortina (logo, spinner, etc.) */
+.curtain-content {
+  @apply absolute inset-0 flex items-center justify-center;
+  @apply text-white text-2xl font-bold;
+  opacity: 0;
+  animation: fadeInOut 600ms ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* ===========================
+   NAVEGACIÓN INTERNA (PÁGINAS)
+   =========================== */
+
+.internal-navigation {
+  @apply fixed top-24 left-8 right-8 z-40;
+  @apply flex items-center justify-between gap-8;
+  @apply max-w-6xl mx-auto;
+}
+
+.nav-home {
+  @apply flex items-center gap-2;
+  @apply text-base font-medium;
+  @apply text-gray-700 dark:text-gray-300;
+  @apply hover:text-[var(--active-theme-primary)] dark:hover:text-[var(--active-theme-primary)];
+  @apply transition-colors duration-300;
+}
+
+.nav-home-icon {
+  @apply text-xl;
+}
+
+.nav-home-text {
+  @apply hidden sm:inline;
+}
+
+.nav-links {
+  @apply flex items-center gap-6;
+}
+
+.nav-links a {
+  @apply flex items-center gap-2;
+  @apply text-sm font-medium;
+  @apply text-gray-600 dark:text-gray-400;
+  @apply hover:text-[var(--active-theme-primary)] dark:hover:text-[var(--active-theme-primary)];
+  @apply transition-colors duration-300;
+  @apply opacity-60 hover:opacity-100;
+}
+
+.nav-links a.active {
+  @apply text-[var(--active-theme-primary)];
+  @apply opacity-100;
+}
+
+.nav-number {
+  @apply text-xs opacity-50;
+}
+
+.nav-text {
+  @apply hidden sm:inline;
+}
+
+/* Responsive: Menú compacto en móvil */
+@media (max-width: 640px) {
+  .internal-navigation {
+    @apply top-20 left-4 right-4 gap-4;
+  }
+
+  .nav-links {
+    @apply gap-4;
+  }
+
+  .nav-links a {
+    @apply text-xs;
+  }
+}
+
