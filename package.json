@@ -21,6 +21,7 @@
   "author": "Josevi Pérez",
   "license": "MIT",
   "dependencies": {
+    "animejs": "^4.3.5",
     "compression": "^1.7.4",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",

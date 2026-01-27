@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Cubo de Rubik 3D Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Contenedor de la escena 3D */
+        .scene {
+            width: 500px;
+            height: 500px;
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+
+        /* Cubo contenedor */
+        .cube-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Cara del cubo */
+        .cube-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: #000;
+            border: 8px solid #1a1a1a;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Posicionamiento de caras */
+        .face-front  { transform: translateZ(150px); }
+        .face-back   { transform: rotateY(180deg) translateZ(150px); }
+        .face-right  { transform: rotateY(90deg) translateZ(150px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(150px); }
+        .face-top    { transform: rotateX(90deg) translateZ(150px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        /* Cuadrado individual del cubo (sticker) */
+        .sticker {
+            border: 2px solid #1a1a1a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.3);
+            cursor: default;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Stickers clickeables */
+        .sticker.clickable {
+            cursor: pointer;
+        }
+
+        .sticker.clickable:hover {
+            transform: scale(0.95);
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.8),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+            filter: brightness(1.2);
+        }
+
+        .sticker.clickable::after {
+            content: '👁';
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sticker.clickable:hover::after {
+            opacity: 0.8;
+        }
+
+        /* Colores de las caras (estética Rubik's oficial) */
+        /* Rojo */
+        .color-red { background: #B71234; }
+        /* Azul */
+        .color-blue { background: #0046AD; }
+        /* Verde */
+        .color-green { background: #009B48; }
+        /* Amarillo */
+        .color-yellow { background: #FFD500; }
+        /* Naranja */
+        .color-orange { background: #FF5800; }
+        /* Blanco */
+        .color-white { background: #FFFFFF; }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .direction-controls {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left center right"
+                ". down .";
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-up { grid-area: up; }
+        .btn-down { grid-area: down; }
+        .btn-left { grid-area: left; }
+        .btn-right { grid-area: right; }
+        .btn-center { grid-area: center; }
+
+        .reset-btn {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Info de caras */
+        .info {
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            max-width: 600px;
+        }
+
+        /* Modal para contenido expandido */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .modal-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scene {
+                width: 350px;
+                height: 350px;
+            }
+
+            .cube-face {
+                width: 200px;
+                height: 200px;
+            }
+
+            .face-front, .face-back,
+            .face-right, .face-left,
+            .face-top, .face-bottom {
+                transform: translateZ(100px);
+            }
+
+            .face-back   { transform: rotateY(180deg) translateZ(100px); }
+            .face-right  { transform: rotateY(90deg) translateZ(100px); }
+            .face-left   { transform: rotateY(-90deg) translateZ(100px); }
+            .face-top    { transform: rotateX(90deg) translateZ(100px); }
+            .face-bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Josevi Pérez - Portfolio Interactivo</h1>
+    <p class="subtitle">Explora cada cara del cubo para descubrir mi trabajo</p>
+
+    <!-- Escena 3D -->
+    <div class="scene">
+        <div class="cube-container" id="cube">
+            <!-- Cara Frontal (ROJA) - Proyectos -->
+            <div class="cube-face face-front">
+                <div class="sticker color-red"></div>
+                <div class="sticker color-red clickable" data-section="proyectos" data-item="1"></div>
+                <div class="sticker color-red"></div>
+                <div class="sticker color-red clickable" data-section="proyectos" data-item="2"></div>
+                <div class="sticker color-red"></div>
+                <div class="sticker color-red clickable" data-section="proyectos" data-item="3"></div>
+                <div class="sticker color-red"></div>
+                <div class="sticker color-red"></div>
+                <div class="sticker color-red"></div>
+            </div>
+
+            <!-- Cara Trasera (NARANJA) - Experiencia -->
+            <div class="cube-face face-back">
+                <div class="sticker color-orange"></div>
+                <div class="sticker color-orange clickable" data-section="experiencia" data-item="1"></div>
+                <div class="sticker color-orange"></div>
+                <div class="sticker color-orange clickable" data-section="experiencia" data-item="2"></div>
+                <div class="sticker color-orange"></div>
+                <div class="sticker color-orange clickable" data-section="experiencia" data-item="3"></div>
+                <div class="sticker color-orange"></div>
+                <div class="sticker color-orange"></div>
+                <div class="sticker color-orange"></div>
+            </div>
+
+            <!-- Cara Derecha (AZUL) - Skills -->
+            <div class="cube-face face-right">
+                <div class="sticker color-blue clickable" data-section="skills" data-item="frontend"></div>
+                <div class="sticker color-blue"></div>
+                <div class="sticker color-blue clickable" data-section="skills" data-item="backend"></div>
+                <div class="sticker color-blue"></div>
+                <div class="sticker color-blue"></div>
+                <div class="sticker color-blue"></div>
+                <div class="sticker color-blue clickable" data-section="skills" data-item="devops"></div>
+                <div class="sticker color-blue"></div>
+                <div class="sticker color-blue clickable" data-section="skills" data-item="database"></div>
+            </div>
+
+            <!-- Cara Izquierda (VERDE) - Sobre mí -->
+            <div class="cube-face face-left">
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green clickable" data-section="about" data-item="bio"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+                <div class="sticker color-green"></div>
+            </div>
+
+            <!-- Cara Superior (AMARILLA) - Educación -->
+            <div class="cube-face face-top">
+                <div class="sticker color-yellow clickable" data-section="educacion" data-item="1"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow clickable" data-section="educacion" data-item="2"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow"></div>
+                <div class="sticker color-yellow"></div>
+            </div>
+
+            <!-- Cara Inferior (BLANCA) - Contacto -->
+            <div class="cube-face face-bottom">
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white clickable" data-section="contacto" data-item="form"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+                <div class="sticker color-white"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+        <div class="direction-controls">
+            <button class="control-btn btn-up" id="rotateUp">↑</button>
+            <button class="control-btn btn-left" id="rotateLeft">←</button>
+            <button class="control-btn btn-center" id="rotateCenter">⟲</button>
+            <button class="control-btn btn-right" id="rotateRight">→</button>
+            <button class="control-btn btn-down" id="rotateDown">↓</button>
+        </div>
+        <button class="reset-btn" id="resetBtn">Reset</button>
+    </div>
+
+    <!-- Info -->
+    <p class="info">
+        🎮 Arrastra el cubo para rotarlo | 🖱️ Click en los cuadrados resaltados para ver contenido
+    </p>
+
+    <!-- Modal para contenido -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">×</button>
+            <h2 class="modal-title" id="modalTitle">Título</h2>
+            <div class="modal-description" id="modalDescription">Contenido...</div>
+        </div>
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalClose = document.getElementById('modalClose');
+
+        let currentRotationX = -20;
+        let currentRotationY = -30;
+        let isDragging = false;
+        let previousMouseX = 0;
+        let previousMouseY = 0;
+
+        // Aplicar rotación inicial
+        updateCubeRotation();
+
+        // Rotación con mouse/touch
+        cube.addEventListener('mousedown', startDrag);
+        cube.addEventListener('touchstart', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            previousMouseX = clientX;
+            previousMouseY = clientY;
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = clientX - previousMouseX;
+            const deltaY = clientY - previousMouseY;
+
+            currentRotationY += deltaX * 0.5;
+            currentRotationX -= deltaY * 0.5;
+
+            updateCubeRotation();
+
+            previousMouseX = clientX;
+            previousMouseY = clientY;
+        }
+
+        function stopDrag() {
+            isDragging = false;
+        }
+
+        function updateCubeRotation() {
+            cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+        }
+
+        // Controles direccionales
+        document.getElementById('rotateUp').addEventListener('click', () => {
+            currentRotationX -= 90;
+            updateCubeRotation();
+        });
+
+        document.getElementById('rotateDown').addEventListener('click', () => {
+            currentRotationX += 90;
+            updateCubeRotation();
+        });
+
+        document.getElementById('rotateLeft').addEventListener('click', () => {
+            currentRotationY -= 90;
+            updateCubeRotation();
+        });
+
+        document.getElementById('rotateRight').addEventListener('click', () => {
+            currentRotationY += 90;
+            updateCubeRotation();
+        });
+
+        document.getElementById('rotateCenter').addEventListener('click', () => {
+            currentRotationY += 45;
+            currentRotationX += 45;
+            updateCubeRotation();
+        });
+
+        // Reset
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            currentRotationX = -20;
+            currentRotationY = -30;
+            updateCubeRotation();
+        });
+
+        // Contenido de ejemplo
+        const content = {
+            proyectos: {
+                1: { title: 'E-Commerce Platform', desc: 'Plataforma completa de comercio electrónico con Node.js, Angular y MongoDB. Gestión de inventario, pagos y panel admin.' },
+                2: { title: 'Dashboard Analytics', desc: 'Sistema de visualización de métricas en tiempo real con WebSockets, React y D3.js.' },
+                3: { title: 'Chat Application', desc: 'Aplicación de mensajería instantánea con Socket.io, canales y notificaciones push.' }
+            },
+            experiencia: {
+                1: { title: 'Senior Full Stack Developer', desc: 'Empresa Tech Corp (2023-Actualidad). Desarrollo de aplicaciones web escalables con MEAN stack.' },
+                2: { title: 'Full Stack Developer', desc: 'Digital Solutions (2021-2023). Implementación de soluciones web corporativas.' },
+                3: { title: 'Frontend Developer', desc: 'StartupXYZ (2019-2021). Desarrollo de interfaces modernas con Angular y React.' }
+            },
+            skills: {
+                frontend: { title: 'Frontend Development', desc: 'Angular, React, Vue.js, TypeScript, HTML5, CSS3, Tailwind CSS' },
+                backend: { title: 'Backend Development', desc: 'Node.js, Express, NestJS, REST APIs, GraphQL' },
+                devops: { title: 'DevOps & Cloud', desc: 'Docker, Jenkins, GitLab CI, AWS, Azure, Kubernetes' },
+                database: { title: 'Databases', desc: 'MongoDB, MySQL, PostgreSQL, Redis' }
+            },
+            about: {
+                bio: { title: 'Sobre Mí', desc: 'Full Stack Developer con más de 5 años de experiencia creando soluciones web escalables y eficientes. Apasionado por la tecnología y el código limpio.' }
+            },
+            educacion: {
+                1: { title: 'Ingeniería Informática', desc: 'Universidad Politécnica de Valencia (2015-2019). Especialización en desarrollo web y arquitectura de software.' },
+                2: { title: 'Master en Cloud Computing', desc: 'Universidad Complutense de Madrid (2020-2021). Especialización en AWS y arquitecturas cloud-native.' }
+            },
+            contacto: {
+                form: { title: 'Contacto', desc: '📧 Email: email@josevi.dev<br>📱 LinkedIn: linkedin.com/in/josevi<br>💻 GitHub: github.com/josevi<br><br>¿Tienes un proyecto en mente? ¡Hablemos!' }
+            }
+        };
+
+        // Click en stickers
+        document.querySelectorAll('.sticker.clickable').forEach(sticker => {
+            sticker.addEventListener('click', () => {
+                const section = sticker.dataset.section;
+                const item = sticker.dataset.item;
+                const data = content[section][item];
+
+                modalTitle.textContent = data.title;
+                modalDescription.innerHTML = data.desc;
+                modal.classList.add('active');
+            });
+        });
+
+        // Cerrar modal
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

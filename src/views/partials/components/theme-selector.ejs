@@ -1,0 +1,24 @@
+<!-- Selector de temas de color (6 paletas) - Diseño minimalista -->
+<div class="theme-selector-minimal" x-data x-init="$store.colorTheme.init()">
+  <%
+    const themes = [
+      { name: 'blue-dusk', color: '#7d97b8', label: 'Azul Crepúsculo' },
+      { name: 'golden-hour', color: '#dfb255', label: 'Hora Dorada' },
+      { name: 'forest-green', color: '#52a47e', label: 'Verde Bosque' },
+      { name: 'sage-mist', color: '#9eaf92', label: 'Salvia Niebla' },
+      { name: 'stone-gray', color: '#a7b6b0', label: 'Gris Piedra' },
+      { name: 'charcoal-night', color: '#2a2927', label: 'Noche Carbón' }
+    ];
+  %>
+
+  <% themes.forEach(theme => { %>
+    <button
+      @click="$store.colorTheme.setTheme('<%= theme.name %>')"
+      class="theme-bar"
+      :class="{ 'active': $store.colorTheme.current === '<%= theme.name %>' }"
+      style="background-color: <%= theme.color %>"
+      aria-label="<%= theme.label %>"
+      title="<%= theme.label %>">
+    </button>
+  <% }) %>
+</div>

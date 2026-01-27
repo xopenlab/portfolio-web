@@ -1,0 +1,22 @@
+<!-- Toggle para animaciones del nombre (solo visible en landing) -->
+<% if (typeof pageState !== 'undefined' && pageState === 'is-index') { %>
+  <button
+    @click="toggleAnimations()"
+    x-data="{
+      animationsEnabled: localStorage.getItem('nameAnimationsEnabled') !== 'false',
+      toggleAnimations() {
+        this.animationsEnabled = !this.animationsEnabled;
+        // Importar y ejecutar la función de toggle
+        import('/js/name-animation.js').then(module => {
+          module.setAnimationsEnabled(this.animationsEnabled);
+        });
+      }
+    }"
+    class="animation-toggle-minimal text-xs tracking-wider transition-colors duration-300"
+    :class="{ 'text-gray-800 dark:text-gray-200': animationsEnabled, 'text-gray-400 dark:text-gray-600': !animationsEnabled }"
+    :aria-label="animationsEnabled ? 'Desactivar animaciones' : 'Activar animaciones'"
+    title="Activar/desactivar animaciones del nombre"
+    type="button">
+    <span x-text="animationsEnabled ? 'FX' : 'FX'"></span>
+  </button>
+<% } %>

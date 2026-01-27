@@ -7,12 +7,12 @@
 <body class="antialiased" x-data>
   <%- include('../partials/header') %>
 
-  <main class="pt-20">
+  <main class="pt-20 legal-page">
     <section class="section">
       <div class="container mx-auto max-w-4xl px-4">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-8">Política de Cookies</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Política de Cookies</h1>
 
-        <div class="prose prose-lg dark:prose-invert max-w-none">
+        <div class="prose dark:prose-invert max-w-none">
           <p class="text-gray-600 dark:text-gray-400 mb-8">
             Última actualización: <%= new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) %>
           </p>
@@ -136,8 +136,13 @@
   <!-- Banner de Cookies -->
   <%- include('../partials/cookie-banner') %>
 
-  <!-- Scripts -->
+  <!-- Botones flotantes -->
+  <%- include('../partials/components/floating-nav-button') %>
+  <%- include('../partials/components/floating-scroll-top') %>
+
+  <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
-  <script type="module" src="/js/theme.js"></script>
+  <script type="module" src="/js/main.js"></script>
 </body>
 </html>

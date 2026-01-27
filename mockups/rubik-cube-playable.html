@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Cubo de Rubik 3D JUGABLE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        #cubeView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #cubeView.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        .scene {
+            width: 500px;
+            height: 500px;
+            perspective: 1200px;
+            position: relative;
+        }
+
+        .cube-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+
+        .cube-container:active {
+            cursor: grabbing;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: #000;
+            border: 8px solid #1a1a1a;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            backface-visibility: visible;
+        }
+
+        .face-front  { transform: translateZ(150px); }
+        .face-back   { transform: rotateY(180deg) translateZ(150px); }
+        .face-right  { transform: rotateY(90deg) translateZ(150px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(150px); }
+        .face-top    { transform: rotateX(90deg) translateZ(150px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        .sticker {
+            border: 2px solid #1a1a1a;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sticker.clickable:hover {
+            transform: scale(0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            filter: brightness(1.3);
+        }
+
+        .color-red { background: #B71234; }
+        .color-blue { background: #0046AD; }
+        .color-green { background: #009B48; }
+        .color-yellow { background: #FFD500; }
+        .color-orange { background: #FF5800; }
+        .color-white { background: #FFFFFF; }
+
+        /* Stats Panel */
+        .stats-panel {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .stats-panel.hidden { opacity: 0; pointer-events: none; }
+
+        .stat-item { margin-bottom: 1rem; }
+        .stat-item:last-child { margin-bottom: 0; }
+
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-value { color: #FFD500; }
+        .moves-value { color: #00ff88; }
+
+        .status-value {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .status-playing { color: #00ff88; }
+        .status-solved {
+            color: #FFD500;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Controls Panel */
+        .controls-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            color: white;
+            z-index: 100;
+            max-width: 300px;
+        }
+
+        .controls-panel.hidden { opacity: 0; pointer-events: none; }
+
+        .panel-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .panel-title {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .move-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .move-btn {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .move-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .move-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .shuffle-btn {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .shuffle-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        /* Content View */
+        #contentView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 999;
+        }
+
+        #contentView.active {
+            transform: translateY(0);
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: 100vh;
+        }
+
+        .back-to-cube {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-cube:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .content-title {
+            font-size: 3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .content-body {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        /* Help Hint */
+        .help-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeInOut 6s ease-in-out 2s;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .scene { width: 350px; height: 350px; }
+            .cube-face { width: 200px; height: 200px; }
+            .face-front, .face-back, .face-right, .face-left, .face-top, .face-bottom { transform: translateZ(100px); }
+            .face-back { transform: rotateY(180deg) translateZ(100px); }
+            .face-right { transform: rotateY(90deg) translateZ(100px); }
+            .face-left { transform: rotateY(-90deg) translateZ(100px); }
+            .face-top { transform: rotateX(90deg) translateZ(100px); }
+            .face-bottom { transform: rotateX(-90deg) translateZ(100px); }
+            .stats-panel { left: 10px; top: 10px; padding: 1rem; min-width: 150px; }
+            .stat-value { font-size: 1.5rem; }
+            .controls-panel { right: 10px; top: 10px; padding: 0.75rem; }
+            .content-title { font-size: 2rem; }
+            .content-body { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="cubeView">
+        <div class="scene">
+            <div class="cube-container" id="cube">
+                <div class="cube-face face-front" data-face="F">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+                <div class="cube-face face-back" data-face="B">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+                <div class="cube-face face-right" data-face="R">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+                <div class="cube-face face-left" data-face="L">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+                <div class="cube-face face-top" data-face="U">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+                <div class="cube-face face-bottom" data-face="D">
+                    <div class="sticker" data-pos="0"></div>
+                    <div class="sticker" data-pos="1"></div>
+                    <div class="sticker" data-pos="2"></div>
+                    <div class="sticker" data-pos="3"></div>
+                    <div class="sticker" data-pos="4"></div>
+                    <div class="sticker" data-pos="5"></div>
+                    <div class="sticker" data-pos="6"></div>
+                    <div class="sticker" data-pos="7"></div>
+                    <div class="sticker" data-pos="8"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-panel" id="statsPanel">
+        <div class="stat-item">
+            <div class="stat-label">⏱️ Tiempo</div>
+            <div class="stat-value timer-value" id="timer">00:00</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">🎯 Movimientos</div>
+            <div class="stat-value moves-value" id="moves">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Estado</div>
+            <div class="status-value status-playing" id="status">Listo</div>
+        </div>
+    </div>
+
+    <div class="controls-panel" id="controlsPanel">
+        <div class="panel-section">
+            <div class="panel-title">🎮 Movimientos</div>
+            <div class="move-buttons">
+                <button class="move-btn" onclick="rotateFace('U')">U</button>
+                <button class="move-btn" onclick="rotateFace('D')">D</button>
+                <button class="move-btn" onclick="rotateFace('L')">L</button>
+                <button class="move-btn" onclick="rotateFace('R')">R</button>
+                <button class="move-btn" onclick="rotateFace('F')">F</button>
+                <button class="move-btn" onclick="rotateFace('B')">B</button>
+                <button class="move-btn" onclick="rotateFace('U', true)">U'</button>
+                <button class="move-btn" onclick="rotateFace('D', true)">D'</button>
+                <button class="move-btn" onclick="rotateFace('L', true)">L'</button>
+                <button class="move-btn" onclick="rotateFace('R', true)">R'</button>
+                <button class="move-btn" onclick="rotateFace('F', true)">F'</button>
+                <button class="move-btn" onclick="rotateFace('B', true)">B'</button>
+            </div>
+        </div>
+        <div class="panel-section">
+            <button class="action-btn shuffle-btn" onclick="shuffleCube()">🎲 Mezclar</button>
+            <button class="action-btn" onclick="resetCube()">↺ Reset</button>
+        </div>
+    </div>
+
+    <div id="contentView">
+        <button class="back-to-cube" id="backToCube">← Volver al cubo</button>
+        <div class="content-container">
+            <h1 class="content-title" id="contentTitle">Título</h1>
+            <div class="content-body" id="contentBody">Contenido...</div>
+        </div>
+    </div>
+
+    <div class="help-hint">
+        🎮 Usa los botones U/D/L/R/F/B para rotar las caras | ' = antihorario | 🎲 Mezclar para empezar
+    </div>
+
+    <script>
+        // Estado del cubo (modelo de datos)
+        const cubeState = {
+            F: ['red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red'],
+            B: ['orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange', 'orange'],
+            R: ['blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue', 'blue'],
+            L: ['green', 'green', 'green', 'green', 'green', 'green', 'green', 'green', 'green'],
+            U: ['yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow'],
+            D: ['white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white']
+        };
+
+        const SOLVED_STATE = JSON.parse(JSON.stringify(cubeState));
+
+        const cube = document.getElementById('cube');
+        const cubeView = document.getElementById('cubeView');
+        const contentView = document.getElementById('contentView');
+        const statsPanel = document.getElementById('statsPanel');
+        const controlsPanel = document.getElementById('controlsPanel');
+
+        let currentRotationX = -20;
+        let currentRotationY = -30;
+        let moves = 0;
+        let seconds = 0;
+        let timerInterval = null;
+        let isPlaying = false;
+
+        // Actualizar UI del cubo
+        function updateCubeUI() {
+            Object.keys(cubeState).forEach(face => {
+                const faceElement = document.querySelector(`[data-face="${face}"]`);
+                const stickers = faceElement.querySelectorAll('.sticker');
+                cubeState[face].forEach((color, index) => {
+                    stickers[index].className = `sticker color-${color}`;
+                    // Hacer clickeables solo algunos cuadrados específicos
+                    if (face === 'F' && [1, 3, 5].includes(index)) stickers[index].classList.add('clickable');
+                    if (face === 'B' && [1, 3, 5].includes(index)) stickers[index].classList.add('clickable');
+                    if (face === 'R' && [0, 2, 6, 8].includes(index)) stickers[index].classList.add('clickable');
+                    if (face === 'L' && [4].includes(index)) stickers[index].classList.add('clickable');
+                    if (face === 'U' && [0, 2].includes(index)) stickers[index].classList.add('clickable');
+                    if (face === 'D' && [4].includes(index)) stickers[index].classList.add('clickable');
+                });
+            });
+        }
+
+        // Rotar cara del cubo (lógica real de Rubik's)
+        function rotateFace(face, counterClockwise = false) {
+            incrementMoves();
+
+            const temp = JSON.parse(JSON.stringify(cubeState));
+
+            // Rotar la cara en sí (90 grados)
+            if (!counterClockwise) {
+                cubeState[face] = [
+                    temp[face][6], temp[face][3], temp[face][0],
+                    temp[face][7], temp[face][4], temp[face][1],
+                    temp[face][8], temp[face][5], temp[face][2]
+                ];
+            } else {
+                cubeState[face] = [
+                    temp[face][2], temp[face][5], temp[face][8],
+                    temp[face][1], temp[face][4], temp[face][7],
+                    temp[face][0], temp[face][3], temp[face][6]
+                ];
+            }
+
+            // Rotar piezas adyacentes (según la cara)
+            if (face === 'U') {
+                if (!counterClockwise) {
+                    cubeState.F[0] = temp.R[0]; cubeState.F[1] = temp.R[1]; cubeState.F[2] = temp.R[2];
+                    cubeState.R[0] = temp.B[0]; cubeState.R[1] = temp.B[1]; cubeState.R[2] = temp.B[2];
+                    cubeState.B[0] = temp.L[0]; cubeState.B[1] = temp.L[1]; cubeState.B[2] = temp.L[2];
+                    cubeState.L[0] = temp.F[0]; cubeState.L[1] = temp.F[1]; cubeState.L[2] = temp.F[2];
+                } else {
+                    cubeState.F[0] = temp.L[0]; cubeState.F[1] = temp.L[1]; cubeState.F[2] = temp.L[2];
+                    cubeState.L[0] = temp.B[0]; cubeState.L[1] = temp.B[1]; cubeState.L[2] = temp.B[2];
+                    cubeState.B[0] = temp.R[0]; cubeState.B[1] = temp.R[1]; cubeState.B[2] = temp.R[2];
+                    cubeState.R[0] = temp.F[0]; cubeState.R[1] = temp.F[1]; cubeState.R[2] = temp.F[2];
+                }
+            } else if (face === 'D') {
+                if (!counterClockwise) {
+                    cubeState.F[6] = temp.L[6]; cubeState.F[7] = temp.L[7]; cubeState.F[8] = temp.L[8];
+                    cubeState.L[6] = temp.B[6]; cubeState.L[7] = temp.B[7]; cubeState.L[8] = temp.B[8];
+                    cubeState.B[6] = temp.R[6]; cubeState.B[7] = temp.R[7]; cubeState.B[8] = temp.R[8];
+                    cubeState.R[6] = temp.F[6]; cubeState.R[7] = temp.F[7]; cubeState.R[8] = temp.F[8];
+                } else {
+                    cubeState.F[6] = temp.R[6]; cubeState.F[7] = temp.R[7]; cubeState.F[8] = temp.R[8];
+                    cubeState.R[6] = temp.B[6]; cubeState.R[7] = temp.B[7]; cubeState.R[8] = temp.B[8];
+                    cubeState.B[6] = temp.L[6]; cubeState.B[7] = temp.L[7]; cubeState.B[8] = temp.L[8];
+                    cubeState.L[6] = temp.F[6]; cubeState.L[7] = temp.F[7]; cubeState.L[8] = temp.F[8];
+                }
+            } else if (face === 'L') {
+                if (!counterClockwise) {
+                    cubeState.F[0] = temp.U[0]; cubeState.F[3] = temp.U[3]; cubeState.F[6] = temp.U[6];
+                    cubeState.U[0] = temp.B[8]; cubeState.U[3] = temp.B[5]; cubeState.U[6] = temp.B[2];
+                    cubeState.B[2] = temp.D[6]; cubeState.B[5] = temp.D[3]; cubeState.B[8] = temp.D[0];
+                    cubeState.D[0] = temp.F[0]; cubeState.D[3] = temp.F[3]; cubeState.D[6] = temp.F[6];
+                } else {
+                    cubeState.F[0] = temp.D[0]; cubeState.F[3] = temp.D[3]; cubeState.F[6] = temp.D[6];
+                    cubeState.D[0] = temp.B[8]; cubeState.D[3] = temp.B[5]; cubeState.D[6] = temp.B[2];
+                    cubeState.B[2] = temp.U[6]; cubeState.B[5] = temp.U[3]; cubeState.B[8] = temp.U[0];
+                    cubeState.U[0] = temp.F[0]; cubeState.U[3] = temp.F[3]; cubeState.U[6] = temp.F[6];
+                }
+            } else if (face === 'R') {
+                if (!counterClockwise) {
+                    cubeState.F[2] = temp.D[2]; cubeState.F[5] = temp.D[5]; cubeState.F[8] = temp.D[8];
+                    cubeState.D[2] = temp.B[6]; cubeState.D[5] = temp.B[3]; cubeState.D[8] = temp.B[0];
+                    cubeState.B[0] = temp.U[8]; cubeState.B[3] = temp.U[5]; cubeState.B[6] = temp.U[2];
+                    cubeState.U[2] = temp.F[2]; cubeState.U[5] = temp.F[5]; cubeState.U[8] = temp.F[8];
+                } else {
+                    cubeState.F[2] = temp.U[2]; cubeState.F[5] = temp.U[5]; cubeState.F[8] = temp.U[8];
+                    cubeState.U[2] = temp.B[6]; cubeState.U[5] = temp.B[3]; cubeState.U[8] = temp.B[0];
+                    cubeState.B[0] = temp.D[8]; cubeState.B[3] = temp.D[5]; cubeState.B[6] = temp.D[2];
+                    cubeState.D[2] = temp.F[2]; cubeState.D[5] = temp.F[5]; cubeState.D[8] = temp.F[8];
+                }
+            } else if (face === 'F') {
+                if (!counterClockwise) {
+                    cubeState.U[6] = temp.L[8]; cubeState.U[7] = temp.L[5]; cubeState.U[8] = temp.L[2];
+                    cubeState.R[0] = temp.U[6]; cubeState.R[3] = temp.U[7]; cubeState.R[6] = temp.U[8];
+                    cubeState.D[0] = temp.R[6]; cubeState.D[1] = temp.R[3]; cubeState.D[2] = temp.R[0];
+                    cubeState.L[2] = temp.D[0]; cubeState.L[5] = temp.D[1]; cubeState.L[8] = temp.D[2];
+                } else {
+                    cubeState.U[6] = temp.R[0]; cubeState.U[7] = temp.R[3]; cubeState.U[8] = temp.R[6];
+                    cubeState.L[2] = temp.U[8]; cubeState.L[5] = temp.U[7]; cubeState.L[8] = temp.U[6];
+                    cubeState.D[0] = temp.L[2]; cubeState.D[1] = temp.L[5]; cubeState.D[2] = temp.L[8];
+                    cubeState.R[0] = temp.D[2]; cubeState.R[3] = temp.D[1]; cubeState.R[6] = temp.D[0];
+                }
+            } else if (face === 'B') {
+                if (!counterClockwise) {
+                    cubeState.U[0] = temp.R[2]; cubeState.U[1] = temp.R[5]; cubeState.U[2] = temp.R[8];
+                    cubeState.L[0] = temp.U[2]; cubeState.L[3] = temp.U[1]; cubeState.L[6] = temp.U[0];
+                    cubeState.D[6] = temp.L[0]; cubeState.D[7] = temp.L[3]; cubeState.D[8] = temp.L[6];
+                    cubeState.R[2] = temp.D[8]; cubeState.R[5] = temp.D[7]; cubeState.R[8] = temp.D[6];
+                } else {
+                    cubeState.U[0] = temp.L[6]; cubeState.U[1] = temp.L[3]; cubeState.U[2] = temp.L[0];
+                    cubeState.R[2] = temp.U[0]; cubeState.R[5] = temp.U[1]; cubeState.R[8] = temp.U[2];
+                    cubeState.D[6] = temp.R[8]; cubeState.D[7] = temp.R[5]; cubeState.D[8] = temp.R[2];
+                    cubeState.L[0] = temp.D[6]; cubeState.L[3] = temp.D[7]; cubeState.L[6] = temp.D[8];
+                }
+            }
+
+            updateCubeUI();
+            checkSolved();
+        }
+
+        // Mezclar cubo
+        function shuffleCube() {
+            resetMoves();
+            resetTimer();
+            document.getElementById('status').textContent = 'Mezclando...';
+
+            const moves = ['U', 'D', 'L', 'R', 'F', 'B'];
+            for (let i = 0; i < 25; i++) {
+                const randomMove = moves[Math.floor(Math.random() * moves.length)];
+                const randomDir = Math.random() > 0.5;
+                rotateFace(randomMove, randomDir);
+            }
+
+            resetMoves(); // Reset contador después de mezclar
+            document.getElementById('status').textContent = '¡Empieza!';
+        }
+
+        // Reset cubo
+        function resetCube() {
+            Object.keys(SOLVED_STATE).forEach(face => {
+                cubeState[face] = [...SOLVED_STATE[face]];
+            });
+            updateCubeUI();
+            resetMoves();
+            resetTimer();
+            checkSolved();
+        }
+
+        // Verificar si está resuelto
+        function checkSolved() {
+            const solved = Object.keys(cubeState).every(face => {
+                return cubeState[face].every(color => color === cubeState[face][0]);
+            });
+
+            if (solved && moves > 0) {
+                stopTimer();
+                document.getElementById('status').textContent = '¡RESUELTO!';
+                document.getElementById('status').className = 'status-value status-solved';
+                setTimeout(() => {
+                    alert(`🎉 ¡Felicidades! Resolviste el cubo en ${moves} movimientos y ${document.getElementById('timer').textContent}`);
+                }, 500);
+            }
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (timerInterval) return;
+            isPlaying = true;
+            document.getElementById('status').textContent = 'Jugando';
+            document.getElementById('status').className = 'status-value status-playing';
+
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                document.getElementById('timer').textContent =
+                    `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            document.getElementById('timer').textContent = '00:00';
+            isPlaying = false;
+            document.getElementById('status').textContent = 'Listo';
+            document.getElementById('status').className = 'status-value status-playing';
+        }
+
+        function incrementMoves() {
+            if (!isPlaying && moves === 0) {
+                startTimer();
+            }
+            moves++;
+            document.getElementById('moves').textContent = moves;
+        }
+
+        function resetMoves() {
+            moves = 0;
+            document.getElementById('moves').textContent = '0';
+        }
+
+        // Rotación del cubo con mouse
+        let isDragging = false;
+        let previousMouseX = 0;
+        let previousMouseY = 0;
+
+        cube.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - previousMouseX;
+            const deltaY = e.clientY - previousMouseY;
+            currentRotationY += deltaX * 0.5;
+            currentRotationX -= deltaY * 0.5;
+            cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+            previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Content navigation (example)
+        const content = {
+            proyectos: { 1: { title: 'E-Commerce Platform', desc: '<h2>Descripción</h2><p>Plataforma completa...</p>' }},
+            experiencia: { 1: { title: 'Senior Developer', desc: '<h2>Tech Corp</h2><p>2023 - Actualidad</p>' }},
+            skills: { frontend: { title: 'Frontend', desc: '<h2>Frontend</h2><ul><li>Angular</li><li>React</li></ul>' }},
+            about: { bio: { title: 'Sobre Mí', desc: '<h2>Josevi Pérez</h2><p>Full Stack Developer...</p>' }},
+            educacion: { 1: { title: 'Ingeniería', desc: '<h2>Universidad</h2><p>2015-2019</p>' }},
+            contacto: { form: { title: 'Contacto', desc: '<h2>Contacto</h2><p>email@josevi.dev</p>' }}
+        };
+
+        document.querySelectorAll('.sticker.clickable').forEach(sticker => {
+            sticker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Aquí podrías mapear cada sticker a una sección específica
+                contentView.classList.add('active');
+                cubeView.classList.add('hidden');
+                statsPanel.classList.add('hidden');
+                controlsPanel.classList.add('hidden');
+                stopTimer();
+            });
+        });
+
+        document.getElementById('backToCube').addEventListener('click', () => {
+            contentView.classList.remove('active');
+            cubeView.classList.remove('hidden');
+            statsPanel.classList.remove('hidden');
+            controlsPanel.classList.remove('hidden');
+            if (isPlaying) startTimer();
+        });
+
+        // Initialize
+        updateCubeUI();
+        cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+    </script>
+</body>
+</html>

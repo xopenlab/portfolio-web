@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Sección Proyectos Retro Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Efecto CRT Scanlines */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Título de sección con estilo Level */
+        .level-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border: 4px solid #00ff41;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+            position: relative;
+        }
+
+        .level-number {
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+        }
+
+        .level-name {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+        }
+
+        /* Grid de proyectos */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Card de proyecto */
+        .project-card {
+            border: 4px solid;
+            background: rgba(0, 0, 0, 0.9);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-card:nth-child(3n+1) {
+            border-color: #00ff41;
+        }
+
+        .project-card:nth-child(3n+2) {
+            border-color: #ff10f0;
+        }
+
+        .project-card:nth-child(3n+3) {
+            border-color: #00f0ff;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .project-card:nth-child(3n+1):hover {
+            box-shadow: 0 0 40px #00ff41;
+        }
+
+        .project-card:nth-child(3n+2):hover {
+            box-shadow: 0 0 40px #ff10f0;
+        }
+
+        .project-card:nth-child(3n+3):hover {
+            box-shadow: 0 0 40px #00f0ff;
+        }
+
+        /* Header del card con icono */
+        .project-header {
+            padding: 1.5rem;
+            border-bottom: 3px solid;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .project-card:nth-child(3n+1) .project-header {
+            border-color: #00ff41;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .project-card:nth-child(3n+2) .project-header {
+            border-color: #ff10f0;
+            background: rgba(255, 16, 240, 0.05);
+        }
+
+        .project-card:nth-child(3n+3) .project-header {
+            border-color: #00f0ff;
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .project-icon {
+            font-size: 2.5rem;
+        }
+
+        .project-card:nth-child(3n+1) .project-icon {
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41;
+        }
+
+        .project-card:nth-child(3n+2) .project-icon {
+            color: #ff10f0;
+            text-shadow: 0 0 20px #ff10f0;
+        }
+
+        .project-card:nth-child(3n+3) .project-icon {
+            color: #00f0ff;
+            text-shadow: 0 0 20px #00f0ff;
+        }
+
+        .project-title {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1.3rem;
+            flex: 1;
+        }
+
+        .project-card:nth-child(3n+1) .project-title {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .project-card:nth-child(3n+2) .project-title {
+            color: #ff10f0;
+            text-shadow: 0 0 10px #ff10f0;
+        }
+
+        .project-card:nth-child(3n+3) .project-title {
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        /* Contenido del card */
+        .project-body {
+            padding: 1.5rem;
+        }
+
+        .project-description {
+            color: #f0f0f0;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Tech stack badges */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badge {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.7rem;
+            border: 2px solid;
+        }
+
+        .project-card:nth-child(3n+1) .tech-badge {
+            color: #00ff41;
+            border-color: #00ff41;
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .project-card:nth-child(3n+2) .tech-badge {
+            color: #ff10f0;
+            border-color: #ff10f0;
+            background: rgba(255, 16, 240, 0.1);
+        }
+
+        .project-card:nth-child(3n+3) .tech-badge {
+            color: #00f0ff;
+            border-color: #00f0ff;
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        /* Botón de acción */
+        .project-action {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            padding: 0.8rem 1.2rem;
+            border: 3px solid;
+            background: rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .project-card:nth-child(3n+1) .project-action {
+            color: #00ff41;
+            border-color: #00ff41;
+        }
+
+        .project-card:nth-child(3n+1) .project-action:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00ff41;
+        }
+
+        .project-card:nth-child(3n+2) .project-action {
+            color: #ff10f0;
+            border-color: #ff10f0;
+        }
+
+        .project-card:nth-child(3n+2) .project-action:hover {
+            background: #ff10f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #ff10f0;
+        }
+
+        .project-card:nth-child(3n+3) .project-action {
+            color: #00f0ff;
+            border-color: #00f0ff;
+        }
+
+        .project-card:nth-child(3n+3) .project-action:hover {
+            background: #00f0ff;
+            color: #0a0a0a;
+            box-shadow: 0 0 20px #00f0ff;
+        }
+
+        .project-action:active {
+            transform: translateY(2px);
+        }
+
+        /* Badge "Destacado" */
+        .featured-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.8rem;
+            padding: 0.4rem 1rem;
+            border: 3px solid #ffff00;
+            background: #0a0a0a;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Botón "Load More" */
+        .load-more-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .load-more-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            padding: 1.2rem 2.5rem;
+            border: 4px solid #ffff00;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: #ffff00;
+            color: #0a0a0a;
+            box-shadow: 0 0 40px #ffff00;
+            transform: scale(1.05);
+        }
+
+        .load-more-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .level-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Título de nivel -->
+        <div class="level-title">
+            <div class="level-number">LEVEL 04</div>
+            <div class="level-name">PROJECTS</div>
+        </div>
+
+        <!-- Grid de proyectos -->
+        <div class="projects-grid">
+            <!-- Proyecto 1 -->
+            <div class="project-card">
+                <div class="featured-badge">★ FEATURED ★</div>
+                <div class="project-header">
+                    <div class="project-icon">▼</div>
+                    <h3 class="project-title">▓ E-COMMERCE</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Plataforma completa de comercio electrónico con gestión
+                        de inventario, pagos integrados y panel administrativo.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">NODE</span>
+                        <span class="tech-badge">ANGULAR</span>
+                        <span class="tech-badge">MONGODB</span>
+                        <span class="tech-badge">STRIPE</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+
+            <!-- Proyecto 2 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">◆</div>
+                    <h3 class="project-title">▓ DASHBOARD</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Dashboard analítico en tiempo real para visualización
+                        de métricas empresariales con gráficos interactivos.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">REACT</span>
+                        <span class="tech-badge">D3.JS</span>
+                        <span class="tech-badge">WEBSOCKETS</span>
+                        <span class="tech-badge">EXPRESS</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+
+            <!-- Proyecto 3 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">★</div>
+                    <h3 class="project-title">▓ CHAT APP</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Aplicación de mensajería instantánea con canales,
+                        notificaciones push y compartición de archivos.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">SOCKET.IO</span>
+                        <span class="tech-badge">VUE</span>
+                        <span class="tech-badge">REDIS</span>
+                        <span class="tech-badge">AWS S3</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+
+            <!-- Proyecto 4 -->
+            <div class="project-card">
+                <div class="featured-badge">★ FEATURED ★</div>
+                <div class="project-header">
+                    <div class="project-icon">▼</div>
+                    <h3 class="project-title">▓ API REST</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        API RESTful escalable con autenticación JWT,
+                        documentación Swagger y rate limiting.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">EXPRESS</span>
+                        <span class="tech-badge">JWT</span>
+                        <span class="tech-badge">SWAGGER</span>
+                        <span class="tech-badge">MYSQL</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+
+            <!-- Proyecto 5 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">◆</div>
+                    <h3 class="project-title">▓ BLOG CMS</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Sistema de gestión de contenidos con editor WYSIWYG,
+                        SEO optimizado y gestión de usuarios.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">NEXT.JS</span>
+                        <span class="tech-badge">PRISMA</span>
+                        <span class="tech-badge">POSTGRES</span>
+                        <span class="tech-badge">TAILWIND</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+
+            <!-- Proyecto 6 -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon">★</div>
+                    <h3 class="project-title">▓ TASK MANAGER</h3>
+                </div>
+                <div class="project-body">
+                    <p class="project-description">
+                        Gestor de tareas colaborativo con tableros Kanban,
+                        asignaciones y seguimiento de tiempo.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-badge">ANGULAR</span>
+                        <span class="tech-badge">NEST.JS</span>
+                        <span class="tech-badge">MONGODB</span>
+                        <span class="tech-badge">DOCKER</span>
+                    </div>
+                    <a href="#" class="project-action">▶ VIEW PROJECT</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Load More -->
+        <div class="load-more-container">
+            <button class="load-more-btn">▼ LOAD MORE PROJECTS ▼</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Hero Section Retro Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Efecto CRT Scanlines */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Efecto vignette oscuro en bordes */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header/Navbar */
+        .arcade-header {
+            border: 4px solid #00ff41;
+            box-shadow:
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                inset 0 0 10px rgba(0, 255, 65, 0.1);
+            padding: 1rem 2rem;
+            margin-bottom: 3rem;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: #00ff41;
+            text-shadow:
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                0 0 30px #00ff41;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .score-display {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1rem;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            position: relative;
+        }
+
+        /* Aliens animados en la parte superior */
+        .aliens-row {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            animation: alien-march 4s ease-in-out infinite;
+        }
+
+        @keyframes alien-march {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+
+        .alien {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            animation: alien-bounce 1s ease-in-out infinite;
+        }
+
+        .alien:nth-child(1) {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            animation-delay: 0s;
+        }
+        .alien:nth-child(2) {
+            color: #ff10f0;
+            text-shadow: 0 0 10px #ff10f0;
+            animation-delay: 0.2s;
+        }
+        .alien:nth-child(3) {
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+            animation-delay: 0.4s;
+        }
+        .alien:nth-child(4) {
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            animation-delay: 0.6s;
+        }
+        .alien:nth-child(5) {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes alien-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Badge "Insert Coin" */
+        .insert-coin {
+            display: inline-block;
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1rem;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            border: 3px solid #ffff00;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            animation: blink 1s step-start infinite;
+            background: rgba(255, 255, 0, 0.1);
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Nombre principal */
+        .hero-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 4rem;
+            color: #00ff41;
+            text-shadow:
+                0 0 10px #00ff41,
+                0 0 20px #00ff41,
+                0 0 40px #00ff41,
+                4px 4px 0 #003b00;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        /* Título profesional */
+        .hero-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, #ff10f0, #00f0ff, #ff10f0);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Descripción */
+        .hero-description {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            color: #f0f0f0;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+        }
+
+        /* Tech badges */
+        .tech-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border: 3px solid;
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .badge:nth-child(1) {
+            color: #00ff41;
+            border-color: #00ff41;
+        }
+        .badge:nth-child(2) {
+            color: #ff10f0;
+            border-color: #ff10f0;
+        }
+        .badge:nth-child(3) {
+            color: #00f0ff;
+            border-color: #00f0ff;
+        }
+        .badge:nth-child(4) {
+            color: #ffff00;
+            border-color: #ffff00;
+        }
+
+        .badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        /* Botones CTA */
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-arcade {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            padding: 1rem 2rem;
+            border: 4px solid;
+            background: rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            color: #00ff41;
+            border-color: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .btn-primary:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #00ff41;
+            transform: translateY(-3px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+        }
+
+        .btn-secondary {
+            color: #ff10f0;
+            border-color: #ff10f0;
+            box-shadow: 0 0 10px #ff10f0;
+        }
+
+        .btn-secondary:hover {
+            background: #ff10f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #ff10f0;
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(2px);
+        }
+
+        /* Nave del jugador (avatar/icono) */
+        .player-ship {
+            margin-top: 3rem;
+            font-size: 4rem;
+            color: #00f0ff;
+            text-shadow:
+                0 0 20px #00f0ff,
+                0 0 40px #00f0ff;
+            animation: ship-float 3s ease-in-out infinite;
+        }
+
+        @keyframes ship-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Indicador scroll */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Pixelify Sans', cursive;
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+            animation: scroll-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scroll-bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-name {
+                font-size: 2rem;
+            }
+            .hero-title {
+                font-size: 1rem;
+            }
+            .aliens-row {
+                gap: 1rem;
+            }
+            .alien {
+                font-size: 1.5rem;
+            }
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn-arcade {
+                font-size: 0.8rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="arcade-header">
+            <div class="logo">&lt;JP/&gt;</div>
+            <div class="score-display">SCORE: 999999 | HI: 999999</div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <!-- Aliens en la parte superior -->
+            <div class="aliens-row">
+                <span class="alien">▼</span>
+                <span class="alien">▼</span>
+                <span class="alien">▼</span>
+                <span class="alien">▼</span>
+                <span class="alien">▼</span>
+            </div>
+
+            <!-- Badge Insert Coin -->
+            <div class="insert-coin">★ PLAYER 1 READY ★</div>
+
+            <!-- Nombre -->
+            <h1 class="hero-name">JOSEVI<br>PÉREZ</h1>
+
+            <!-- Título profesional -->
+            <h2 class="hero-title">[FULL STACK DEVELOPER]</h2>
+
+            <!-- Descripción -->
+            <p class="hero-description">
+                Especialista en arquitecturas escalables, desarrollo web moderno
+                y soluciones tecnológicas innovadoras. Level 99 en JavaScript.
+            </p>
+
+            <!-- Tech Badges -->
+            <div class="tech-badges">
+                <span class="badge">▓ NODE.JS</span>
+                <span class="badge">▓ ANGULAR</span>
+                <span class="badge">▓ EXPRESS</span>
+                <span class="badge">▓ MONGODB</span>
+            </div>
+
+            <!-- Botones CTA -->
+            <div class="cta-buttons">
+                <a href="#" class="btn-arcade btn-primary">▶ START GAME</a>
+                <a href="#" class="btn-arcade btn-secondary">◆ VIEW PROJECTS</a>
+            </div>
+
+            <!-- Nave del jugador -->
+            <div class="player-ship">▲</div>
+
+            <!-- Indicador scroll -->
+            <div class="scroll-indicator">▼ SCROLL DOWN ▼</div>
+        </section>
+    </div>
+</body>
+</html>

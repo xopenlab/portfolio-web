@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Cubo de Rubik 3D Interactivo Jugable</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        /* Vista del cubo (inicial) */
+        #cubeView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #cubeView.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.8);
+        }
+
+        /* Contenedor de la escena 3D */
+        .scene {
+            width: 500px;
+            height: 500px;
+            perspective: 1200px;
+            position: relative;
+        }
+
+        /* Cubo contenedor */
+        .cube-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.05s linear;
+            cursor: grab;
+            animation: cubeAssemble 2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .cube-container:active {
+            cursor: grabbing;
+        }
+
+        @keyframes cubeAssemble {
+            0% {
+                transform: rotateX(-20deg) rotateY(-30deg) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: rotateX(360deg) rotateY(360deg) scale(1.2);
+            }
+            100% {
+                transform: rotateX(-20deg) rotateY(-30deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Cara del cubo - CORREGIDO EL 3D */
+        .cube-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: #000;
+            border: 8px solid #1a1a1a;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            padding: 4px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            backface-visibility: visible;
+        }
+
+        /* Posicionamiento de caras - CORREGIDO */
+        .face-front  { transform: translateZ(150px); }
+        .face-back   { transform: rotateY(180deg) translateZ(150px); }
+        .face-right  { transform: rotateY(90deg) translateZ(150px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(150px); }
+        .face-top    { transform: rotateX(90deg) translateZ(150px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        /* Cuadrado individual del cubo (sticker) */
+        .sticker {
+            border: 2px solid #1a1a1a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Stickers clickeables */
+        .sticker.clickable {
+            cursor: pointer;
+        }
+
+        .sticker.clickable:hover {
+            transform: scale(0.9);
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.8),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+            filter: brightness(1.3);
+        }
+
+        /* Colores de las caras (estética Rubik's oficial) */
+        .color-red { background: #B71234; }
+        .color-blue { background: #0046AD; }
+        .color-green { background: #009B48; }
+        .color-yellow { background: #FFD500; }
+        .color-orange { background: #FF5800; }
+        .color-white { background: #FFFFFF; }
+
+        /* Panel de controles lateral ARRASTRABLE */
+        .controls-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            cursor: move;
+            user-select: none;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+
+        .controls-panel.dragging {
+            opacity: 0.8;
+        }
+
+        .controls-panel.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel-header {
+            color: white;
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .direction-controls {
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left play right"
+                ". down .";
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .control-btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn-up { grid-area: up; }
+        .btn-down { grid-area: down; }
+        .btn-left { grid-area: left; }
+        .btn-right { grid-area: right; }
+        .btn-play { grid-area: play; font-size: 1rem; }
+
+        .reset-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .shuffle-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .shuffle-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        /* CONTADOR Y TIMER - NUEVO */
+        .stats-panel {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .stats-panel.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .stat-item {
+            margin-bottom: 1rem;
+        }
+
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-value {
+            color: #FFD500;
+        }
+
+        .moves-value {
+            color: #00ff88;
+        }
+
+        .status-value {
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .status-playing {
+            color: #00ff88;
+        }
+
+        .status-solved {
+            color: #FFD500;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Vista de contenido fullscreen */
+        #contentView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 999;
+        }
+
+        #contentView.active {
+            transform: translateY(0);
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: 100vh;
+        }
+
+        .back-to-cube {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-cube:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+        }
+
+        .content-title {
+            font-size: 3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .content-body {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        /* Indicador de ayuda inicial */
+        .help-hint {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeInOut 4s ease-in-out 2s;
+            pointer-events: none;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .scene {
+                width: 350px;
+                height: 350px;
+            }
+
+            .cube-face {
+                width: 200px;
+                height: 200px;
+            }
+
+            .face-front, .face-back,
+            .face-right, .face-left,
+            .face-top, .face-bottom {
+                transform: translateZ(100px);
+            }
+
+            .face-back   { transform: rotateY(180deg) translateZ(100px); }
+            .face-right  { transform: rotateY(90deg) translateZ(100px); }
+            .face-left   { transform: rotateY(-90deg) translateZ(100px); }
+            .face-top    { transform: rotateX(90deg) translateZ(100px); }
+            .face-bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+            .controls-panel {
+                right: 10px;
+                padding: 0.5rem;
+            }
+
+            .control-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .reset-btn, .shuffle-btn {
+                font-size: 0.75rem;
+                padding: 0.6rem;
+            }
+
+            .stats-panel {
+                left: 10px;
+                top: 10px;
+                padding: 1rem;
+                min-width: 150px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .content-title {
+                font-size: 2rem;
+            }
+
+            .content-body {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Vista del Cubo -->
+    <div id="cubeView">
+        <div class="scene">
+            <div class="cube-container" id="cube">
+                <!-- Cara Frontal (ROJA) - Proyectos -->
+                <div class="cube-face face-front">
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyectos" data-item="1"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyectos" data-item="2"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyectos" data-item="3"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red"></div>
+                </div>
+
+                <!-- Cara Trasera (NARANJA) - Experiencia -->
+                <div class="cube-face face-back">
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="experiencia" data-item="1"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="experiencia" data-item="2"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="experiencia" data-item="3"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange"></div>
+                </div>
+
+                <!-- Cara Derecha (AZUL) - Skills -->
+                <div class="cube-face face-right">
+                    <div class="sticker color-blue clickable" data-section="skills" data-item="frontend"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="skills" data-item="backend"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="skills" data-item="devops"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="skills" data-item="database"></div>
+                </div>
+
+                <!-- Cara Izquierda (VERDE) - Sobre mí -->
+                <div class="cube-face face-left">
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green clickable" data-section="about" data-item="bio"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                </div>
+
+                <!-- Cara Superior (AMARILLA) - Educación -->
+                <div class="cube-face face-top">
+                    <div class="sticker color-yellow clickable" data-section="educacion" data-item="1"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow clickable" data-section="educacion" data-item="2"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                </div>
+
+                <!-- Cara Inferior (BLANCA) - Contacto -->
+                <div class="cube-face face-bottom">
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white clickable" data-section="contacto" data-item="form"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Estadísticas (TIMER Y CONTADOR) -->
+    <div class="stats-panel" id="statsPanel">
+        <div class="stat-item">
+            <div class="stat-label">⏱️ Tiempo</div>
+            <div class="stat-value timer-value" id="timer">00:00</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">🎯 Movimientos</div>
+            <div class="stat-value moves-value" id="moves">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Estado</div>
+            <div class="status-value status-playing" id="status">Jugando</div>
+        </div>
+    </div>
+
+    <!-- Panel de Controles (Arrastrable) -->
+    <div class="controls-panel" id="controlsPanel">
+        <div class="panel-header">⋮⋮ CONTROLES</div>
+        <div class="direction-controls">
+            <button class="control-btn btn-up" id="rotateUp">↑</button>
+            <button class="control-btn btn-left" id="rotateLeft">←</button>
+            <button class="control-btn btn-play" id="playBtn" title="Auto-rotar">⟲</button>
+            <button class="control-btn btn-right" id="rotateRight">→</button>
+            <button class="control-btn btn-down" id="rotateDown">↓</button>
+        </div>
+        <button class="shuffle-btn" id="shuffleBtn">🎲 Mezclar</button>
+        <button class="reset-btn" id="resetBtn">↺ Reset</button>
+    </div>
+
+    <!-- Vista de Contenido Fullscreen -->
+    <div id="contentView">
+        <button class="back-to-cube" id="backToCube">← Volver al cubo</button>
+        <div class="content-container">
+            <div class="content-header">
+                <h1 class="content-title" id="contentTitle">Título</h1>
+            </div>
+            <div class="content-body" id="contentBody">
+                Contenido...
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicador de ayuda -->
+    <div class="help-hint">
+        🎮 Arrastra el cubo | 🖱️ Click en cuadrados brillantes | ⏱️ ¡Resuelve el puzzle!
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        const cubeView = document.getElementById('cubeView');
+        const contentView = document.getElementById('contentView');
+        const contentTitle = document.getElementById('contentTitle');
+        const contentBody = document.getElementById('contentBody');
+        const backToCube = document.getElementById('backToCube');
+        const controlsPanel = document.getElementById('controlsPanel');
+        const statsPanel = document.getElementById('statsPanel');
+        const timerDisplay = document.getElementById('timer');
+        const movesDisplay = document.getElementById('moves');
+        const statusDisplay = document.getElementById('status');
+
+        let currentRotationX = -20;
+        let currentRotationY = -30;
+        let isDragging = false;
+        let previousMouseX = 0;
+        let previousMouseY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
+        let animationId = null;
+
+        // Timer y contador
+        let moves = 0;
+        let seconds = 0;
+        let timerInterval = null;
+        let isPlaying = false;
+
+        // Panel arrastrable
+        let panelDragging = false;
+        let panelOffsetX = 0;
+        let panelOffsetY = 0;
+
+        controlsPanel.addEventListener('mousedown', (e) => {
+            if (e.target === controlsPanel || e.target.classList.contains('panel-header')) {
+                panelDragging = true;
+                panelOffsetX = e.clientX - controlsPanel.offsetLeft;
+                panelOffsetY = e.clientY - controlsPanel.offsetTop;
+                controlsPanel.classList.add('dragging');
+                controlsPanel.style.transform = 'none';
+                controlsPanel.style.top = controlsPanel.offsetTop + 'px';
+                controlsPanel.style.right = 'auto';
+                controlsPanel.style.left = controlsPanel.offsetLeft + 'px';
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (panelDragging) {
+                controlsPanel.style.left = (e.clientX - panelOffsetX) + 'px';
+                controlsPanel.style.top = (e.clientY - panelOffsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (panelDragging) {
+                panelDragging = false;
+                controlsPanel.classList.remove('dragging');
+            }
+        });
+
+        // Funciones de timer
+        function startTimer() {
+            if (timerInterval) return;
+            isPlaying = true;
+            statusDisplay.textContent = 'Jugando';
+            statusDisplay.className = 'status-value status-playing';
+
+            timerInterval = setInterval(() => {
+                seconds++;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            seconds = 0;
+            timerDisplay.textContent = '00:00';
+            isPlaying = false;
+            statusDisplay.textContent = 'Listo';
+            statusDisplay.className = 'status-value status-playing';
+        }
+
+        function incrementMoves() {
+            if (!isPlaying) {
+                startTimer();
+            }
+            moves++;
+            movesDisplay.textContent = moves;
+        }
+
+        function resetMoves() {
+            moves = 0;
+            movesDisplay.textContent = '0';
+        }
+
+        // Aplicar rotación inicial
+        updateCubeRotation();
+
+        // Rotación con mouse/touch MEJORADA (más fluida)
+        cube.addEventListener('mousedown', startDrag);
+        cube.addEventListener('touchstart', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            previousMouseX = clientX;
+            previousMouseY = clientY;
+            velocityX = 0;
+            velocityY = 0;
+
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            const deltaX = clientX - previousMouseX;
+            const deltaY = clientY - previousMouseY;
+
+            velocityX = deltaX * 0.8;
+            velocityY = deltaY * 0.8;
+
+            currentRotationY += velocityX;
+            currentRotationX -= velocityY;
+
+            updateCubeRotation();
+
+            previousMouseX = clientX;
+            previousMouseY = clientY;
+        }
+
+        function stopDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+
+            // Inercia al soltar
+            if (Math.abs(velocityX) > 0.5 || Math.abs(velocityY) > 0.5) {
+                applyInertia();
+            }
+        }
+
+        function applyInertia() {
+            if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) {
+                return;
+            }
+
+            currentRotationY += velocityX;
+            currentRotationX -= velocityY;
+            updateCubeRotation();
+
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+
+            animationId = requestAnimationFrame(applyInertia);
+        }
+
+        function updateCubeRotation() {
+            cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+        }
+
+        // Controles direccionales
+        document.getElementById('rotateUp').addEventListener('click', () => {
+            currentRotationX -= 90;
+            updateCubeRotation();
+            incrementMoves();
+        });
+
+        document.getElementById('rotateDown').addEventListener('click', () => {
+            currentRotationX += 90;
+            updateCubeRotation();
+            incrementMoves();
+        });
+
+        document.getElementById('rotateLeft').addEventListener('click', () => {
+            currentRotationY -= 90;
+            updateCubeRotation();
+            incrementMoves();
+        });
+
+        document.getElementById('rotateRight').addEventListener('click', () => {
+            currentRotationY += 90;
+            updateCubeRotation();
+            incrementMoves();
+        });
+
+        // Auto-rotar
+        let autoRotate = null;
+        document.getElementById('playBtn').addEventListener('click', () => {
+            if (autoRotate) {
+                clearInterval(autoRotate);
+                autoRotate = null;
+            } else {
+                autoRotate = setInterval(() => {
+                    currentRotationY += 2;
+                    updateCubeRotation();
+                }, 50);
+            }
+        });
+
+        // Mezclar cubo (modo juego)
+        document.getElementById('shuffleBtn').addEventListener('click', () => {
+            resetMoves();
+            resetTimer();
+
+            let shuffles = 20;
+            const interval = setInterval(() => {
+                const random = Math.random();
+                if (random < 0.5) {
+                    currentRotationX += (Math.random() > 0.5 ? 90 : -90);
+                } else {
+                    currentRotationY += (Math.random() > 0.5 ? 90 : -90);
+                }
+                updateCubeRotation();
+                shuffles--;
+                if (shuffles <= 0) {
+                    clearInterval(interval);
+                    statusDisplay.textContent = '¡Empieza!';
+                }
+            }, 100);
+        });
+
+        // Reset
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            currentRotationX = -20;
+            currentRotationY = -30;
+            updateCubeRotation();
+            resetMoves();
+            resetTimer();
+        });
+
+        // Contenido de ejemplo (igual que antes)
+        const content = {
+            proyectos: {
+                1: {
+                    title: 'E-Commerce Platform',
+                    desc: `
+                        <h2>Descripción del Proyecto</h2>
+                        <p>Plataforma completa de comercio electrónico desarrollada con el stack MEAN (MongoDB, Express, Angular, Node.js).</p>
+
+                        <h3>Características principales:</h3>
+                        <ul>
+                            <li>Gestión de inventario en tiempo real</li>
+                            <li>Sistema de pagos integrado con Stripe</li>
+                            <li>Panel administrativo avanzado</li>
+                            <li>Carrito de compras reactivo</li>
+                            <li>Sistema de reseñas y valoraciones</li>
+                        </ul>
+
+                        <h3>Tecnologías utilizadas:</h3>
+                        <p>Node.js, Angular 15, MongoDB, Express, Stripe API, AWS S3, JWT Authentication</p>
+                    `
+                },
+                2: {
+                    title: 'Dashboard Analytics',
+                    desc: `
+                        <h2>Dashboard de Análisis en Tiempo Real</h2>
+                        <p>Sistema avanzado de visualización de métricas empresariales con actualización en tiempo real mediante WebSockets.</p>
+
+                        <h3>Funcionalidades:</h3>
+                        <ul>
+                            <li>Gráficos interactivos con D3.js</li>
+                            <li>Actualización en tiempo real vía WebSockets</li>
+                            <li>Exportación de datos a Excel/PDF</li>
+                            <li>Sistema de alertas personalizables</li>
+                            <li>Filtros avanzados de datos</li>
+                        </ul>
+                    `
+                },
+                3: {
+                    title: 'Chat Application',
+                    desc: `
+                        <h2>Aplicación de Mensajería Instantánea</h2>
+                        <p>Plataforma de comunicación en tiempo real con arquitectura de microservicios.</p>
+
+                        <h3>Features:</h3>
+                        <ul>
+                            <li>Mensajería instantánea con Socket.io</li>
+                            <li>Canales públicos y privados</li>
+                            <li>Compartición de archivos (hasta 50MB)</li>
+                            <li>Notificaciones push</li>
+                            <li>Búsqueda de mensajes históricos</li>
+                        </ul>
+                    `
+                }
+            },
+            experiencia: {
+                1: { title: 'Senior Full Stack Developer', desc: '<h2>Tech Corp</h2><p><strong>2023 - Actualidad</strong></p><p>Desarrollo de aplicaciones web escalables con MEAN stack. Liderazgo de equipo de 5 desarrolladores. Implementación de arquitecturas de microservicios y cloud computing con AWS.</p>' },
+                2: { title: 'Full Stack Developer', desc: '<h2>Digital Solutions</h2><p><strong>2021 - 2023</strong></p><p>Implementación de soluciones web corporativas. Desarrollo de APIs RESTful y sistemas de gestión empresarial con Node.js y Angular.</p>' },
+                3: { title: 'Frontend Developer', desc: '<h2>StartupXYZ</h2><p><strong>2019 - 2021</strong></p><p>Desarrollo de interfaces modernas con Angular y React. Optimización de rendimiento y diseño responsive. Implementación de PWAs.</p>' }
+            },
+            skills: {
+                frontend: { title: 'Frontend Development', desc: '<h2>Desarrollo Frontend</h2><p>Especialista en frameworks modernos de JavaScript:</p><ul><li>Angular (5+ años)</li><li>React (3+ años)</li><li>Vue.js (2+ años)</li><li>TypeScript</li><li>HTML5/CSS3</li><li>Tailwind CSS</li></ul>' },
+                backend: { title: 'Backend Development', desc: '<h2>Desarrollo Backend</h2><p>Experto en tecnologías del lado del servidor:</p><ul><li>Node.js</li><li>Express</li><li>NestJS</li><li>REST APIs</li><li>GraphQL</li><li>Microservicios</li></ul>' },
+                devops: { title: 'DevOps & Cloud', desc: '<h2>DevOps y Cloud Computing</h2><p>Experiencia en:</p><ul><li>Docker & Kubernetes</li><li>Jenkins / GitLab CI</li><li>AWS (EC2, S3, Lambda, RDS)</li><li>Azure</li><li>Terraform</li></ul>' },
+                database: { title: 'Databases', desc: '<h2>Bases de Datos</h2><p>Dominio de múltiples sistemas de bases de datos:</p><ul><li>MongoDB (NoSQL)</li><li>MySQL</li><li>PostgreSQL</li><li>Redis (caché)</li></ul>' }
+            },
+            about: {
+                bio: { title: 'Sobre Mí', desc: '<h2>Josevi Pérez</h2><p>Full Stack Developer con más de 5 años de experiencia creando soluciones web escalables y eficientes.</p><p>Apasionado por la tecnología, el código limpio y las buenas prácticas. Me especializo en JavaScript/TypeScript y el ecosistema Node.js.</p><p>Siempre en constante aprendizaje y actualización con las últimas tecnologías del mercado.</p>' }
+            },
+            educacion: {
+                1: { title: 'Ingeniería Informática', desc: '<h2>Universidad Politécnica de Valencia</h2><p><strong>2015-2019</strong></p><p>Especialización en desarrollo web y arquitectura de software. Proyecto fin de grado sobre sistemas distribuidos y microservicios.</p>' },
+                2: { title: 'Master en Cloud Computing', desc: '<h2>Universidad Complutense de Madrid</h2><p><strong>2020-2021</strong></p><p>Especialización en AWS y arquitecturas cloud-native. Certificación AWS Solutions Architect Associate.</p>' }
+            },
+            contacto: {
+                form: {
+                    title: 'Contacto',
+                    desc: `
+                        <h2>¿Trabajamos juntos?</h2>
+                        <p>Me encantaría saber más sobre tu proyecto y cómo podría ayudarte.</p>
+
+                        <h3>Información de contacto:</h3>
+                        <p>📧 <strong>Email:</strong> email@josevi.dev</p>
+                        <p>📱 <strong>LinkedIn:</strong> linkedin.com/in/josevi</p>
+                        <p>💻 <strong>GitHub:</strong> github.com/josevi</p>
+                        <p>🐦 <strong>Twitter:</strong> @josevi_dev</p>
+
+                        <p><strong>Disponibilidad:</strong> Actualmente aceptando nuevos proyectos freelance.</p>
+                    `
+                }
+            }
+        };
+
+        // Click en stickers - Cambiar a vista fullscreen
+        document.querySelectorAll('.sticker.clickable').forEach(sticker => {
+            sticker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = sticker.dataset.section;
+                const item = sticker.dataset.item;
+                const data = content[section][item];
+
+                contentTitle.textContent = data.title;
+                contentBody.innerHTML = data.desc;
+
+                cubeView.classList.add('hidden');
+                contentView.classList.add('active');
+                controlsPanel.classList.add('hidden');
+                statsPanel.classList.add('hidden');
+
+                // Pausar timer cuando se ve contenido
+                stopTimer();
+            });
+        });
+
+        // Volver al cubo
+        backToCube.addEventListener('click', () => {
+            contentView.classList.remove('active');
+            cubeView.classList.remove('hidden');
+            controlsPanel.classList.remove('hidden');
+            statsPanel.classList.remove('hidden');
+
+            // Reanudar timer si estaba jugando
+            if (isPlaying) {
+                startTimer();
+            }
+        });
+    </script>
+</body>
+</html>

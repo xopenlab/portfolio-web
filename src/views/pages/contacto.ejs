@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head', { title }) %>
+</head>
+<body class="<%= pageState %> antialiased" x-data x-cloak>
+  <!-- Header/Navigation -->
+  <%- include('../partials/header', { pageState }) %>
+
+  <!-- Page Transition Wrapper -->
+  <div class="page-transition-wrapper">
+    <!-- Main Content -->
+    <main class="contacto-container">
+      <!-- Header de la página -->
+      <header class="page-header">
+        <h1>Contacto</h1>
+        <p class="page-subtitle">¿Hablamos de tu proyecto?</p>
+      </header>
+
+      <!-- Contenido principal: Info + Formulario -->
+      <div class="contacto-content">
+        <!-- Información de contacto -->
+        <aside class="contacto-info">
+          <h2 class="section-title">Información</h2>
+
+          <div class="info-item">
+            <span class="info-icon">📧</span>
+            <div>
+              <p class="info-label">Email</p>
+              <p class="info-value">tu@email.com</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="info-icon">📍</span>
+            <div>
+              <p class="info-label">Ubicación</p>
+              <p class="info-value">Tu ciudad, País</p>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="info-icon">💼</span>
+            <div>
+              <p class="info-label">LinkedIn</p>
+              <a href="#" class="info-link">Ver perfil</a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Formulario de contacto -->
+        <section class="contacto-form-section">
+          <h2 class="section-title">Envía un mensaje</h2>
+          <p class="mb-6 text-gray-600 dark:text-gray-400">
+            Rellena el formulario y me pondré en contacto contigo lo antes posible.
+          </p>
+
+          <!-- Formulario -->
+          <form class="contacto-form" x-data="{ sending: false }">
+            <div class="form-group">
+              <label for="name" class="form-label">Nombre</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="Tu nombre"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="tu@email.com"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="form-label">Mensaje</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                class="form-input"
+                placeholder="Cuéntame sobre tu proyecto..."
+                required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="privacy" required>
+                <span class="text-sm text-gray-600 dark:text-gray-400">
+                  Acepto la <a href="/privacy-policy" class="text-primary-600 hover:underline">política de privacidad</a>
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary w-full" :disabled="sending">
+              <span x-show="!sending">Enviar mensaje</span>
+              <span x-show="sending">Enviando...</span>
+            </button>
+          </form>
+        </section>
+      </div>
+
+      <!-- Bordes decorativos -->
+      <%- include('../partials/components/decorative-borders') %>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

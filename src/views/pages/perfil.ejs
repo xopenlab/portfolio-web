@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head', { title }) %>
+</head>
+<body class="<%= pageState %> antialiased" x-data x-cloak>
+  <!-- Header/Navigation -->
+  <%- include('../partials/header', { pageState }) %>
+
+  <!-- Page Transition Wrapper -->
+  <div class="page-transition-wrapper">
+    <!-- Main Content -->
+    <main class="perfil-container">
+      <!-- Header de la página -->
+      <header class="page-header">
+        <h1>Perfil Profesional</h1>
+        <p class="page-subtitle">Experiencia y formación académica</p>
+      </header>
+
+      <!-- Sección: Sobre mí -->
+      <section class="about-section">
+        <h2 class="section-title">Sobre mí</h2>
+        <div class="about-content">
+          <p class="text-gray-700 dark:text-gray-300">
+            [Espacio para descripción profesional]
+          </p>
+          <p class="text-gray-700 dark:text-gray-300 mt-4">
+            Aquí puedes añadir información sobre tu experiencia, habilidades y enfoque profesional.
+          </p>
+        </div>
+      </section>
+
+      <!-- Sección: Experiencia Laboral -->
+      <section class="experience-section">
+        <h2 class="section-title">Experiencia Laboral</h2>
+        <div class="timeline">
+          <!-- Experiencia placeholder 1 -->
+          <article class="timeline-item">
+            <time class="timeline-date">2024 - Actualidad</time>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Puesto de ejemplo</h3>
+              <p class="timeline-company">Empresa de ejemplo</p>
+              <p class="timeline-description">
+                Descripción de responsabilidades, logros y proyectos destacados en este puesto.
+              </p>
+              <div class="timeline-tags">
+                <span class="badge">Node.js</span>
+                <span class="badge">Express</span>
+                <span class="badge">SQL Server</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Experiencia placeholder 2 -->
+          <article class="timeline-item">
+            <time class="timeline-date">2020 - 2024</time>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Puesto anterior</h3>
+              <p class="timeline-company">Otra empresa</p>
+              <p class="timeline-description">
+                Descripción de responsabilidades, logros y proyectos destacados.
+              </p>
+              <div class="timeline-tags">
+                <span class="badge">React</span>
+                <span class="badge">TypeScript</span>
+                <span class="badge">MongoDB</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Sección: Formación Académica -->
+      <section class="education-section">
+        <h2 class="section-title">Formación Académica</h2>
+        <div class="timeline">
+          <!-- Educación placeholder 1 -->
+          <article class="timeline-item">
+            <time class="timeline-date">2020 - 2024</time>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Titulación de ejemplo</h3>
+              <p class="timeline-institution">Institución educativa</p>
+              <p class="timeline-description">
+                Descripción breve de la titulación y áreas de especialización.
+              </p>
+            </div>
+          </article>
+
+          <!-- Educación placeholder 2 -->
+          <article class="timeline-item">
+            <time class="timeline-date">2015 - 2020</time>
+            <div class="timeline-content">
+              <h3 class="timeline-title">Otra titulación</h3>
+              <p class="timeline-institution">Otra institución</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Bordes decorativos -->
+      <%- include('../partials/components/decorative-borders') %>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

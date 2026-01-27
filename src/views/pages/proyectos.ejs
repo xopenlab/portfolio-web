@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head', { title }) %>
+</head>
+<body class="<%= pageState %> antialiased" x-data x-cloak>
+  <!-- Header/Navigation -->
+  <%- include('../partials/header', { pageState }) %>
+
+  <!-- Page Transition Wrapper -->
+  <div class="page-transition-wrapper">
+    <!-- Main Content -->
+    <main class="proyectos-container">
+      <!-- Header de la página -->
+      <header class="page-header">
+        <h1>Proyectos</h1>
+        <p class="page-subtitle">Trabajos destacados</p>
+      </header>
+
+      <!-- Grid de proyectos con filtros -->
+      <section class="projects-grid" x-data="{ filter: 'all' }">
+        <!-- Filtros opcionales -->
+        <div class="filters">
+          <button @click="filter = 'all'" :class="{ active: filter === 'all' }">
+            Todos
+          </button>
+          <button @click="filter = 'backend'" :class="{ active: filter === 'backend' }">
+            Backend
+          </button>
+          <button @click="filter = 'fullstack'" :class="{ active: filter === 'fullstack' }">
+            Full Stack
+          </button>
+        </div>
+
+        <!-- Grid de proyectos (placeholders) -->
+        <div class="projects-list">
+          <!-- Proyecto placeholder 1 -->
+          <article class="project-card">
+            <div class="project-logo-placeholder"></div>
+            <h3>Proyecto de ejemplo 1</h3>
+            <p class="project-company">Empresa</p>
+            <p class="project-description">
+              Descripción breve del proyecto y las tecnologías utilizadas.
+            </p>
+            <div class="project-tags">
+              <span class="badge">Node.js</span>
+              <span class="badge">Express</span>
+              <span class="badge">SQL Server</span>
+            </div>
+          </article>
+
+          <!-- Proyecto placeholder 2 -->
+          <article class="project-card">
+            <div class="project-logo-placeholder"></div>
+            <h3>Proyecto de ejemplo 2</h3>
+            <p class="project-company">Empresa</p>
+            <p class="project-description">
+              Descripción breve del proyecto y las tecnologías utilizadas.
+            </p>
+            <div class="project-tags">
+              <span class="badge">React</span>
+              <span class="badge">TypeScript</span>
+              <span class="badge">MongoDB</span>
+            </div>
+          </article>
+
+          <!-- Proyecto placeholder 3 -->
+          <article class="project-card">
+            <div class="project-logo-placeholder"></div>
+            <h3>Proyecto de ejemplo 3</h3>
+            <p class="project-company">Empresa</p>
+            <p class="project-description">
+              Descripción breve del proyecto y las tecnologías utilizadas.
+            </p>
+            <div class="project-tags">
+              <span class="badge">PHP</span>
+              <span class="badge">Laravel</span>
+              <span class="badge">MySQL</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Bordes decorativos -->
+      <%- include('../partials/components/decorative-borders') %>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

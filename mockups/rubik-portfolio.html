@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Josevi Pérez - Portfolio Interactivo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        /* Vista del Cubo */
+        #cubeView {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #cubeView.hidden {
+            opacity: 0;
+            transform: scale(0.92);
+            pointer-events: none;
+        }
+
+        .scene {
+            width: 600px;
+            height: 600px;
+            perspective: 1500px;
+        }
+
+        .cube-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.05s linear;
+            cursor: grab;
+        }
+
+        .cube-container:active {
+            cursor: grabbing;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            background: #000;
+            border: 10px solid #1a1a1a;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            padding: 5px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+            backface-visibility: visible;
+        }
+
+        .face-front  { transform: translateZ(180px); }
+        .face-back   { transform: rotateY(180deg) translateZ(180px); }
+        .face-right  { transform: rotateY(90deg) translateZ(180px); }
+        .face-left   { transform: rotateY(-90deg) translateZ(180px); }
+        .face-top    { transform: rotateX(90deg) translateZ(180px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(180px); }
+
+        .sticker {
+            border: 3px solid #1a1a1a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sticker::before {
+            content: attr(data-label);
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .sticker.clickable::before {
+            opacity: 1;
+        }
+
+        .sticker.clickable:hover {
+            transform: scale(0.92);
+            filter: brightness(1.3);
+            box-shadow:
+                0 0 30px rgba(255, 255, 255, 0.8),
+                inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        .sticker.clickable:hover::before {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 0.75rem;
+        }
+
+        /* Colores por cara */
+        .color-red { background: #B71234; }
+        .color-blue { background: #0046AD; }
+        .color-green { background: #009B48; }
+        .color-yellow { background: #FFD500; }
+        .color-orange { background: #FF5800; }
+        .color-white { background: #FFFFFF; }
+
+        /* Panel de Ayuda */
+        .help-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 3rem;
+            color: white;
+            z-index: 200;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .help-panel h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .help-panel h2 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .help-panel p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .help-panel .start-btn {
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .help-panel .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            color: white;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .legend.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #000;
+        }
+
+        /* Vista de Contenido */
+        #contentView {
+            position: fixed;
+            inset: 0;
+            background: white;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 300;
+            pointer-events: none;
+        }
+
+        #contentView.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            min-height: 100vh;
+        }
+
+        .back-to-cube {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            padding: 1rem 2rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 400;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        #contentView.active .back-to-cube {
+            opacity: 1;
+            transform: translateX(0);
+            transition-delay: 0.2s;
+        }
+
+        .back-to-cube:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 3px solid #eee;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #contentView.active .content-header {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.3s;
+        }
+
+        .content-title {
+            font-size: 3.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .content-body {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: #444;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #contentView.active .content-body {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.4s;
+        }
+
+        .content-body h2 {
+            font-size: 2rem;
+            color: #333;
+            margin: 2rem 0 1rem;
+        }
+
+        .content-body h3 {
+            font-size: 1.5rem;
+            color: #555;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .content-body ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        .content-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content-body strong {
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .scene { width: 350px; height: 350px; }
+            .cube-face { width: 210px; height: 210px; }
+            .face-front, .face-back, .face-right, .face-left, .face-top, .face-bottom { transform: translateZ(105px); }
+            .face-back { transform: rotateY(180deg) translateZ(105px); }
+            .face-right { transform: rotateY(90deg) translateZ(105px); }
+            .face-left { transform: rotateY(-90deg) translateZ(105px); }
+            .face-top { transform: rotateX(90deg) translateZ(105px); }
+            .face-bottom { transform: rotateX(-90deg) translateZ(105px); }
+            .help-panel { padding: 2rem; max-width: 90%; }
+            .help-panel h1 { font-size: 2rem; }
+            .help-panel h2 { font-size: 1.2rem; }
+            .legend { flex-direction: column; gap: 0.5rem; }
+            .content-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Panel de Bienvenida -->
+    <div class="help-panel" id="welcomePanel">
+        <h1>Josevi Pérez</h1>
+        <h2>Full Stack Developer</h2>
+        <p>
+            Explora mi portfolio de una forma única e interactiva.<br>
+            <strong>Rota el cubo 3D</strong> arrastrando con el mouse y <strong>haz clic</strong> en los cuadrados para descubrir mi experiencia, proyectos y habilidades.
+        </p>
+        <button class="start-btn" onclick="startExperience()">🚀 Comenzar</button>
+    </div>
+
+    <!-- Vista del Cubo -->
+    <div id="cubeView" style="opacity: 0;">
+        <div class="scene">
+            <div class="cube-container" id="cube">
+                <!-- Cara Frontal (ROJA) - Proyectos -->
+                <div class="cube-face face-front">
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyecto1" data-label="E-Commerce"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyecto2" data-label="Dashboard"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red clickable" data-section="proyecto3" data-label="Chat App"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red"></div>
+                    <div class="sticker color-red"></div>
+                </div>
+
+                <!-- Cara Trasera (NARANJA) - Experiencia -->
+                <div class="cube-face face-back">
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="exp1" data-label="Senior Dev"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="exp2" data-label="Full Stack"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange clickable" data-section="exp3" data-label="Frontend"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange"></div>
+                    <div class="sticker color-orange"></div>
+                </div>
+
+                <!-- Cara Derecha (AZUL) - Skills -->
+                <div class="cube-face face-right">
+                    <div class="sticker color-blue clickable" data-section="frontend" data-label="Frontend"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="backend" data-label="Backend"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="devops" data-label="DevOps"></div>
+                    <div class="sticker color-blue"></div>
+                    <div class="sticker color-blue clickable" data-section="database" data-label="Databases"></div>
+                </div>
+
+                <!-- Cara Izquierda (VERDE) - Sobre mí -->
+                <div class="cube-face face-left">
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green clickable" data-section="about" data-label="Sobre Mí"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                    <div class="sticker color-green"></div>
+                </div>
+
+                <!-- Cara Superior (AMARILLA) - Educación -->
+                <div class="cube-face face-top">
+                    <div class="sticker color-yellow clickable" data-section="edu1" data-label="Ingeniería"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow clickable" data-section="edu2" data-label="Master"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                    <div class="sticker color-yellow"></div>
+                </div>
+
+                <!-- Cara Inferior (BLANCA) - Contacto -->
+                <div class="cube-face face-bottom">
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white clickable" data-section="contacto" data-label="Contacto"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                    <div class="sticker color-white"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leyenda -->
+    <div class="legend" style="display: none;" id="legend">
+        <div class="legend-item">
+            <div class="legend-color color-red"></div>
+            <span>Proyectos</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color color-orange"></div>
+            <span>Experiencia</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color color-blue"></div>
+            <span>Skills</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color color-green"></div>
+            <span>Sobre mí</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color color-yellow"></div>
+            <span>Educación</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color color-white"></div>
+            <span>Contacto</span>
+        </div>
+    </div>
+
+    <!-- Vista de Contenido -->
+    <div id="contentView">
+        <button class="back-to-cube" id="backToCube">← Volver al cubo</button>
+        <div class="content-container">
+            <div class="content-header">
+                <h1 class="content-title" id="contentTitle">Título</h1>
+                <p class="content-subtitle" id="contentSubtitle">Subtítulo</p>
+            </div>
+            <div class="content-body" id="contentBody">Contenido...</div>
+        </div>
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        const cubeView = document.getElementById('cubeView');
+        const contentView = document.getElementById('contentView');
+        const welcomePanel = document.getElementById('welcomePanel');
+        const legend = document.getElementById('legend');
+
+        let currentRotationX = -25;
+        let currentRotationY = -35;
+        let isDragging = false;
+        let previousMouseX = 0;
+        let previousMouseY = 0;
+        let velocityX = 0;
+        let velocityY = 0;
+        let animationId = null;
+
+        function startExperience() {
+            welcomePanel.style.animation = 'fadeOut 0.5s ease';
+            setTimeout(() => {
+                welcomePanel.style.display = 'none';
+                cubeView.style.opacity = '1';
+                legend.style.display = 'flex';
+                setTimeout(() => {
+                    legend.classList.add('visible');
+                }, 50);
+            }, 500);
+        }
+
+        // Rotación del cubo con mouse
+        cube.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
+            velocityX = 0;
+            velocityY = 0;
+            if (animationId) cancelAnimationFrame(animationId);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const deltaX = e.clientX - previousMouseX;
+            const deltaY = e.clientY - previousMouseY;
+
+            velocityX = deltaX * 0.8;
+            velocityY = deltaY * 0.8;
+
+            currentRotationY += velocityX;
+            currentRotationX -= velocityY;
+
+            updateCubeRotation();
+
+            previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (Math.abs(velocityX) > 0.5 || Math.abs(velocityY) > 0.5) {
+                applyInertia();
+            }
+        });
+
+        function applyInertia() {
+            if (Math.abs(velocityX) < 0.1 && Math.abs(velocityY) < 0.1) return;
+
+            currentRotationY += velocityX;
+            currentRotationX -= velocityY;
+            updateCubeRotation();
+
+            velocityX *= 0.95;
+            velocityY *= 0.95;
+
+            animationId = requestAnimationFrame(applyInertia);
+        }
+
+        function updateCubeRotation() {
+            cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+        }
+
+        // Contenido del portfolio
+        const portfolioContent = {
+            proyecto1: {
+                title: 'Plataforma E-Commerce Escalable',
+                subtitle: 'Node.js • Angular • MongoDB • AWS',
+                body: `
+                    <h2>Descripción del Proyecto</h2>
+                    <p>Desarrollo completo de una plataforma de comercio electrónico con arquitectura de microservicios, capaz de gestionar más de 10,000 transacciones diarias.</p>
+
+                    <h3>Características Principales:</h3>
+                    <ul>
+                        <li><strong>Gestión de inventario en tiempo real</strong> con sincronización multi-almacén</li>
+                        <li><strong>Sistema de pagos integrado</strong> con Stripe y PayPal</li>
+                        <li><strong>Panel administrativo avanzado</strong> con analytics en tiempo real</li>
+                        <li><strong>Carrito de compras reactivo</strong> con persistencia en múltiples dispositivos</li>
+                        <li><strong>Sistema de recomendaciones</strong> basado en ML</li>
+                    </ul>
+
+                    <h3>Stack Tecnológico:</h3>
+                    <p>Node.js, Express, Angular 15, MongoDB, Redis, AWS (EC2, S3, Lambda), Docker, Jenkins</p>
+
+                    <h3>Resultados:</h3>
+                    <ul>
+                        <li>Aumento del 45% en conversiones</li>
+                        <li>Reducción del 60% en tiempo de carga</li>
+                        <li>99.9% de uptime en producción</li>
+                    </ul>
+                `
+            },
+            proyecto2: {
+                title: 'Dashboard Analytics en Tiempo Real',
+                subtitle: 'React • D3.js • WebSockets • PostgreSQL',
+                body: `
+                    <h2>Sistema de Visualización de Datos</h2>
+                    <p>Dashboard empresarial con actualización en tiempo real mediante WebSockets para visualización de KPIs y métricas de negocio.</p>
+
+                    <h3>Funcionalidades:</h3>
+                    <ul>
+                        <li><strong>Gráficos interactivos</strong> con D3.js y Chart.js</li>
+                        <li><strong>Actualización en tiempo real</strong> vía WebSockets</li>
+                        <li><strong>Exportación de datos</strong> a Excel, PDF y CSV</li>
+                        <li><strong>Sistema de alertas</strong> personalizables por usuario</li>
+                        <li><strong>Filtros avanzados</strong> con query builder visual</li>
+                    </ul>
+
+                    <h3>Impacto:</h3>
+                    <p>Reducción del 70% en el tiempo de generación de reportes y aumento del 40% en la toma de decisiones basadas en datos.</p>
+                `
+            },
+            proyecto3: {
+                title: 'Aplicación de Mensajería Instantánea',
+                subtitle: 'Socket.io • Vue.js • Redis • AWS S3',
+                body: `
+                    <h2>Plataforma de Comunicación en Tiempo Real</h2>
+                    <p>Sistema de mensajería con arquitectura de microservicios altamente escalable.</p>
+
+                    <h3>Features:</h3>
+                    <ul>
+                        <li><strong>Mensajería instantánea</strong> con Socket.io</li>
+                        <li><strong>Canales públicos y privados</strong></li>
+                        <li><strong>Compartición de archivos</strong> hasta 100MB</li>
+                        <li><strong>Notificaciones push</strong> multiplataforma</li>
+                        <li><strong>Búsqueda full-text</strong> en historial de mensajes</li>
+                        <li><strong>Videollamadas</strong> integradas con WebRTC</li>
+                    </ul>
+                `
+            },
+            exp1: {
+                title: 'Senior Full Stack Developer',
+                subtitle: 'Tech Corp • 2023 - Actualidad',
+                body: `
+                    <h2>Responsabilidades</h2>
+                    <ul>
+                        <li>Liderazgo técnico de equipo de 5 desarrolladores</li>
+                        <li>Arquitectura de microservicios con Node.js y AWS</li>
+                        <li>Implementación de CI/CD con Jenkins y GitLab</li>
+                        <li>Code reviews y mentoring de desarrolladores junior</li>
+                    </ul>
+
+                    <h3>Logros:</h3>
+                    <ul>
+                        <li>Reducción del 40% en tiempo de deployment</li>
+                        <li>Implementación de arquitectura serverless</li>
+                        <li>Migración exitosa de monolito a microservicios</li>
+                    </ul>
+                `
+            },
+            exp2: {
+                title: 'Full Stack Developer',
+                subtitle: 'Digital Solutions • 2021 - 2023',
+                body: `
+                    <h2>Proyectos Destacados</h2>
+                    <ul>
+                        <li>Desarrollo de ERP corporativo con MEAN stack</li>
+                        <li>APIs RESTful y GraphQL</li>
+                        <li>Integración con sistemas legacy</li>
+                    </ul>
+                `
+            },
+            exp3: {
+                title: 'Frontend Developer',
+                subtitle: 'StartupXYZ • 2019 - 2021',
+                body: `
+                    <h2>Experiencia</h2>
+                    <ul>
+                        <li>Desarrollo de SPAs con Angular y React</li>
+                        <li>Optimización de rendimiento web</li>
+                        <li>Implementación de PWAs</li>
+                    </ul>
+                `
+            },
+            frontend: {
+                title: 'Desarrollo Frontend',
+                subtitle: 'Frameworks Modernos • Diseño Responsivo • Performance',
+                body: `
+                    <h2>Tecnologías Dominadas:</h2>
+                    <ul>
+                        <li><strong>Angular</strong> (5+ años) - Experto en RxJS, NgRx, Angular Material</li>
+                        <li><strong>React</strong> (3+ años) - Hooks, Redux, Next.js, React Query</li>
+                        <li><strong>Vue.js</strong> (2+ años) - Composition API, Vuex, Nuxt.js</li>
+                        <li><strong>TypeScript</strong> - Tipado avanzado, decoradores, generics</li>
+                        <li><strong>HTML5/CSS3</strong> - Semántica, accesibilidad, Grid, Flexbox</li>
+                        <li><strong>Tailwind CSS</strong> - Diseño utility-first, customización</li>
+                    </ul>
+                `
+            },
+            backend: {
+                title: 'Desarrollo Backend',
+                subtitle: 'APIs • Microservicios • Arquitectura',
+                body: `
+                    <h2>Stack Backend:</h2>
+                    <ul>
+                        <li><strong>Node.js</strong> - Event loop, streams, clusters</li>
+                        <li><strong>Express</strong> - Middleware, routing, error handling</li>
+                        <li><strong>NestJS</strong> - Dependency injection, decoradores, modules</li>
+                        <li><strong>REST APIs</strong> - Diseño RESTful, versionado, HATEOAS</li>
+                        <li><strong>GraphQL</strong> - Schemas, resolvers, Apollo Server</li>
+                        <li><strong>Microservicios</strong> - Event-driven, SAGA, CQRS</li>
+                    </ul>
+                `
+            },
+            devops: {
+                title: 'DevOps & Cloud',
+                subtitle: 'CI/CD • Containerización • Cloud Computing',
+                body: `
+                    <h2>Herramientas y Plataformas:</h2>
+                    <ul>
+                        <li><strong>Docker</strong> - Multi-stage builds, compose, swarm</li>
+                        <li><strong>Kubernetes</strong> - Deployments, services, ingress, helm</li>
+                        <li><strong>Jenkins</strong> - Pipelines, Blue Ocean, plugins</li>
+                        <li><strong>GitLab CI</strong> - .gitlab-ci.yml, runners, artifacts</li>
+                        <li><strong>AWS</strong> - EC2, S3, Lambda, RDS, CloudFront, Route53</li>
+                        <li><strong>Terraform</strong> - Infrastructure as Code</li>
+                    </ul>
+                `
+            },
+            database: {
+                title: 'Bases de Datos',
+                subtitle: 'SQL • NoSQL • Optimización',
+                body: `
+                    <h2>Experiencia en:</h2>
+                    <ul>
+                        <li><strong>MongoDB</strong> - Aggregation, indexing, replication, sharding</li>
+                        <li><strong>MySQL</strong> - Query optimization, transactions, stored procedures</li>
+                        <li><strong>PostgreSQL</strong> - Advanced SQL, JSONB, partitioning</li>
+                        <li><strong>Redis</strong> - Caching, pub/sub, data structures</li>
+                        <li><strong>Elasticsearch</strong> - Full-text search, analytics</li>
+                    </ul>
+                `
+            },
+            about: {
+                title: 'Sobre Mí',
+                subtitle: 'Full Stack Developer • Arquitecto de Software • Tech Lead',
+                body: `
+                    <h2>Josevi Pérez</h2>
+                    <p>Full Stack Developer con más de 5 años de experiencia especializado en JavaScript/TypeScript y arquitecturas escalables.</p>
+
+                    <h3>Mi Enfoque:</h3>
+                    <ul>
+                        <li><strong>Código limpio y mantenible</strong> - Sigo principios SOLID y patrones de diseño</li>
+                        <li><strong>Arquitectura escalable</strong> - Diseño sistemas preparados para crecer</li>
+                        <li><strong>Aprendizaje continuo</strong> - Siempre actualizado con las últimas tecnologías</li>
+                        <li><strong>Trabajo en equipo</strong> - Comunicación efectiva y mentoría</li>
+                    </ul>
+
+                    <h3>Valores:</h3>
+                    <p>Calidad sobre cantidad, simplicidad sobre complejidad, y resultados medibles sobre métricas vanidosas.</p>
+                `
+            },
+            edu1: {
+                title: 'Ingeniería Informática',
+                subtitle: 'Universidad Politécnica de Valencia • 2015-2019',
+                body: `
+                    <h2>Formación Académica</h2>
+                    <p>Grado en Ingeniería Informática con especialización en Desarrollo Web y Arquitectura de Software.</p>
+
+                    <h3>Proyecto Fin de Grado:</h3>
+                    <p>Sistema distribuido de procesamiento de datos en tiempo real con Apache Kafka y Node.js. Calificación: Matrícula de Honor.</p>
+                `
+            },
+            edu2: {
+                title: 'Master en Cloud Computing',
+                subtitle: 'Universidad Complutense de Madrid • 2020-2021',
+                body: `
+                    <h2>Especialización en Cloud</h2>
+                    <p>Master oficial en Cloud Computing y Arquitecturas Cloud-Native.</p>
+
+                    <h3>Certificaciones:</h3>
+                    <ul>
+                        <li>AWS Solutions Architect Associate</li>
+                        <li>Docker Certified Associate</li>
+                        <li>Kubernetes Administrator (CKA)</li>
+                    </ul>
+                `
+            },
+            contacto: {
+                title: 'Contacto',
+                subtitle: '¿Trabajamos juntos?',
+                body: `
+                    <h2>Información de Contacto</h2>
+                    <p>Me encantaría saber más sobre tu proyecto y cómo podría ayudarte.</p>
+
+                    <h3>Email:</h3>
+                    <p><strong>email@josevi.dev</strong></p>
+
+                    <h3>Redes Sociales:</h3>
+                    <ul>
+                        <li><strong>LinkedIn:</strong> linkedin.com/in/josevi</li>
+                        <li><strong>GitHub:</strong> github.com/josevi</li>
+                        <li><strong>Twitter:</strong> @josevi_dev</li>
+                    </ul>
+
+                    <h3>Disponibilidad:</h3>
+                    <p>Actualmente aceptando nuevos proyectos freelance y oportunidades laborales interesantes.</p>
+                `
+            }
+        };
+
+        // Click en stickers
+        document.querySelectorAll('.sticker.clickable').forEach(sticker => {
+            sticker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const section = sticker.dataset.section;
+                const data = portfolioContent[section];
+
+                if (data) {
+                    document.getElementById('contentTitle').textContent = data.title;
+                    document.getElementById('contentSubtitle').textContent = data.subtitle;
+                    document.getElementById('contentBody').innerHTML = data.body;
+
+                    legend.classList.remove('visible');
+                    setTimeout(() => {
+                        contentView.classList.add('active');
+                        cubeView.classList.add('hidden');
+                        legend.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+
+        // Volver al cubo
+        document.getElementById('backToCube').addEventListener('click', () => {
+            contentView.classList.remove('active');
+            cubeView.classList.remove('hidden');
+            setTimeout(() => {
+                legend.style.display = 'flex';
+                setTimeout(() => {
+                    legend.classList.add('visible');
+                }, 50);
+            }, 200);
+        });
+
+        // Initialize
+        updateCubeRotation();
+    </script>
+</body>
+</html>

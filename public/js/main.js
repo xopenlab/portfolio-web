@@ -1,3 +1,19 @@
+// Los stores de Alpine.js están en alpine-setup.js (cargado antes de Alpine.js CDN)
+
+// Importar utilidades
+import { initPageTransitions } from './utils/transitions.js';
+import { initFloatingNav } from './utils/floating-nav.js';
+import { initFloatingScrollTop } from './utils/floating-scroll-top.js';
+
+// Inicializar transiciones de página
+initPageTransitions();
+
+// Inicializar botón flotante de navegación
+initFloatingNav();
+
+// Inicializar botón flotante de scroll to top
+initFloatingScrollTop();
+
 // JavaScript principal de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 Portfolio cargado correctamente');

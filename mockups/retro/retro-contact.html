@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Formulario de Contacto Retro Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            padding: 2rem;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Efecto CRT Scanlines */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Título estilo "Insert Coin" */
+        .game-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .insert-coin {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            color: #ffff00;
+            text-shadow: 0 0 20px #ffff00, 0 0 40px #ffff00;
+            animation: blink 1s step-start infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .game-subtitle {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1.2rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        /* Contenedor principal estilo arcade machine */
+        .arcade-container {
+            border: 6px solid #00ff41;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow:
+                0 0 30px rgba(0, 255, 65, 0.5),
+                inset 0 0 30px rgba(0, 255, 65, 0.1);
+            padding: 2rem;
+        }
+
+        /* Header del formulario */
+        .form-header {
+            text-align: center;
+            padding: 1.5rem;
+            border: 4px solid #ff10f0;
+            margin-bottom: 2rem;
+            background: rgba(255, 16, 240, 0.05);
+        }
+
+        .form-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.8rem;
+            color: #ff10f0;
+            text-shadow: 0 0 20px #ff10f0;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .form-instructions {
+            font-family: 'Pixelify Sans', cursive;
+            color: #00f0ff;
+            font-size: 1rem;
+        }
+
+        /* Grid del formulario */
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        /* Campo de formulario */
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .form-input,
+        .form-textarea {
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            padding: 1rem;
+            border: 3px solid #00ff41;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff41;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            box-shadow: 0 0 20px #00ff41;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(0, 255, 65, 0.3);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Contador de caracteres */
+        .char-counter {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.85rem;
+            color: #00f0ff;
+            text-align: right;
+        }
+
+        /* Botón de envío */
+        .submit-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .submit-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1rem;
+            padding: 1.2rem 3rem;
+            border: 4px solid #ff10f0;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff10f0;
+            text-shadow: 0 0 10px #ff10f0;
+            box-shadow: 0 0 20px rgba(255, 16, 240, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .submit-btn:hover {
+            background: #ff10f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 40px #ff10f0;
+            transform: scale(1.05);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Info de contacto alternativa */
+        .contact-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border: 3px solid #00f0ff;
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .contact-info-title {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1.2rem;
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            border: 2px solid #00f0ff;
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            box-shadow: 0 0 20px #00f0ff;
+            transform: translateY(-3px);
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        .contact-text {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: #f0f0f0;
+        }
+
+        /* Validación visual */
+        .form-input:valid {
+            border-color: #00ff41;
+        }
+
+        .form-input:invalid:not(:placeholder-shown) {
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Footer con score */
+        .form-footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-top: 3px solid #ffff00;
+            text-align: center;
+            font-family: 'Pixelify Sans', cursive;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-title {
+                font-size: 1.2rem;
+            }
+
+            .insert-coin {
+                font-size: 1rem;
+            }
+
+            .arcade-container {
+                padding: 1rem;
+            }
+
+            .submit-btn {
+                font-size: 0.9rem;
+                padding: 1rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Título del juego -->
+        <div class="game-title">
+            <div class="insert-coin">▼ INSERT COIN ▼</div>
+            <div class="game-subtitle">TO START COMMUNICATION</div>
+        </div>
+
+        <!-- Contenedor arcade -->
+        <div class="arcade-container">
+            <!-- Header del formulario -->
+            <div class="form-header">
+                <h2 class="form-title">PLAYER 1<br>ENTER NAME</h2>
+                <p class="form-instructions">▶ Complete los datos para iniciar el juego</p>
+            </div>
+
+            <!-- Formulario -->
+            <form class="form-grid">
+                <!-- Nombre -->
+                <div class="form-field">
+                    <label class="form-label" for="name">▓ NOMBRE</label>
+                    <input
+                        type="text"
+                        id="name"
+                        class="form-input"
+                        placeholder="Ingresa tu nombre..."
+                        required
+                    >
+                </div>
+
+                <!-- Email -->
+                <div class="form-field">
+                    <label class="form-label" for="email">▓ EMAIL</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-input"
+                        placeholder="tu@email.com"
+                        required
+                    >
+                </div>
+
+                <!-- Asunto -->
+                <div class="form-field">
+                    <label class="form-label" for="subject">▓ ASUNTO</label>
+                    <input
+                        type="text"
+                        id="subject"
+                        class="form-input"
+                        placeholder="¿De qué quieres hablar?"
+                        required
+                    >
+                </div>
+
+                <!-- Mensaje -->
+                <div class="form-field">
+                    <label class="form-label" for="message">▓ MENSAJE</label>
+                    <textarea
+                        id="message"
+                        class="form-textarea"
+                        placeholder="Escribe tu mensaje aquí..."
+                        required
+                    ></textarea>
+                    <div class="char-counter">0 / 500 caracteres</div>
+                </div>
+
+                <!-- Botón submit -->
+                <div class="submit-container">
+                    <button type="submit" class="submit-btn">▶ START GAME ◀</button>
+                </div>
+            </form>
+
+            <!-- Información de contacto alternativa -->
+            <div class="contact-info">
+                <h3 class="contact-info-title">▼ OTROS MÉTODOS DE CONTACTO ▼</h3>
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <span class="contact-icon">✉</span>
+                        <span class="contact-text">email@josevi.dev</span>
+                    </div>
+                    <div class="contact-method">
+                        <span class="contact-icon">◆</span>
+                        <span class="contact-text">linkedin.com/in/josevi</span>
+                    </div>
+                    <div class="contact-method">
+                        <span class="contact-icon">★</span>
+                        <span class="contact-text">github.com/josevi</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="form-footer">
+                ★ PRESS START TO CONTINUE ★
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contador de caracteres simple
+        const textarea = document.getElementById('message');
+        const counter = document.querySelector('.char-counter');
+
+        textarea.addEventListener('input', (e) => {
+            const length = e.target.value.length;
+            counter.textContent = `${length} / 500 caracteres`;
+
+            if (length > 500) {
+                counter.style.color = '#ff0000';
+                counter.style.textShadow = '0 0 10px #ff0000';
+            } else {
+                counter.style.color = '#00f0ff';
+                counter.style.textShadow = 'none';
+            }
+        });
+
+        // Prevenir submit para demo
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('🎮 GAME STARTED! Mensaje enviado con éxito.');
+        });
+    </script>
+</body>
+</html>

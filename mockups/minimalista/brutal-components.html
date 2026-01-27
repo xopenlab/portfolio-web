@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Componentes Brutalismo Suave</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            color: #000000;
+            font-family: 'DM Sans', sans-serif;
+            padding: 3rem 2rem;
+            line-height: 1.6;
+        }
+
+        body.dark {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 6rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #000000;
+        }
+
+        body.dark .section-title {
+            border-bottom-color: #ffffff;
+        }
+
+        /* BOTONES */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 1rem 2rem;
+            border: 3px solid #000000;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        body.dark .btn {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .btn-filled {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark .btn-filled {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .btn-filled:hover {
+            background: #1e3a8a;
+            border-color: #1e3a8a;
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .btn-filled:hover {
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        .btn-outline:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .btn-outline:hover {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        .btn-accent {
+            background: #1e3a8a;
+            border-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        .btn-accent:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .btn-accent:hover {
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            border: 3px solid #000000;
+            padding: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        body.dark .card {
+            border-color: #ffffff;
+        }
+
+        .card:hover {
+            transform: translate(-8px, -8px);
+            box-shadow: 8px 8px 0 #000000;
+        }
+
+        body.dark .card:hover {
+            box-shadow: 8px 8px 0 #ffffff;
+        }
+
+        .card-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-description {
+            line-height: 1.8;
+            color: #000000;
+        }
+
+        body.dark .card-description {
+            color: #ffffff;
+        }
+
+        /* BADGES/TAGS */
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid #000000;
+            background: transparent;
+        }
+
+        body.dark .badge {
+            border-color: #ffffff;
+        }
+
+        .badge-filled {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        body.dark .badge-filled {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .badge-accent {
+            background: #1e3a8a;
+            border-color: #1e3a8a;
+            color: #ffffff;
+        }
+
+        /* PROGRESS BARS */
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-label {
+            font-weight: 500;
+            font-size: 1.125rem;
+        }
+
+        .progress-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: transparent;
+            border: 2px solid #000000;
+            overflow: hidden;
+        }
+
+        body.dark .progress-bar {
+            border-color: #ffffff;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000000;
+            transition: width 1s ease;
+        }
+
+        body.dark .progress-fill {
+            background: #ffffff;
+        }
+
+        .progress-fill.accent {
+            background: #1e3a8a;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            border-left: 3px solid #000000;
+            padding-left: 2rem;
+        }
+
+        body.dark .timeline {
+            border-left-color: #ffffff;
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: #000000;
+            border: 3px solid #000000;
+        }
+
+        body.dark .timeline-item::before {
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .timeline-item.accent::before {
+            background: #1e3a8a;
+            border-color: #1e3a8a;
+        }
+
+        .timeline-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .timeline-description {
+            line-height: 1.8;
+            color: #000000;
+        }
+
+        body.dark .timeline-description {
+            color: #ffffff;
+        }
+
+        /* INPUTS */
+        .form-field {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            padding: 1rem;
+            border: 3px solid #000000;
+            background: transparent;
+            color: #000000;
+            transition: all 0.2s ease;
+        }
+
+        body.dark .form-input {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .form-input:focus {
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Toggle para dark mode */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+        body.dark .theme-toggle {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Modo Oscuro</button>
+
+    <div class="container">
+        <!-- BOTONES -->
+        <section class="section">
+            <h2 class="section-title">Botones</h2>
+            <div class="buttons-grid">
+                <button class="btn btn-filled">Botón Principal</button>
+                <button class="btn btn-outline">Botón Secundario</button>
+                <button class="btn btn-accent">Botón Acento</button>
+            </div>
+        </section>
+
+        <!-- CARDS -->
+        <section class="section">
+            <h2 class="section-title">Cards</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-number">01</div>
+                    <h3 class="card-title">MEAN Stack</h3>
+                    <p class="card-description">
+                        Desarrollo completo con MongoDB, Express, Angular y Node.js.
+                        Arquitecturas escalables y modernas.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-number">02</div>
+                    <h3 class="card-title">Arquitectura</h3>
+                    <p class="card-description">
+                        Diseño de sistemas distribuidos, microservicios y
+                        soluciones cloud-native con AWS.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-number">03</div>
+                    <h3 class="card-title">DevOps</h3>
+                    <p class="card-description">
+                        CI/CD, Docker, Jenkins, GitLab CI.
+                        Automatización y pipelines de desarrollo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BADGES -->
+        <section class="section">
+            <h2 class="section-title">Badges / Tech Stack</h2>
+            <div class="badges-container">
+                <span class="badge badge-filled">JavaScript</span>
+                <span class="badge">TypeScript</span>
+                <span class="badge badge-accent">Node.js</span>
+                <span class="badge">Angular</span>
+                <span class="badge badge-filled">Express</span>
+                <span class="badge">MongoDB</span>
+                <span class="badge badge-accent">MySQL</span>
+                <span class="badge">Docker</span>
+                <span class="badge badge-filled">AWS</span>
+                <span class="badge">Git</span>
+            </div>
+        </section>
+
+        <!-- PROGRESS BARS -->
+        <section class="section">
+            <h2 class="section-title">Progress Bars (Skills)</h2>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">JavaScript</span>
+                    <span class="progress-value">95%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill accent" style="width: 95%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">Node.js</span>
+                    <span class="progress-value">90%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">Angular</span>
+                    <span class="progress-value">85%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill accent" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span class="progress-label">MongoDB</span>
+                    <span class="progress-value">80%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 80%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE -->
+        <section class="section">
+            <h2 class="section-title">Timeline (Experiencia)</h2>
+
+            <div class="timeline">
+                <div class="timeline-item accent">
+                    <div class="timeline-date">2023 - Actualidad</div>
+                    <h3 class="timeline-title">Full Stack Developer Senior</h3>
+                    <p class="timeline-description">
+                        Desarrollo de aplicaciones web escalables con MEAN stack.
+                        Arquitectura de microservicios y cloud computing.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2021 - 2023</div>
+                    <h3 class="timeline-title">Full Stack Developer</h3>
+                    <p class="timeline-description">
+                        Implementación de soluciones web corporativas y sistemas
+                        de gestión empresarial.
+                    </p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">2019 - 2021</div>
+                    <h3 class="timeline-title">Frontend Developer</h3>
+                    <p class="timeline-description">
+                        Desarrollo de interfaces modernas con Angular y React.
+                        Diseño responsive y optimización de rendimiento.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- INPUTS -->
+        <section class="section">
+            <h2 class="section-title">Form Inputs</h2>
+
+            <div class="form-field">
+                <label class="form-label" for="name">Nombre</label>
+                <input type="text" id="name" class="form-input" placeholder="Tu nombre completo">
+            </div>
+
+            <div class="form-field">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" class="form-input" placeholder="tu@email.com">
+            </div>
+
+            <div class="form-field">
+                <label class="form-label" for="message">Mensaje</label>
+                <textarea id="message" class="form-input" rows="5" placeholder="Escribe tu mensaje aquí..."></textarea>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark')) {
+                btn.textContent = 'Modo Claro';
+            } else {
+                btn.textContent = 'Modo Oscuro';
+            }
+        }
+    </script>
+</body>
+</html>

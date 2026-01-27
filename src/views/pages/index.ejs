@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <%- include('../partials/head', { title }) %>
+</head>
+<body class="<%= pageState %> antialiased" x-data x-cloak>
+  <!-- Header/Navigation -->
+  <%- include('../partials/header', { pageState }) %>
+
+  <!-- Page Transition Wrapper -->
+  <div class="page-transition-wrapper">
+    <!-- Main Content -->
+    <main class="landing-container-artistic">
+      <div class="landing-content">
+        <!-- Nombre principal - Diseño artístico -->
+        <h1 class="name-artistic">
+          <span class="name-line">Josevi</span>
+          <span class="name-line">Pérez</span>
+        </h1>
+
+        <!-- Título profesional - Estilo itálico sutil -->
+        <p class="title-artistic">Programador Web Senior</p>
+
+        <!-- Navegación minimalista - Enlaces simples -->
+        <nav class="nav-artistic">
+          <a href="/proyectos" class="nav-link-artistic">
+            <span class="link-number">01</span>
+            <span class="link-text">Proyectos</span>
+          </a>
+          <a href="/perfil" class="nav-link-artistic">
+            <span class="link-number">02</span>
+            <span class="link-text">Perfil</span>
+          </a>
+          <a href="/contacto" class="nav-link-artistic">
+            <span class="link-number">03</span>
+            <span class="link-text">Contacto</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Elementos decorativos -->
+      <%- include('../partials/components/decorative-borders') %>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <%- include('../partials/footer') %>
+
+  <!-- Banner de Cookies -->
+  <%- include('../partials/cookie-banner') %>
+
+  <!-- Scripts: Los stores deben cargarse ANTES de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+
+  <!-- Animaciones del nombre con Anime.js (solo para landing) -->
+  <script type="module">
+    import { initNameAnimations } from '/js/name-animation.js';
+    initNameAnimations();
+  </script>
+</body>
+</html>

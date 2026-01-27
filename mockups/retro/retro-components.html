@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Componentes Retro Arcade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Efecto CRT Scanlines */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+            margin-bottom: 2rem;
+            border-bottom: 4px solid #00ff41;
+            padding-bottom: 1rem;
+        }
+
+        /* BOTONES */
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .btn-arcade {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            padding: 1rem 1.5rem;
+            border: 4px solid;
+            background: rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .btn-green {
+            color: #00ff41;
+            border-color: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .btn-green:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #00ff41;
+            transform: translateY(-5px);
+        }
+
+        .btn-magenta {
+            color: #ff10f0;
+            border-color: #ff10f0;
+            box-shadow: 0 0 10px #ff10f0;
+        }
+
+        .btn-magenta:hover {
+            background: #ff10f0;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #ff10f0;
+            transform: translateY(-5px);
+        }
+
+        .btn-cyan {
+            color: #00f0ff;
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px #00f0ff;
+        }
+
+        .btn-cyan:hover {
+            background: #00f0ff;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #00f0ff;
+            transform: translateY(-5px);
+        }
+
+        .btn-yellow {
+            color: #ffff00;
+            border-color: #ffff00;
+            box-shadow: 0 0 10px #ffff00;
+        }
+
+        .btn-yellow:hover {
+            background: #ffff00;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px #ffff00;
+            transform: translateY(-5px);
+        }
+
+        .btn-arcade:active {
+            transform: translateY(2px);
+        }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card-arcade {
+            border: 4px solid;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-green {
+            border-color: #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+        }
+
+        .card-green:hover {
+            box-shadow: 0 0 30px #00ff41;
+            transform: translateY(-10px);
+        }
+
+        .card-magenta {
+            border-color: #ff10f0;
+            box-shadow: 0 0 10px rgba(255, 16, 240, 0.3);
+        }
+
+        .card-magenta:hover {
+            box-shadow: 0 0 30px #ff10f0;
+            transform: translateY(-10px);
+        }
+
+        .card-cyan {
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        .card-cyan:hover {
+            box-shadow: 0 0 30px #00f0ff;
+            transform: translateY(-10px);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-green .card-title {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .card-magenta .card-title {
+            color: #ff10f0;
+            text-shadow: 0 0 10px #ff10f0;
+        }
+
+        .card-cyan .card-title {
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #f0f0f0;
+        }
+
+        /* BADGES */
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .badge-arcade {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border: 3px solid;
+            background: rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .badge-green {
+            color: #00ff41;
+            border-color: #00ff41;
+        }
+
+        .badge-green:hover {
+            box-shadow: 0 0 20px #00ff41;
+            transform: scale(1.1);
+        }
+
+        .badge-magenta {
+            color: #ff10f0;
+            border-color: #ff10f0;
+        }
+
+        .badge-magenta:hover {
+            box-shadow: 0 0 20px #ff10f0;
+            transform: scale(1.1);
+        }
+
+        .badge-cyan {
+            color: #00f0ff;
+            border-color: #00f0ff;
+        }
+
+        .badge-cyan:hover {
+            box-shadow: 0 0 20px #00f0ff;
+            transform: scale(1.1);
+        }
+
+        .badge-yellow {
+            color: #ffff00;
+            border-color: #ffff00;
+        }
+
+        .badge-yellow:hover {
+            box-shadow: 0 0 20px #ffff00;
+            transform: scale(1.1);
+        }
+
+        /* PROGRESS BARS (Skills) */
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-label {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-outer {
+            height: 30px;
+            border: 3px solid;
+            background: rgba(0, 0, 0, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            transition: width 1s ease;
+            position: relative;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        /* Efecto pixelado en la barra */
+        .progress-bar-inner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 10px,
+                rgba(0, 0, 0, 0.2) 10px,
+                rgba(0, 0, 0, 0.2) 11px
+            );
+        }
+
+        .progress-green .progress-bar-outer {
+            border-color: #00ff41;
+        }
+
+        .progress-green .progress-bar-inner {
+            background: #00ff41;
+        }
+
+        .progress-green .progress-label {
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .progress-magenta .progress-bar-outer {
+            border-color: #ff10f0;
+        }
+
+        .progress-magenta .progress-bar-inner {
+            background: #ff10f0;
+        }
+
+        .progress-magenta .progress-label {
+            color: #ff10f0;
+            text-shadow: 0 0 10px #ff10f0;
+        }
+
+        .progress-cyan .progress-bar-outer {
+            border-color: #00f0ff;
+        }
+
+        .progress-cyan .progress-bar-inner {
+            background: #00f0ff;
+        }
+
+        .progress-cyan .progress-label {
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+
+        /* TIMELINE */
+        .timeline-item {
+            border-left: 4px solid #00ff41;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '▓';
+            position: absolute;
+            left: -14px;
+            top: 0;
+            font-size: 1.5rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .timeline-date {
+            font-family: 'Pixelify Sans', cursive;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-family: 'Pixelify Sans', cursive;
+            font-size: 1.2rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px #00ff41;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-description {
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- BOTONES -->
+        <section class="section">
+            <h2 class="section-title">▓▓ BOTONES</h2>
+            <div class="buttons-grid">
+                <button class="btn-arcade btn-green">▶ PLAY</button>
+                <button class="btn-arcade btn-magenta">◆ PROJECTS</button>
+                <button class="btn-arcade btn-cyan">★ CONTACT</button>
+                <button class="btn-arcade btn-yellow">⚠ DOWNLOAD CV</button>
+            </div>
+        </section>
+
+        <!-- CARDS -->
+        <section class="section">
+            <h2 class="section-title">▓▓ CARDS</h2>
+            <div class="cards-grid">
+                <div class="card-arcade card-green">
+                    <div class="card-icon">▼</div>
+                    <h3 class="card-title">▓ MEAN STACK</h3>
+                    <p class="card-description">
+                        Desarrollo completo con MongoDB, Express, Angular y Node.js.
+                        Arquitecturas escalables y modernas.
+                    </p>
+                </div>
+
+                <div class="card-arcade card-magenta">
+                    <div class="card-icon">◆</div>
+                    <h3 class="card-title">▓ ARQUITECTURA</h3>
+                    <p class="card-description">
+                        Diseño de sistemas distribuidos, microservicios y
+                        soluciones cloud-native con AWS.
+                    </p>
+                </div>
+
+                <div class="card-arcade card-cyan">
+                    <div class="card-icon">★</div>
+                    <h3 class="card-title">▓ DEVOPS</h3>
+                    <p class="card-description">
+                        CI/CD, Docker, Jenkins, GitLab CI.
+                        Automatización y pipelines de desarrollo.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BADGES -->
+        <section class="section">
+            <h2 class="section-title">▓▓ BADGES / TECH STACK</h2>
+            <div class="badges-container">
+                <span class="badge-arcade badge-green">▓ JAVASCRIPT</span>
+                <span class="badge-arcade badge-magenta">▓ TYPESCRIPT</span>
+                <span class="badge-arcade badge-cyan">▓ NODE.JS</span>
+                <span class="badge-arcade badge-yellow">▓ ANGULAR</span>
+                <span class="badge-arcade badge-green">▓ EXPRESS</span>
+                <span class="badge-arcade badge-magenta">▓ MONGODB</span>
+                <span class="badge-arcade badge-cyan">▓ MYSQL</span>
+                <span class="badge-arcade badge-yellow">▓ DOCKER</span>
+                <span class="badge-arcade badge-green">▓ AWS</span>
+                <span class="badge-arcade badge-magenta">▓ GIT</span>
+            </div>
+        </section>
+
+        <!-- PROGRESS BARS -->
+        <section class="section">
+            <h2 class="section-title">▓▓ PROGRESS BARS (SKILLS)</h2>
+
+            <div class="progress-container progress-green">
+                <div class="progress-label">
+                    <span>▓ JAVASCRIPT</span>
+                    <span>95%</span>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" style="width: 95%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container progress-magenta">
+                <div class="progress-label">
+                    <span>▓ NODE.JS</span>
+                    <span>90%</span>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" style="width: 90%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container progress-cyan">
+                <div class="progress-label">
+                    <span>▓ ANGULAR</span>
+                    <span>85%</span>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <div class="progress-container progress-green">
+                <div class="progress-label">
+                    <span>▓ MONGODB</span>
+                    <span>80%</span>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" style="width: 80%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMELINE -->
+        <section class="section">
+            <h2 class="section-title">▓▓ TIMELINE (EXPERIENCIA)</h2>
+
+            <div class="timeline-item">
+                <div class="timeline-date">▶ 2023 - ACTUALIDAD</div>
+                <h3 class="timeline-title">Full Stack Developer Senior</h3>
+                <p class="timeline-description">
+                    Desarrollo de aplicaciones web escalables con MEAN stack.
+                    Arquitectura de microservicios y cloud computing.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">▶ 2021 - 2023</div>
+                <h3 class="timeline-title">Full Stack Developer</h3>
+                <p class="timeline-description">
+                    Implementación de soluciones web corporativas y sistemas
+                    de gestión empresarial.
+                </p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">▶ 2019 - 2021</div>
+                <h3 class="timeline-title">Frontend Developer</h3>
+                <p class="timeline-description">
+                    Desarrollo de interfaces modernas con Angular y React.
+                    Diseño responsive y optimización de rendimiento.
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

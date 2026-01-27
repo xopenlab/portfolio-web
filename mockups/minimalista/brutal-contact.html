@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup - Formulario de Contacto Brutalismo Suave</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #ffffff;
+            color: #000000;
+            font-family: 'DM Sans', sans-serif;
+            padding: 3rem 2rem;
+            line-height: 1.6;
+        }
+
+        body.dark {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header de sección */
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .section-description {
+            font-size: 1.25rem;
+            max-width: 600px;
+            line-height: 1.8;
+            color: #000000;
+        }
+
+        body.dark .section-description {
+            color: #ffffff;
+        }
+
+        /* Layout principal */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* Lado izquierdo - Info de contacto */
+        .contact-info {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .info-block {
+            margin-bottom: 3rem;
+        }
+
+        .info-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        body.dark .info-icon {
+            border-color: #ffffff;
+        }
+
+        .info-link {
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .info-link:hover {
+            border-bottom-color: #1e3a8a;
+        }
+
+        .availability {
+            padding: 1.5rem;
+            border: 3px solid #1e3a8a;
+            background: rgba(30, 58, 138, 0.05);
+            margin-top: 2rem;
+        }
+
+        .availability-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            color: #1e3a8a;
+        }
+
+        .availability-text {
+            font-weight: 500;
+        }
+
+        /* Lado derecho - Formulario */
+        .contact-form {
+            border: 3px solid #000000;
+            padding: 3rem;
+        }
+
+        body.dark .contact-form {
+            border-color: #ffffff;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .form-input,
+        .form-textarea {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            padding: 1rem;
+            border: 3px solid #000000;
+            background: transparent;
+            color: #000000;
+            transition: all 0.2s ease;
+        }
+
+        body.dark .form-input,
+        body.dark .form-textarea {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .form-input:focus,
+        body.dark .form-textarea:focus {
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.dark .form-input::placeholder,
+        body.dark .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .char-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            text-align: right;
+            color: #000000;
+        }
+
+        body.dark .char-counter {
+            color: #ffffff;
+        }
+
+        .char-counter.warning {
+            color: #1e3a8a;
+        }
+
+        /* Checkbox GDPR */
+        .checkbox-field {
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .checkbox-input {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #000000;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        body.dark .checkbox-input {
+            border-color: #ffffff;
+        }
+
+        .checkbox-label {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .checkbox-label a {
+            color: #1e3a8a;
+            text-decoration: none;
+            border-bottom: 1px solid #1e3a8a;
+        }
+
+        /* Botón de envío */
+        .submit-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 500;
+            padding: 1.25rem 3rem;
+            border: 3px solid #1e3a8a;
+            background: #1e3a8a;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0 #000000;
+        }
+
+        body.dark .submit-btn:hover {
+            box-shadow: 4px 4px 0 #ffffff;
+        }
+
+        .submit-btn:active {
+            transform: translate(0, 0);
+            box-shadow: none;
+        }
+
+        /* Toggle para dark mode */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            z-index: 1000;
+        }
+
+        body.dark .theme-toggle {
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .contact-info {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-form {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 2rem 1rem;
+            }
+
+            .contact-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Modo Oscuro</button>
+
+    <div class="container">
+        <!-- Header de sección -->
+        <header class="section-header">
+            <div class="section-number">05 — Contacto</div>
+            <h2 class="section-title">Trabajemos juntos</h2>
+            <p class="section-description">
+                ¿Tienes un proyecto en mente? Me encantaría saber más sobre tu idea
+                y cómo podría ayudarte a hacerla realidad.
+            </p>
+        </header>
+
+        <!-- Layout principal -->
+        <div class="contact-layout">
+            <!-- Lado izquierdo - Info de contacto -->
+            <aside class="contact-info">
+                <div class="info-block">
+                    <h3 class="info-title">Contacto directo</h3>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <div class="info-icon">✉</div>
+                            <a href="mailto:email@josevi.dev" class="info-link">
+                                email@josevi.dev
+                            </a>
+                        </li>
+                        <li class="info-item">
+                            <div class="info-icon">☎</div>
+                            <a href="tel:+34123456789" class="info-link">
+                                +34 123 456 789
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="info-block">
+                    <h3 class="info-title">Redes sociales</h3>
+                    <ul class="info-list">
+                        <li class="info-item">
+                            <div class="info-icon">in</div>
+                            <a href="#" class="info-link">
+                                linkedin.com/in/josevi
+                            </a>
+                        </li>
+                        <li class="info-item">
+                            <div class="info-icon">gh</div>
+                            <a href="#" class="info-link">
+                                github.com/josevi
+                            </a>
+                        </li>
+                        <li class="info-item">
+                            <div class="info-icon">tw</div>
+                            <a href="#" class="info-link">
+                                twitter.com/josevi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="availability">
+                    <div class="availability-title">Disponibilidad</div>
+                    <div class="availability-text">
+                        Actualmente aceptando nuevos proyectos para Q2 2025
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Lado derecho - Formulario -->
+            <div class="contact-form">
+                <h3 class="form-title">Envíame un mensaje</h3>
+
+                <form class="form-grid">
+                    <!-- Nombre y Email -->
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="form-label" for="name">Nombre</label>
+                            <input
+                                type="text"
+                                id="name"
+                                class="form-input"
+                                placeholder="Tu nombre"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label class="form-label" for="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-input"
+                                placeholder="tu@email.com"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Asunto -->
+                    <div class="form-field">
+                        <label class="form-label" for="subject">Asunto</label>
+                        <input
+                            type="text"
+                            id="subject"
+                            class="form-input"
+                            placeholder="¿De qué quieres hablar?"
+                            required
+                        >
+                    </div>
+
+                    <!-- Mensaje -->
+                    <div class="form-field">
+                        <label class="form-label" for="message">Mensaje</label>
+                        <textarea
+                            id="message"
+                            class="form-textarea"
+                            placeholder="Cuéntame sobre tu proyecto..."
+                            required
+                        ></textarea>
+                        <div class="char-counter">0 / 500</div>
+                    </div>
+
+                    <!-- GDPR Checkbox -->
+                    <div class="checkbox-field">
+                        <input
+                            type="checkbox"
+                            id="gdpr"
+                            class="checkbox-input"
+                            required
+                        >
+                        <label class="checkbox-label" for="gdpr">
+                            Acepto la <a href="#">política de privacidad</a> y el
+                            tratamiento de mis datos personales según el RGPD.
+                        </label>
+                    </div>
+
+                    <!-- Botón Submit -->
+                    <button type="submit" class="submit-btn">
+                        Enviar mensaje
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('dark')) {
+                btn.textContent = 'Modo Claro';
+            } else {
+                btn.textContent = 'Modo Oscuro';
+            }
+        }
+
+        // Contador de caracteres
+        const textarea = document.getElementById('message');
+        const counter = document.querySelector('.char-counter');
+
+        textarea.addEventListener('input', (e) => {
+            const length = e.target.value.length;
+            counter.textContent = `${length} / 500`;
+
+            if (length > 400) {
+                counter.classList.add('warning');
+            } else {
+                counter.classList.remove('warning');
+            }
+        });
+
+        // Prevenir submit para demo
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✓ Mensaje enviado con éxito (demo)');
+        });
+    </script>
+</body>
+</html>

@@ -21,10 +21,10 @@
   <!-- Footer -->
   <%- include('../partials/footer') %>
   
-  <!-- Scripts: Cargar Alpine.js ANTES de nuestros scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js" defer></script>
-  <script type="module" src="/js/theme.js"></script>
-  <script type="module" src="/js/animations.js"></script>
+  <!-- Scripts: Alpine setup debe cargarse ANTES del CDN de Alpine.js -->
+  <script src="/js/alpine-setup.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
+  <script type="module" src="/js/name-animation.js"></script>
   <script type="module" src="/js/main.js"></script>
 </body>
 </html>
