@@ -17,9 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, observerOptions);
 
-  // Observar todos los elementos con la clase animate-on-scroll
-  const animatedElements = document.querySelectorAll('.animate-on-scroll');
-  animatedElements.forEach(el => observer.observe(el));
+  /**
+   * Iniciar observación de elementos animate-on-scroll tras revelado de cortina.
+   * Evita que secciones visibles se animen antes de que la cortina se quite.
+   */
+  const initScrollObserver = () => {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    animatedElements.forEach(el => observer.observe(el));
+  };
+
+  // Esperar a que la cortina termine de revelarse
+  document.addEventListener('curtainRevealed', initScrollObserver, { once: true });
 
   // Smooth scroll para los enlaces de navegación
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -8,7 +8,7 @@
   <div class="container mx-auto px-4 py-20 relative z-10">
     <div class="max-w-4xl mx-auto text-center">
       <!-- Saludo animado -->
-      <div class="animate-fade-in-down mb-6">
+      <div class="animate-fade-in-down reveal-delay-1 mb-6">
         <span class="inline-block px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-800 dark:text-primary-200 font-semibold text-sm">
           👋 ¡Hola! Bienvenido a mi portfolio
         </span>
@@ -24,13 +24,8 @@
         </span>
       </h1>
 
-      <!-- Descripción -->
-      <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 animate-fade-in-up animation-delay-200 max-w-3xl mx-auto">
-        <%= data.about.description %>
-      </p>
-
       <!-- Stack tecnológico destacado -->
-      <div class="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up animation-delay-400">
+      <div class="flex flex-wrap justify-center gap-3 mb-10 animate-fade-in-up reveal-delay-1">
         <span class="badge">Node.js</span>
         <span class="badge">Express.js</span>
         <span class="badge">JavaScript</span>
@@ -43,7 +38,7 @@
       </div>
 
       <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up animation-delay-600">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up reveal-delay-2">
         <a href="#contact" class="btn-primary">
           <span class="flex items-center">
             Contáctame
@@ -63,7 +58,7 @@
       </div>
 
       <!-- Estadísticas rápidas -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 animate-fade-in-up animation-delay-800">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 animate-fade-in-up reveal-delay-3">
         <div class="text-center">
         </div>
         <div class="text-center">
@@ -82,28 +77,10 @@
 
   <!-- Scroll indicator -->
   <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-    <a href="#about" aria-label="Desplazar hacia abajo">
+    <a href="#profile" aria-label="Desplazar hacia abajo">
       <svg class="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
       </svg>
     </a>
   </div>
 </section>
-
-<style>
-  .animation-delay-200 {
-    animation-delay: 0.2s;
-  }
-  .animation-delay-400 {
-    animation-delay: 0.4s;
-  }
-  .animation-delay-600 {
-    animation-delay: 0.6s;
-  }
-  .animation-delay-800 {
-    animation-delay: 0.8s;
-  }
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-</style>

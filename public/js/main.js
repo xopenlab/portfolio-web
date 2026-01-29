@@ -17,6 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingScrollTop();
   }, 0);
 
+  // Tecla ESC para volver a la página principal (solo en páginas internas)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && window.location.pathname !== '/') {
+      const homeLink = document.querySelector('.nav-home');
+      if (homeLink) {
+        homeLink.click();
+      } else {
+        window.location.href = '/';
+      }
+    }
+  });
+
   // Agregar clase al body cuando el DOM esté completamente cargado
   document.body.classList.add('loaded');
 

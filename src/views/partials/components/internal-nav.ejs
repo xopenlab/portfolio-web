@@ -1,18 +1,19 @@
 <!-- Navegación para páginas internas -->
 <nav class="internal-navigation" aria-label="Navegación principal">
-  <a href="/" class="nav-home" aria-label="Volver a inicio">
-    <span class="nav-home-icon">←</span>
-    <span class="nav-home-text">Inicio</span>
+  <a href="/" class="nav-home" aria-label="Volver a inicio" title="Inicio (Esc)">
+    <svg class="nav-home-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
   </a>
 
   <div class="nav-links">
-    <a href="/proyectos" class="<%= typeof pageState !== 'undefined' && pageState.includes('proyectos') ? 'active' : '' %>">
-      <span class="nav-number">01</span>
-      <span class="nav-text">Proyectos</span>
-    </a>
     <a href="/perfil" class="<%= typeof pageState !== 'undefined' && pageState.includes('perfil') ? 'active' : '' %>">
-      <span class="nav-number">02</span>
+      <span class="nav-number">01</span>
       <span class="nav-text">Perfil</span>
+    </a>
+    <a href="/proyectos" class="<%= typeof pageState !== 'undefined' && pageState.includes('proyectos') ? 'active' : '' %>">
+      <span class="nav-number">02</span>
+      <span class="nav-text">Proyectos</span>
     </a>
     <a href="/contacto" class="<%= typeof pageState !== 'undefined' && pageState.includes('contacto') ? 'active' : '' %>">
       <span class="nav-number">03</span>

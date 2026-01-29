@@ -16,7 +16,7 @@ export const portfolioData = {
 
   about: {
     description:
-      "Profesional con más de siete años dedicados a la programación web, con amplia experiencia en el sector logístico y dedicado, en la actualidad, a la mejora de procesos en el sector de producción de derivados de la madera.",
+      "Programador de aplicaciones web de profesión, fotógrafo en sus ratos libres y, siempre, apasionado por el campo y la Naturaleza. Cuando trabajo en un proyecto, parto del análisis de las necesidades reales del negocio y me enfoco en la eficiencia y en la usabilidad de las soluciones implementadas. Me considero agnóstico a la tecnología, por lo que trato de aplicar soluciones \"sensatas\", tras analizar primero los problemas, siempre antes de definir cualquier posible solución.",
     highlights: [
       "Desarrollo de API RESTful e integraciones de servicios web",
       "Creación de aplicaciones para mejora de procesos industriales",

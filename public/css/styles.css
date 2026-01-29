@@ -60,11 +60,11 @@
   --font-mono: 'Fira Code', monospace;
 
   /* Animaciones personalizadas */
-  --animate-fade-in: fadeIn 0.5s ease-in-out;
-  --animate-fade-in-up: fadeInUp 0.6s ease-out;
-  --animate-fade-in-down: fadeInDown 0.6s ease-out;
-  --animate-slide-in-left: slideInLeft 0.6s ease-out;
-  --animate-slide-in-right: slideInRight 0.6s ease-out;
+  --animate-fade-in: fadeIn 0.8s ease-in-out;
+  --animate-fade-in-up: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-fade-in-down: fadeInDown 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-slide-in-left: slideInLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-slide-in-right: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --animate-bounce-slow: bounce 3s infinite;
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -592,70 +592,21 @@
 
   /* Página de Perfil */
   .perfil-container {
-    @apply max-w-5xl mx-auto px-4 py-20 pt-32;
+    @apply min-h-screen flex items-center justify-center px-8 py-20;
   }
 
-  .about-section,
-  .experience-section,
-  .education-section {
-    @apply mb-16;
+  .perfil-about {
+    @apply max-w-2xl;
   }
 
-  .section-title {
-    @apply text-3xl font-bold mb-8;
-    background: linear-gradient(135deg,
-      var(--color-theme-primary),
-      var(--color-theme-accent)
-    );
-    @apply bg-clip-text text-transparent;
+  .perfil-text {
+    @apply text-lg md:text-xl leading-relaxed font-light;
+    font-family: var(--font-serif);
+    color: var(--color-gray-700);
   }
 
-  .about-content {
-    @apply max-w-3xl;
-  }
-
-  .timeline {
-    @apply space-y-8 relative pl-8;
-  }
-
-  .timeline::before {
-    content: '';
-    @apply absolute left-0 top-0 bottom-0 w-0.5;
-    background-color: var(--color-theme-primary);
-  }
-
-  .timeline-item {
-    @apply relative;
-  }
-
-  .timeline-item::before {
-    content: '';
-    @apply absolute w-3 h-3 rounded-full border-2 border-white dark:border-gray-900;
-    background-color: var(--color-theme-primary);
-    left: -33px;
-    top: 8px;
-  }
-
-  .timeline-date {
-    @apply text-sm font-semibold mb-2 block;
-    color: var(--color-theme-primary);
-  }
-
-  .timeline-title {
-    @apply text-xl font-bold mb-1;
-  }
-
-  .timeline-company,
-  .timeline-institution {
-    @apply text-gray-600 dark:text-gray-400 mb-2;
-  }
-
-  .timeline-description {
-    @apply text-gray-700 dark:text-gray-300 mb-4;
-  }
-
-  .timeline-tags {
-    @apply flex gap-2 flex-wrap;
+  .dark .perfil-text {
+    color: var(--color-gray-300);
   }
 
   /* Página de Contacto */
@@ -773,26 +724,38 @@
 /* Utilidades personalizadas */
 @layer utilities {
   /* Utilidades de animación usando variables de @theme */
+  /* Las animaciones de entrada se pausan hasta que la cortina se revela (body.page-revealed) */
   .animate-fade-in {
     animation: var(--animate-fade-in);
+    animation-fill-mode: both;
+    animation-play-state: paused;
   }
 
   .animate-fade-in-up {
     animation: var(--animate-fade-in-up);
+    animation-fill-mode: both;
+    animation-play-state: paused;
   }
 
   .animate-fade-in-down {
     animation: var(--animate-fade-in-down);
+    animation-fill-mode: both;
+    animation-play-state: paused;
   }
 
   .animate-slide-in-left {
     animation: var(--animate-slide-in-left);
+    animation-fill-mode: both;
+    animation-play-state: paused;
   }
 
   .animate-slide-in-right {
     animation: var(--animate-slide-in-right);
+    animation-fill-mode: both;
+    animation-play-state: paused;
   }
 
+  /* Animaciones continuas (bounce, pulse) no se pausan */
   .animate-bounce-slow {
     animation: var(--animate-bounce-slow);
   }
@@ -800,6 +763,23 @@
   .animate-pulse-slow {
     animation: var(--animate-pulse-slow);
   }
+
+  /* Activar animaciones tras revelado de cortina */
+  body.page-revealed .animate-fade-in,
+  body.page-revealed .animate-fade-in-up,
+  body.page-revealed .animate-fade-in-down,
+  body.page-revealed .animate-slide-in-left,
+  body.page-revealed .animate-slide-in-right {
+    animation-play-state: running;
+  }
+
+  /* Clases de delay para stagger progresivo post-cortina */
+  .reveal-delay-1 { animation-delay: 0.3s; }
+  .reveal-delay-2 { animation-delay: 0.6s; }
+  .reveal-delay-3 { animation-delay: 0.9s; }
+  .reveal-delay-4 { animation-delay: 1.2s; }
+  .reveal-delay-5 { animation-delay: 1.5s; }
+  .reveal-delay-6 { animation-delay: 1.8s; }
 
   /* Animación progresiva para scroll */
   .animate-on-scroll {
@@ -1086,19 +1066,15 @@
 }
 
 .nav-home {
-  @apply flex items-center gap-2;
-  @apply text-base font-medium;
-  @apply text-gray-700 dark:text-gray-300;
+  @apply flex items-center justify-center;
+  @apply text-gray-500 dark:text-gray-400;
   @apply hover:text-[var(--active-theme-primary)] dark:hover:text-[var(--active-theme-primary)];
-  @apply transition-colors duration-300;
+  @apply transition-all duration-300;
+  @apply opacity-60 hover:opacity-100;
 }
 
 .nav-home-icon {
-  @apply text-xl;
-}
-
-.nav-home-text {
-  @apply hidden sm:inline;
+  @apply w-5 h-5;
 }
 
 .nav-links {

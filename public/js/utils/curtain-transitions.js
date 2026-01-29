@@ -221,9 +221,11 @@ function revealPage(curtain) {
       curtain.classList.remove('is-covering');
       curtain.classList.add('is-revealing');
 
-      // Limpiar clases y resolver promesa después de la animación
+      // Limpiar clases y activar animaciones de contenido después de la cortina
       setTimeout(() => {
         curtain.classList.remove('is-revealing');
+        document.body.classList.add('page-revealed');
+        document.dispatchEvent(new CustomEvent('curtainRevealed'));
         resolve();
       }, transitionConfig.duration.exit);
     }, 50);
