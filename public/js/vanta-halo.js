@@ -6,8 +6,18 @@
   var debounceTimer = null;
 
   /**
+   * Convertir color CSS hex (#rrggbb) a número (0xrrggbb)
+   * @param {string} hex - Color en formato CSS hex
+   * @returns {number} Color como número
+   */
+  function hexToNum(hex) {
+    if (!hex || typeof hex !== 'string') return 0;
+    return parseInt(hex.replace('#', ''), 16);
+  }
+
+  /**
    * Obtener colores actuales del tema
-   * @returns {{ bgColor: number, baseColor: number, color2: number }}
+   * @returns {{ bgColor: number, baseColor: number, color2: number, isDark: boolean }}
    */
   function getThemeColors() {
     var style = getComputedStyle(document.documentElement);
@@ -16,8 +26,9 @@
     var isDark = document.documentElement.classList.contains('dark');
     return {
       bgColor: isDark ? 0x111827 : 0xf5f0eb,
-      baseColor: primary || 0x6b8ba4,
-      color2: secondary || 0xa3b8cc
+      baseColor: primary ? hexToNum(primary) : 0x6b8ba4,
+      color2: secondary ? hexToNum(secondary) : 0xa3b8cc,
+      isDark: isDark
     };
   }
 
@@ -26,8 +37,7 @@
    */
   function create() {
     var el = document.getElementById('vanta-proyectos');
-    if (!el || typeof VANTA === 'undefined') return;
-    if (vantaEffect) return;
+    if (!el || typeof VANTA === 'undefined' || vantaEffect) return;
 
     var colors = getThemeColors();
 
@@ -47,26 +57,27 @@
       speed: 0.8
     });
 
+    // Mayor opacidad en modo claro para compensar menor contraste
     var canvas = el.querySelector('canvas');
-    if (canvas) canvas.style.opacity = '0.35';
+    if (canvas) canvas.style.opacity = colors.isDark ? '0.2' : '0.5';
   }
 
   /**
-   * Actualizar colores del efecto sin destruirlo
+   * Recrear efecto con los colores actuales del tema
+   * Halo usa shaders GLSL que no actualizan colores vía setOptions,
+   * por lo que es necesario destruir y recrear el efecto.
    */
-  function updateColors() {
-    if (!vantaEffect) return;
-    var colors = getThemeColors();
-    vantaEffect.setOptions({
-      backgroundColor: colors.bgColor,
-      baseColor: colors.baseColor,
-      color2: colors.color2
-    });
+  function recreate() {
+    if (vantaEffect) {
+      vantaEffect.destroy();
+      vantaEffect = null;
+    }
+    create();
   }
 
   function debouncedUpdate() {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateColors, 300);
+    debounceTimer = setTimeout(recreate, 300);
   }
 
   document.addEventListener('curtainRevealed', create, { once: true });
