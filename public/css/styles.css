@@ -334,7 +334,12 @@
   }
 
   .landing-content {
-    @apply max-w-6xl mx-auto w-full;
+    @apply max-w-[52rem] mx-auto w-full;
+    @apply flex flex-col md:flex-row md:items-center md:justify-between gap-8;
+  }
+
+  .landing-left {
+    @apply flex-shrink-0;
   }
 
   /* Nombre - Tipografía muy grande y prominent */
@@ -374,7 +379,7 @@
   /* Título - Estilo itálico sutil */
   .title-artistic {
     font-family: var(--font-serif);
-    @apply text-xl md:text-3xl mb-16 md:mb-24;
+    @apply text-xl md:text-3xl mb-0;
     font-style: italic;
     font-weight: 400;
     color: var(--active-theme-primary, #7d97b8);
@@ -387,8 +392,8 @@
 
   /* Navegación minimalista */
   .nav-artistic {
-    @apply flex flex-col gap-4 md:gap-6 max-w-md;
-    padding-left: 1rem;
+    @apply flex flex-col gap-4 md:gap-6;
+    @apply md:pb-4;
     animation: fadeIn 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.7s backwards;
   }
 
