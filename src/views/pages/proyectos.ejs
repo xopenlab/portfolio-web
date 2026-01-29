@@ -3,8 +3,7 @@
 <head>
   <%- include('../partials/head', { title }) %>
 </head>
-<body class="<%= pageState %> antialiased" x-data="{ panel: null }" x-cloak
-  @keydown.escape.window="panel = null">
+<body class="<%= pageState %> antialiased" x-cloak>
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
@@ -14,7 +13,7 @@
   <!-- Page Transition Wrapper -->
   <div class="page-transition-wrapper">
     <!-- Main Content -->
-    <main class="proyectos-container">
+    <main class="proyectos-container" x-data="{ panel: null }" @keydown.escape.window="panel = null">
       <!-- Fondo Vanta.js -->
       <div class="vanta-bg" id="vanta-proyectos"></div>
 
@@ -54,103 +53,84 @@
 
       <!-- Bordes decorativos -->
       <%- include('../partials/components/decorative-borders') %>
+
+      <!-- Overlay -->
+      <div class="proyectos-overlay"
+        x-show="panel !== null"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="panel = null"
+        style="display: none;">
+      </div>
+
+      <!-- Panel izquierdo: Aplicaciones Web -->
+      <div class="proyectos-panel proyectos-panel--left"
+        :class="{ 'is-open': panel === 'webapp' }">
+        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="proyectos-section-title">Aplicaciones Web</h2>
+        <div class="proyectos-timeline">
+          <% data.projects.featured.filter(p => p.category === 'webapp').forEach(function(proj) { %>
+            <div class="proyectos-item">
+              <div class="proyectos-item-content">
+                <span class="proyectos-project-title"><%= proj.title %></span>
+                <span class="proyectos-company"><%= proj.company %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Panel derecho: APIs y Servicios -->
+      <div class="proyectos-panel proyectos-panel--right"
+        :class="{ 'is-open': panel === 'api' }">
+        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="proyectos-section-title">APIs y Servicios</h2>
+        <div class="proyectos-timeline">
+          <% data.projects.featured.filter(p => p.category === 'api').forEach(function(proj) { %>
+            <div class="proyectos-item">
+              <div class="proyectos-item-content">
+                <span class="proyectos-project-title"><%= proj.title %></span>
+                <span class="proyectos-company"><%= proj.company %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Panel derecho: Automatización -->
+      <div class="proyectos-panel proyectos-panel--right"
+        :class="{ 'is-open': panel === 'automation' }">
+        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="proyectos-section-title">Automatización</h2>
+        <div class="proyectos-timeline">
+          <% data.projects.featured.filter(p => p.category === 'automation').forEach(function(proj) { %>
+            <div class="proyectos-item">
+              <div class="proyectos-item-content">
+                <span class="proyectos-project-title"><%= proj.title %></span>
+                <span class="proyectos-company"><%= proj.company %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
     </main>
   </div>
-
-  <!-- Overlay -->
-  <div class="proyectos-overlay"
-    x-show="panel !== null"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    @click="panel = null"
-    style="display: none;">
-  </div>
-
-  <!-- Panel izquierdo: Aplicaciones Web -->
-  <div class="proyectos-panel proyectos-panel--left"
-    :class="{ 'is-open': panel === 'webapp' }">
-    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-    <h2 class="proyectos-section-title">Aplicaciones Web</h2>
-    <div class="proyectos-timeline">
-      <% data.projects.featured.filter(p => p.category === 'webapp').forEach(function(proj) { %>
-        <div class="proyectos-item">
-          <div class="proyectos-item-content">
-            <span class="proyectos-project-title"><%= proj.title %></span>
-            <span class="proyectos-company">
-              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
-              <%= proj.company %>
-            </span>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </div>
-
-  <!-- Panel derecho: APIs y Servicios -->
-  <div class="proyectos-panel proyectos-panel--right"
-    :class="{ 'is-open': panel === 'api' }">
-    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-    <h2 class="proyectos-section-title">APIs y Servicios</h2>
-    <div class="proyectos-timeline">
-      <% data.projects.featured.filter(p => p.category === 'api').forEach(function(proj) { %>
-        <div class="proyectos-item">
-          <div class="proyectos-item-content">
-            <span class="proyectos-project-title"><%= proj.title %></span>
-            <span class="proyectos-company">
-              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
-              <%= proj.company %>
-            </span>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </div>
-
-  <!-- Panel derecho: Automatización -->
-  <div class="proyectos-panel proyectos-panel--right"
-    :class="{ 'is-open': panel === 'automation' }">
-    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-    <h2 class="proyectos-section-title">Automatización</h2>
-    <div class="proyectos-timeline">
-      <% data.projects.featured.filter(p => p.category === 'automation').forEach(function(proj) { %>
-        <div class="proyectos-item">
-          <div class="proyectos-item-content">
-            <span class="proyectos-project-title"><%= proj.title %></span>
-            <span class="proyectos-company">
-              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
-              <%= proj.company %>
-            </span>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </div>
-
-  <!-- Sección de tecnologías -->
-  <section class="proyectos-tech animate-fade-in reveal-delay-2">
-    <h2 class="proyectos-tech-title">Tecnologías</h2>
-    <div class="proyectos-tech-list">
-      <% data.projects.libraries.forEach(function(lib, i) { %>
-        <span class="proyectos-tech-badge" style="animation-delay: <%= 0.8 + (i * 0.08) %>s"><%= lib %></span>
-      <% }); %>
-    </div>
-  </section>
 
   <!-- Footer -->
   <%- include('../partials/footer') %>

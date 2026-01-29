@@ -3,8 +3,7 @@
 <head>
   <%- include('../partials/head', { title }) %>
 </head>
-<body class="<%= pageState %> antialiased" x-data="{ panel: null }" x-cloak
-  @keydown.escape.window="panel = null">
+<body class="<%= pageState %> antialiased" x-cloak>
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
@@ -14,7 +13,7 @@
   <!-- Page Transition Wrapper -->
   <div class="page-transition-wrapper">
     <!-- Main Content -->
-    <main class="perfil-container">
+    <main class="perfil-container" x-data="{ panel: null }" @keydown.escape.window="panel = null">
       <!-- Fondo Vanta.js -->
       <div class="vanta-bg" id="vanta-perfil"></div>
 
@@ -23,7 +22,6 @@
         <p class="perfil-text">
           <%= data.about.description %>
         </p>
-
       </section>
 
       <!-- Indicador pulsante izquierdo: Experiencia -->
@@ -46,64 +44,64 @@
 
       <!-- Bordes decorativos -->
       <%- include('../partials/components/decorative-borders') %>
+
+      <!-- Overlay -->
+      <div class="perfil-overlay"
+        x-show="panel !== null"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="panel = null"
+        style="display: none;">
+      </div>
+
+      <!-- Panel izquierdo: Experiencia -->
+      <div class="perfil-panel perfil-panel--left"
+        :class="{ 'is-open': panel === 'experiencia' }">
+        <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="perfil-section-title">Experiencia</h2>
+        <div class="perfil-timeline">
+          <% data.experience.forEach(function(exp) { %>
+            <div class="perfil-item">
+              <span class="perfil-year"><%= exp.year %></span>
+              <div class="perfil-item-content">
+                <span class="perfil-role"><%= exp.position %></span>
+                <span class="perfil-company"><%= exp.company %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Panel derecho: Formación -->
+      <div class="perfil-panel perfil-panel--right"
+        :class="{ 'is-open': panel === 'formacion' }">
+        <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="perfil-section-title">Formación</h2>
+        <div class="perfil-timeline">
+          <% data.education.forEach(function(edu) { %>
+            <div class="perfil-item">
+              <span class="perfil-year"><%= edu.year %></span>
+              <div class="perfil-item-content">
+                <span class="perfil-role"><%= edu.title %></span>
+                <span class="perfil-company"><%= edu.institution %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
     </main>
-  </div>
-
-  <!-- Overlay -->
-  <div class="perfil-overlay"
-    x-show="panel !== null"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0"
-    x-transition:enter-end="opacity-100"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100"
-    x-transition:leave-end="opacity-0"
-    @click="panel = null"
-    style="display: none;">
-  </div>
-
-  <!-- Panel izquierdo: Experiencia -->
-  <div class="perfil-panel perfil-panel--left"
-    :class="{ 'is-open': panel === 'experiencia' }">
-    <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-    <h2 class="perfil-section-title">Experiencia</h2>
-    <div class="perfil-timeline">
-      <% data.experience.forEach(function(exp) { %>
-        <div class="perfil-item">
-          <span class="perfil-year"><%= exp.year %></span>
-          <div class="perfil-item-content">
-            <span class="perfil-role"><%= exp.position %></span>
-            <span class="perfil-company"><%= exp.company %></span>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </div>
-
-  <!-- Panel derecho: Formación -->
-  <div class="perfil-panel perfil-panel--right"
-    :class="{ 'is-open': panel === 'formacion' }">
-    <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 6L6 18M6 6l12 12"/>
-      </svg>
-    </button>
-    <h2 class="perfil-section-title">Formación</h2>
-    <div class="perfil-timeline">
-      <% data.education.forEach(function(edu) { %>
-        <div class="perfil-item">
-          <span class="perfil-year"><%= edu.year %></span>
-          <div class="perfil-item-content">
-            <span class="perfil-role"><%= edu.title %></span>
-            <span class="perfil-company"><%= edu.institution %></span>
-          </div>
-        </div>
-      <% }); %>
-    </div>
   </div>
 
   <!-- Footer -->
