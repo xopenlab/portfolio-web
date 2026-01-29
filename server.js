@@ -47,6 +47,11 @@ app.use(express.urlencoded({ extended: true }));
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Servir librerías de node_modules como estáticos (/vendor/*)
+app.use('/vendor/three', express.static(path.join(__dirname, 'node_modules', 'three', 'build')));
+app.use('/vendor/vanta', express.static(path.join(__dirname, 'node_modules', 'vanta', 'dist')));
+app.use('/vendor/p5', express.static(path.join(__dirname, 'node_modules', 'p5', 'lib')));
+
 // Rutas
 app.use('/', indexRoutes);
 

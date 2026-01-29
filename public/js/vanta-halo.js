@@ -1,8 +1,5 @@
 /**
- * Inicialización de Vanta.js Topology para la página de proyectos
- * Nota: Topology dibuja líneas acumulativas sin limpiar el canvas.
- * Se aplica un fade semi-transparente en cada frame para crear
- * una apariencia de animación continua.
+ * Inicialización de Vanta.js Halo para la página de proyectos
  */
 (function() {
   var vantaEffect = null;
@@ -10,56 +7,48 @@
 
   /**
    * Obtener colores actuales del tema
-   * @returns {{ bgColor: number, bgRgba: string, color: string|number }}
+   * @returns {{ bgColor: number, baseColor: number, color2: number }}
    */
   function getThemeColors() {
     var style = getComputedStyle(document.documentElement);
     var primary = style.getPropertyValue('--active-theme-primary').trim();
+    var secondary = style.getPropertyValue('--active-theme-secondary').trim();
     var isDark = document.documentElement.classList.contains('dark');
     return {
       bgColor: isDark ? 0x111827 : 0xf5f0eb,
-      bgRgba: isDark ? 'rgba(17,24,39,0.03)' : 'rgba(245,240,235,0.03)',
-      color: primary || 0x6b8ba4
+      baseColor: primary || 0x6b8ba4,
+      color2: secondary || 0xa3b8cc
     };
   }
 
   /**
-   * Crear efecto Vanta Topology
+   * Crear efecto Vanta Halo
    */
   function create() {
     var el = document.getElementById('vanta-proyectos');
-    if (!el || typeof VANTA === 'undefined' || typeof p5 === 'undefined') return;
+    if (!el || typeof VANTA === 'undefined') return;
     if (vantaEffect) return;
 
     var colors = getThemeColors();
 
-    vantaEffect = VANTA.TOPOLOGY({
+    vantaEffect = VANTA.HALO({
       el: el,
-      p5: p5,
+      THREE: THREE,
       mouseControls: true,
       touchControls: true,
       gyroControls: false,
       scale: 1.0,
       scaleMobile: 1.0,
       backgroundColor: colors.bgColor,
-      color: colors.color
+      baseColor: colors.baseColor,
+      color2: colors.color2,
+      amplitudeFactor: 0.8,
+      size: 1.2,
+      speed: 0.8
     });
 
-    // Inyectar fade en el loop de p5 para animación continua
-    if (vantaEffect.p5 && vantaEffect.p5.draw) {
-      var originalDraw = vantaEffect.p5.draw;
-      var fadeColor = colors.bgRgba;
-      vantaEffect.p5.draw = function() {
-        // Capa semi-transparente del fondo para desvanecer líneas antiguas
-        this.fill(fadeColor);
-        this.noStroke();
-        this.rect(-200, -200, this.width + 400, this.height + 400);
-        originalDraw.call(this);
-      };
-    }
-
     var canvas = el.querySelector('canvas');
-    if (canvas) canvas.style.opacity = '0.4';
+    if (canvas) canvas.style.opacity = '0.35';
   }
 
   /**
@@ -70,7 +59,8 @@
     var colors = getThemeColors();
     vantaEffect.setOptions({
       backgroundColor: colors.bgColor,
-      color: colors.color
+      baseColor: colors.baseColor,
+      color2: colors.color2
     });
   }
 

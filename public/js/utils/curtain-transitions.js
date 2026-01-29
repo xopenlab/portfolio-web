@@ -156,7 +156,10 @@ async function navigateToPage(url, curtain, pushState = true) {
     // 9. Scroll to top
     window.scrollTo(0, 0);
 
-    // 10. Re-inicializar Alpine.js en el nuevo contenido
+    // 10. Cargar scripts específicos de la página destino
+    await loadPageScripts(doc);
+
+    // 11. Re-inicializar Alpine.js en el nuevo contenido
     if (window.Alpine) {
       window.Alpine.initTree(document.querySelector('main'));
       if (newNav) {
@@ -164,7 +167,7 @@ async function navigateToPage(url, curtain, pushState = true) {
       }
     }
 
-    // 11. Revelar contenido (cortina sube)
+    // 12. Revelar contenido (cortina sube)
     await revealPage(curtain);
 
     console.log(`✓ Navegación SPA completada: ${url}`);
@@ -269,4 +272,90 @@ export function updateTransitionConfig(newConfig) {
   }
 
   console.log('✓ Configuración de transiciones actualizada:', newConfig);
+}
+
+/**
+ * Scripts que no deben recargarse en navegación SPA (comunes a todas las páginas)
+ */
+const SKIP_SCRIPTS = [
+  '/js/alpine-setup.js',
+  '/js/main.js',
+  'alpinejs'
+];
+
+/**
+ * Librerías vendor que solo se cargan una vez (comprueban su global antes de recargar)
+ * Nota: los scripts de efectos Vanta (vanta.birds, vanta.topology) no se incluyen aquí
+ * porque cada efecto registra un constructor diferente en window.VANTA
+ */
+const VENDOR_GLOBALS = {
+  '/vendor/three/three': 'THREE',
+  '/vendor/p5/p5': 'p5'
+};
+
+/**
+ * Cargar y ejecutar scripts específicos de la página destino
+ * Excluye scripts comunes ya cargados; librerías vendor se cargan solo una vez
+ * @param {Document} doc - Documento parseado de la página destino
+ * @returns {Promise<void>}
+ */
+async function loadPageScripts(doc) {
+  const scripts = doc.querySelectorAll('body > script[src]');
+  const vendorScripts = [];
+  const pageInitScripts = [];
+
+  for (const script of scripts) {
+    const src = script.getAttribute('src');
+    if (!src) continue;
+
+    // Saltar scripts comunes ya cargados
+    if (SKIP_SCRIPTS.some(c => src.includes(c))) continue;
+
+    // Clasificar: vendor (cargar solo si falta) vs init de página (re-ejecutar siempre)
+    const vendorKey = Object.keys(VENDOR_GLOBALS).find(k => src.includes(k));
+    if (vendorKey) {
+      vendorScripts.push({ src, globalName: VENDOR_GLOBALS[vendorKey] });
+    } else {
+      pageInitScripts.push(src);
+    }
+  }
+
+  if (vendorScripts.length === 0 && pageInitScripts.length === 0) return;
+
+  // Limpiar efecto Vanta anterior si existe
+  if (window.VANTA && window.VANTA.current) {
+    window.VANTA.current.destroy();
+    window.VANTA.current = null;
+  }
+
+  // Cargar librerías vendor solo si su global no existe aún
+  for (const { src, globalName } of vendorScripts) {
+    if (!window[globalName]) {
+      await loadScript(src);
+    }
+  }
+
+  // Re-ejecutar scripts de inicialización de página (vanta-birds.js, vanta-topology.js, etc.)
+  for (const src of pageInitScripts) {
+    await loadScript(src);
+  }
+}
+
+/**
+ * Cargar un script externo de forma dinámica
+ * @param {string} src - URL del script
+ * @returns {Promise<void>}
+ */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    // Si ya existe un script con este src, eliminarlo para re-ejecutar
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) existing.remove();
+
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(`Error cargando script: ${src}`));
+    document.body.appendChild(script);
+  });
 }
