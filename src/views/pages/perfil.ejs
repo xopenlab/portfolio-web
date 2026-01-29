@@ -3,7 +3,8 @@
 <head>
   <%- include('../partials/head', { title }) %>
 </head>
-<body class="<%= pageState %> antialiased" x-data x-cloak>
+<body class="<%= pageState %> antialiased" x-data="{ panel: null }" x-cloak
+  @keydown.escape.window="panel = null">
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
@@ -14,16 +15,95 @@
   <div class="page-transition-wrapper">
     <!-- Main Content -->
     <main class="perfil-container">
+      <!-- Fondo Vanta.js -->
+      <div class="vanta-bg" id="vanta-perfil"></div>
+
       <!-- Texto personal -->
-      <section class="perfil-about">
-        <p class="perfil-text animate-fade-in-up">
+      <section class="perfil-about animate-fade-in-up">
+        <p class="perfil-text">
           <%= data.about.description %>
         </p>
+
       </section>
+
+      <!-- Indicador pulsante izquierdo: Experiencia -->
+      <button class="perfil-trigger perfil-trigger--left animate-fade-in reveal-delay-1"
+        :class="{ 'is-active': panel === 'experiencia' }"
+        @click="panel = panel === 'experiencia' ? null : 'experiencia'"
+        aria-label="Ver experiencia profesional">
+        <span class="perfil-trigger-dot"></span>
+        <span class="perfil-trigger-label">Experiencia</span>
+      </button>
+
+      <!-- Indicador pulsante derecho: Formación -->
+      <button class="perfil-trigger perfil-trigger--right animate-fade-in reveal-delay-1"
+        :class="{ 'is-active': panel === 'formacion' }"
+        @click="panel = panel === 'formacion' ? null : 'formacion'"
+        aria-label="Ver formación">
+        <span class="perfil-trigger-label">Formación</span>
+        <span class="perfil-trigger-dot"></span>
+      </button>
 
       <!-- Bordes decorativos -->
       <%- include('../partials/components/decorative-borders') %>
     </main>
+  </div>
+
+  <!-- Overlay -->
+  <div class="perfil-overlay"
+    x-show="panel !== null"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    @click="panel = null"
+    style="display: none;">
+  </div>
+
+  <!-- Panel izquierdo: Experiencia -->
+  <div class="perfil-panel perfil-panel--left"
+    :class="{ 'is-open': panel === 'experiencia' }">
+    <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <h2 class="perfil-section-title">Experiencia</h2>
+    <div class="perfil-timeline">
+      <% data.experience.forEach(function(exp) { %>
+        <div class="perfil-item">
+          <span class="perfil-year"><%= exp.year %></span>
+          <div class="perfil-item-content">
+            <span class="perfil-role"><%= exp.position %></span>
+            <span class="perfil-company"><%= exp.company %></span>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Panel derecho: Formación -->
+  <div class="perfil-panel perfil-panel--right"
+    :class="{ 'is-open': panel === 'formacion' }">
+    <button class="perfil-panel-close" @click="panel = null" aria-label="Cerrar panel">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <h2 class="perfil-section-title">Formación</h2>
+    <div class="perfil-timeline">
+      <% data.education.forEach(function(edu) { %>
+        <div class="perfil-item">
+          <span class="perfil-year"><%= edu.year %></span>
+          <div class="perfil-item-content">
+            <span class="perfil-role"><%= edu.title %></span>
+            <span class="perfil-company"><%= edu.institution %></span>
+          </div>
+        </div>
+      <% }); %>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -39,5 +119,81 @@
   <script src="/js/alpine-setup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
   <script type="module" src="/js/main.js"></script>
+
+  <!-- Vanta.js Birds (solo perfil) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
+  <script>
+    (function() {
+      var vantaEffect = null;
+
+      /** Leer colores del tema activo y crear/recrear Vanta Birds */
+      function createVanta() {
+        var el = document.getElementById('vanta-perfil');
+        if (!el || typeof VANTA === 'undefined') return;
+
+        // Destruir instancia anterior si existe
+        if (vantaEffect) {
+          vantaEffect.destroy();
+          vantaEffect = null;
+        }
+
+        var style = getComputedStyle(document.documentElement);
+        var primary = style.getPropertyValue('--active-theme-primary').trim();
+        var secondary = style.getPropertyValue('--active-theme-secondary').trim();
+        var isDark = document.documentElement.classList.contains('dark');
+        var bgColor = isDark ? 0x111827 : 0xf5f0eb;
+
+        vantaEffect = VANTA.BIRDS({
+          el: el,
+          THREE: THREE,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          quantity: 2,
+          birdSize: 0.8,
+          wingSpan: 20,
+          speedLimit: 2,
+          separation: 80,
+          alignment: 30,
+          cohesion: 30,
+          backgroundColor: bgColor,
+          color1: primary || 0x6b8ba4,
+          color2: secondary || 0xa3b8cc,
+          colorMode: 'lerp'
+        });
+
+        // Reducir opacidad del canvas para que los pájaros sean más sutiles
+        var canvas = el.querySelector('canvas');
+        if (canvas) canvas.style.opacity = '0.4';
+      }
+
+      // Inicializar cuando la cortina se revele
+      document.addEventListener('curtainRevealed', createVanta, { once: true });
+
+      // Reaccionar a cambios de paleta de colores (Alpine store)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          if (m.attributeName === 'style' && vantaEffect) {
+            createVanta();
+          }
+        });
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
+      // Reaccionar a cambio dark/light
+      var classObserver = new MutationObserver(function() {
+        if (vantaEffect) createVanta();
+      });
+      classObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+      // Limpiar al navegar (SPA)
+      window.addEventListener('beforeunload', function() {
+        observer.disconnect();
+        classObserver.disconnect();
+        if (vantaEffect) vantaEffect.destroy();
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -597,11 +597,18 @@
 
   /* Página de Perfil */
   .perfil-container {
-    @apply min-h-screen flex items-center justify-center px-8 py-20;
+    @apply min-h-screen flex items-center justify-center px-8 py-20 relative overflow-hidden;
+  }
+
+  /* Fondo Vanta.js */
+  .vanta-bg {
+    @apply absolute inset-0;
+    z-index: 0;
   }
 
   .perfil-about {
-    @apply max-w-2xl;
+    @apply max-w-2xl mx-auto relative;
+    z-index: 1;
   }
 
   .perfil-text {
@@ -612,6 +619,327 @@
 
   .dark .perfil-text {
     color: var(--color-gray-300);
+  }
+
+  /* Indicadores pulsantes flotantes */
+  .perfil-trigger {
+    @apply fixed top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 cursor-pointer;
+    z-index: 50;
+    transition: opacity 0.3s ease;
+  }
+
+  .perfil-trigger--left {
+    @apply left-6 lg:left-10;
+  }
+
+  .perfil-trigger--right {
+    @apply right-6 lg:right-10;
+  }
+
+  .perfil-trigger-label {
+    @apply text-[0.65rem] uppercase tracking-[0.2em] font-medium select-none;
+    writing-mode: vertical-lr;
+    color: var(--color-gray-400);
+    transition: color 0.3s ease;
+  }
+
+  .perfil-trigger--left .perfil-trigger-label {
+    transform: rotate(180deg);
+  }
+
+  .perfil-trigger:hover .perfil-trigger-label {
+    color: var(--color-gray-700);
+  }
+
+  .dark .perfil-trigger:hover .perfil-trigger-label {
+    color: var(--color-gray-200);
+  }
+
+  .perfil-trigger-dot {
+    @apply w-3 h-3 rounded-full relative;
+    background-color: var(--active-theme-primary);
+  }
+
+  .perfil-trigger-dot::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background-color: var(--active-theme-primary);
+    animation: triggerPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .perfil-trigger.is-active .perfil-trigger-dot::before {
+    animation: none;
+  }
+
+  .perfil-trigger.is-active .perfil-trigger-label {
+    color: var(--active-theme-primary);
+  }
+
+  /* Overlay */
+  .perfil-overlay {
+    @apply fixed inset-0;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+  }
+
+  .dark .perfil-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Paneles laterales */
+  .perfil-panel {
+    @apply fixed top-0 bottom-0 overflow-y-auto;
+    z-index: 70;
+    width: 55%;
+    max-width: 40rem;
+    padding: 5rem 3rem 3rem;
+    background-color: var(--color-gray-50);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    will-change: transform;
+    opacity: 0;
+  }
+
+  .dark .perfil-panel {
+    background-color: var(--color-gray-900);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .perfil-panel--left {
+    @apply left-0;
+    transform: translateX(-100%);
+  }
+
+  .perfil-panel--right {
+    @apply right-0;
+    transform: translateX(100%);
+  }
+
+  .perfil-panel.is-open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Título de sección del panel: fade-in propio */
+  .perfil-panel .perfil-section-title {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+  }
+
+  .perfil-panel.is-open .perfil-section-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Animación stagger de items del timeline al abrir panel */
+  .perfil-panel .perfil-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                padding-left 0.15s ease 0s;
+  }
+
+  .perfil-panel--right .perfil-item {
+    transform: translateX(20px);
+  }
+
+  .perfil-panel.is-open .perfil-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .perfil-panel.is-open .perfil-item:nth-child(1) { transition-delay: 0.55s; }
+  .perfil-panel.is-open .perfil-item:nth-child(2) { transition-delay: 0.65s; }
+  .perfil-panel.is-open .perfil-item:nth-child(3) { transition-delay: 0.75s; }
+  .perfil-panel.is-open .perfil-item:nth-child(4) { transition-delay: 0.85s; }
+  .perfil-panel.is-open .perfil-item:nth-child(5) { transition-delay: 0.95s; }
+  .perfil-panel.is-open .perfil-item:nth-child(6) { transition-delay: 1.05s; }
+  .perfil-panel.is-open .perfil-item:nth-child(7) { transition-delay: 1.15s; }
+  .perfil-panel.is-open .perfil-item:nth-child(8) { transition-delay: 1.25s; }
+
+  .perfil-panel-close {
+    @apply absolute top-6 cursor-pointer;
+    right: 2rem;
+    color: var(--color-gray-400);
+    transition: color 0.2s ease;
+  }
+
+  .perfil-panel-close:hover {
+    color: var(--color-gray-700);
+  }
+
+  .dark .perfil-panel-close:hover {
+    color: var(--color-gray-200);
+  }
+
+  /* Contenido del panel */
+  .perfil-section-title {
+    @apply text-xs uppercase tracking-[0.25em] mb-10 font-medium;
+    color: var(--color-gray-400);
+  }
+
+  .dark .perfil-section-title {
+    color: var(--color-gray-500);
+  }
+
+  .perfil-timeline {
+    @apply flex flex-col gap-0 relative;
+    padding-left: 1.5rem;
+  }
+
+  /* Línea vertical del timeline */
+  .perfil-timeline::before {
+    content: '';
+    @apply absolute top-0 bottom-0;
+    left: 0;
+    width: 1px;
+    background: var(--color-gray-200);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+  }
+
+  .dark .perfil-timeline::before {
+    background: var(--color-gray-700);
+  }
+
+  .perfil-panel.is-open .perfil-timeline::before {
+    transform: scaleY(1);
+  }
+
+  /* Dot animado que recorre el timeline de abajo (antiguo) a arriba (actual) */
+  .perfil-timeline::after {
+    content: '';
+    @apply absolute rounded-full;
+    left: -3px;
+    bottom: 0;
+    width: 7px;
+    height: 7px;
+    background-color: var(--active-theme-primary);
+    opacity: 0;
+    box-shadow: 0 0 8px var(--active-theme-primary);
+    animation: none;
+  }
+
+  .perfil-panel.is-open .perfil-timeline::after {
+    opacity: 1;
+    animation: timelineDotTravel 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.7s forwards,
+               timelineDotPulse 2s ease-in-out 3.2s infinite;
+  }
+
+  .perfil-item {
+    @apply flex flex-col sm:flex-row sm:gap-8 py-4 relative;
+  }
+
+  /* Línea hover que crece (mismo efecto que el menú) */
+  .perfil-item::after {
+    content: '';
+    @apply absolute left-0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--active-theme-primary);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .perfil-item:hover::after {
+    width: 100%;
+  }
+
+  /* Dot estático en cada item del timeline */
+  .perfil-item::before {
+    content: '';
+    @apply absolute rounded-full;
+    left: -1.5rem;
+    top: 1.35rem;
+    width: 5px;
+    height: 5px;
+    margin-left: -2px;
+    background: var(--color-gray-300);
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+  }
+
+  .dark .perfil-item::before {
+    background: var(--color-gray-600);
+  }
+
+  .perfil-panel.is-open .perfil-item::before {
+    opacity: 1;
+  }
+
+  .perfil-item:hover::before {
+    background-color: var(--active-theme-primary);
+  }
+
+  .perfil-item:hover {
+    padding-left: 0.25rem;
+  }
+
+  .perfil-year {
+    @apply text-sm font-light shrink-0 sm:w-24;
+    color: var(--color-gray-400);
+  }
+
+  .dark .perfil-year {
+    color: var(--color-gray-500);
+  }
+
+  .perfil-item-content {
+    @apply flex flex-col;
+  }
+
+  .perfil-role {
+    @apply text-base font-normal;
+    color: var(--color-gray-800);
+  }
+
+  .dark .perfil-role {
+    color: var(--color-gray-200);
+  }
+
+  .perfil-company {
+    @apply text-sm font-light mt-0.5;
+    color: var(--color-gray-500);
+  }
+
+  .dark .perfil-company {
+    color: var(--color-gray-400);
+  }
+
+  /* Responsive: móvil */
+  .perfil-mobile-triggers {
+    @apply flex gap-4 mt-10 justify-center;
+    z-index: 1;
+    position: relative;
+  }
+
+  .perfil-mobile-btn {
+    @apply text-xs uppercase tracking-[0.15em] font-medium px-4 py-2 rounded-full;
+    border: 1px solid var(--color-gray-300);
+    color: var(--color-gray-500);
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .dark .perfil-mobile-btn {
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-400);
+  }
+
+  .perfil-mobile-btn:hover,
+  .perfil-mobile-btn.is-active {
+    border-color: var(--active-theme-primary);
+    color: var(--active-theme-primary);
+  }
+
+  @media (max-width: 639px) {
+    .perfil-panel {
+      width: 85%;
+    }
   }
 
   /* Página de Contacto */
@@ -1058,6 +1386,23 @@
 @keyframes fadeInOut {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
+}
+
+@keyframes triggerPulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(2.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@keyframes timelineDotTravel {
+  0% { bottom: 0; opacity: 0.4; }
+  60% { bottom: calc(100% - 2rem); opacity: 1; }
+  100% { bottom: calc(100% - 1.35rem); opacity: 1; box-shadow: 0 0 12px var(--active-theme-primary); }
+}
+
+@keyframes timelineDotPulse {
+  0%, 100% { box-shadow: 0 0 6px var(--active-theme-primary); transform: scale(1); }
+  50% { box-shadow: 0 0 18px var(--active-theme-primary); transform: scale(1.4); }
 }
 
 /* ===========================
