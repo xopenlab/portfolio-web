@@ -519,80 +519,349 @@
 
   /* Página de Proyectos */
   .proyectos-container {
-    @apply max-w-7xl mx-auto px-4 py-20 pt-32;
+    @apply min-h-screen flex items-center justify-center px-8 py-20 relative overflow-hidden;
   }
 
-  .page-header {
-    @apply text-center mb-16;
+  .proyectos-about {
+    @apply max-w-2xl mx-auto relative;
+    z-index: 1;
   }
 
-  .page-header h1 {
-    @apply text-5xl font-bold mb-4;
-    background: linear-gradient(135deg,
-      var(--color-theme-primary),
-      var(--color-theme-accent)
-    );
-    @apply bg-clip-text text-transparent;
+  .proyectos-text {
+    @apply text-lg md:text-xl leading-relaxed font-light;
+    font-family: var(--font-serif);
+    color: var(--color-gray-700);
   }
 
-  .page-subtitle {
-    @apply text-xl text-gray-600 dark:text-gray-400;
+  .dark .proyectos-text {
+    color: var(--color-gray-300);
   }
 
-  .filters {
-    @apply flex gap-4 justify-center mb-12 flex-wrap;
+  /* Indicadores pulsantes flotantes (proyectos) */
+  .proyectos-trigger {
+    @apply fixed flex flex-col items-center gap-3 cursor-pointer;
+    z-index: 50;
+    transition: opacity 0.3s ease;
   }
 
-  .filters button {
-    @apply px-6 py-2 rounded-full border-2 border-gray-300 dark:border-gray-700
-           transition-all duration-300;
+  .proyectos-trigger--left {
+    @apply left-6 lg:left-10 top-1/2 -translate-y-1/2;
   }
 
-  .filters button.active {
-    border-color: var(--color-theme-primary);
-    background-color: var(--color-theme-primary);
-    @apply text-white;
+  .proyectos-trigger--right {
+    @apply right-6 lg:right-10;
   }
 
-  .projects-list {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  .proyectos-trigger--right-top {
+    top: 30%;
+    transform: translateY(-50%);
   }
 
-  .project-card {
-    @apply bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md
-           border-2 border-transparent
-           transition-all duration-300;
+  .proyectos-trigger--right-bottom {
+    top: 70%;
+    transform: translateY(-50%);
   }
 
-  .project-card:hover {
-    border-color: var(--color-theme-primary);
-    @apply transform scale-105 shadow-xl;
+  .proyectos-trigger-label {
+    @apply text-[0.65rem] uppercase tracking-[0.2em] font-medium select-none;
+    writing-mode: vertical-lr;
+    color: var(--color-gray-400);
+    transition: color 0.3s ease;
   }
 
-  .project-logo-placeholder {
-    @apply w-full h-32 bg-gray-200 dark:bg-gray-700 rounded mb-4
-           flex items-center justify-center;
+  .proyectos-trigger--left .proyectos-trigger-label {
+    transform: rotate(180deg);
   }
 
-  .project-logo-placeholder::after {
-    content: 'Logo';
-    @apply text-gray-400 dark:text-gray-500 text-sm;
+  .proyectos-trigger:hover .proyectos-trigger-label {
+    color: var(--color-gray-700);
   }
 
-  .project-card h3 {
-    @apply text-xl font-bold mb-2;
+  .dark .proyectos-trigger:hover .proyectos-trigger-label {
+    color: var(--color-gray-200);
   }
 
-  .project-company {
-    @apply text-sm text-gray-600 dark:text-gray-400 mb-3;
+  .proyectos-trigger-dot {
+    @apply w-3 h-3 rounded-full relative;
+    background-color: var(--active-theme-primary);
   }
 
-  .project-description {
-    @apply text-sm text-gray-700 dark:text-gray-300 mb-4;
+  .proyectos-trigger-dot::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background-color: var(--active-theme-primary);
+    animation: triggerPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  .project-tags {
-    @apply flex gap-2 flex-wrap;
+  .proyectos-trigger.is-active .proyectos-trigger-dot::before {
+    animation: none;
+  }
+
+  .proyectos-trigger.is-active .proyectos-trigger-label {
+    color: var(--active-theme-primary);
+  }
+
+  /* Overlay (proyectos) */
+  .proyectos-overlay {
+    @apply fixed inset-0;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+  }
+
+  .dark .proyectos-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Paneles laterales (proyectos) */
+  .proyectos-panel {
+    @apply fixed top-0 bottom-0 overflow-y-auto;
+    z-index: 70;
+    width: 55%;
+    max-width: 40rem;
+    padding: 5rem 3rem 3rem;
+    background-color: var(--color-gray-50);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    will-change: transform;
+    opacity: 0;
+  }
+
+  .dark .proyectos-panel {
+    background-color: var(--color-gray-900);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .proyectos-panel--left {
+    @apply left-0;
+    transform: translateX(-100%);
+  }
+
+  .proyectos-panel--right {
+    @apply right-0;
+    transform: translateX(100%);
+  }
+
+  .proyectos-panel.is-open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .proyectos-panel .proyectos-section-title {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+  }
+
+  .proyectos-panel.is-open .proyectos-section-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .proyectos-panel .proyectos-item {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                padding-left 0.15s ease 0s;
+  }
+
+  .proyectos-panel--right .proyectos-item {
+    transform: translateX(20px);
+  }
+
+  .proyectos-panel.is-open .proyectos-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .proyectos-panel.is-open .proyectos-item:nth-child(1) { transition-delay: 0.55s; }
+  .proyectos-panel.is-open .proyectos-item:nth-child(2) { transition-delay: 0.65s; }
+  .proyectos-panel.is-open .proyectos-item:nth-child(3) { transition-delay: 0.75s; }
+  .proyectos-panel.is-open .proyectos-item:nth-child(4) { transition-delay: 0.85s; }
+  .proyectos-panel.is-open .proyectos-item:nth-child(5) { transition-delay: 0.95s; }
+
+  .proyectos-panel-close {
+    @apply absolute top-6 cursor-pointer;
+    right: 2rem;
+    color: var(--color-gray-400);
+    transition: color 0.2s ease;
+  }
+
+  .proyectos-panel-close:hover {
+    color: var(--color-gray-700);
+  }
+
+  .dark .proyectos-panel-close:hover {
+    color: var(--color-gray-200);
+  }
+
+  /* Contenido del panel (proyectos) */
+  .proyectos-section-title {
+    @apply text-xs uppercase tracking-[0.25em] mb-10 font-medium;
+    color: var(--color-gray-400);
+  }
+
+  .dark .proyectos-section-title {
+    color: var(--color-gray-500);
+  }
+
+  .proyectos-timeline {
+    @apply flex flex-col gap-0 relative;
+    padding-left: 1.5rem;
+  }
+
+  /* Línea vertical del timeline (proyectos) */
+  .proyectos-timeline::before {
+    content: '';
+    @apply absolute top-0 bottom-0;
+    left: 0;
+    width: 1px;
+    background: var(--color-gray-200);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+  }
+
+  .dark .proyectos-timeline::before {
+    background: var(--color-gray-700);
+  }
+
+  .proyectos-panel.is-open .proyectos-timeline::before {
+    transform: scaleY(1);
+  }
+
+  .proyectos-item {
+    @apply flex flex-col py-4 relative;
+  }
+
+  /* Dot estático en cada item */
+  .proyectos-item::before {
+    content: '';
+    @apply absolute rounded-full;
+    left: -1.5rem;
+    top: 50%;
+    transform: translate(-50%, -50%) translateX(0.5px);
+    width: 5px;
+    height: 5px;
+    background: var(--color-gray-300);
+    transition: background 0.3s ease;
+  }
+
+  .dark .proyectos-item::before {
+    background: var(--color-gray-600);
+  }
+
+  .proyectos-item:hover::before {
+    background: var(--active-theme-primary);
+  }
+
+  /* Línea hover que crece (proyectos) */
+  .proyectos-item::after {
+    content: '';
+    @apply absolute left-0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--active-theme-primary);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .proyectos-item:hover::after {
+    width: 100%;
+  }
+
+  .proyectos-item:hover {
+    padding-left: 0.5rem;
+  }
+
+  .proyectos-item-content {
+    @apply flex flex-col gap-1;
+  }
+
+  .proyectos-project-title {
+    @apply text-sm font-medium;
+    color: var(--color-gray-800);
+  }
+
+  .dark .proyectos-project-title {
+    color: var(--color-gray-200);
+  }
+
+  .proyectos-company {
+    @apply text-xs flex items-center gap-2;
+    color: var(--color-gray-400);
+  }
+
+  .dark .proyectos-company {
+    color: var(--color-gray-500);
+  }
+
+  .proyectos-company-logo {
+    @apply rounded-sm object-contain;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Sección de tecnologías */
+  .proyectos-tech {
+    @apply relative py-12 px-8;
+    z-index: 1;
+  }
+
+  .proyectos-tech-title {
+    @apply text-xs uppercase tracking-[0.25em] mb-8 font-medium text-center;
+    color: var(--color-gray-400);
+  }
+
+  .dark .proyectos-tech-title {
+    color: var(--color-gray-500);
+  }
+
+  .proyectos-tech-list {
+    @apply flex flex-wrap justify-center gap-3 max-w-3xl mx-auto;
+  }
+
+  .proyectos-tech-badge {
+    @apply text-xs px-3 py-1.5 rounded-full font-medium;
+    border: 1px solid var(--color-gray-200);
+    color: var(--color-gray-600);
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: techBadgeFadeIn 0.4s ease forwards;
+    animation-play-state: paused;
+  }
+
+  body.page-revealed .proyectos-tech-badge {
+    animation-play-state: running;
+  }
+
+  .dark .proyectos-tech-badge {
+    border-color: var(--color-gray-700);
+    color: var(--color-gray-400);
+  }
+
+  .proyectos-tech-badge:hover {
+    border-color: var(--active-theme-primary);
+    color: var(--active-theme-primary);
+  }
+
+  @keyframes techBadgeFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive: paneles proyectos en móvil */
+  @media (max-width: 768px) {
+    .proyectos-panel {
+      width: 85%;
+    }
   }
 
   /* Página de Perfil */

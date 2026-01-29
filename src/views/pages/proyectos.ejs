@@ -3,7 +3,8 @@
 <head>
   <%- include('../partials/head', { title }) %>
 </head>
-<body class="<%= pageState %> antialiased" x-data x-cloak>
+<body class="<%= pageState %> antialiased" x-data="{ panel: null }" x-cloak
+  @keydown.escape.window="panel = null">
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
@@ -14,80 +15,142 @@
   <div class="page-transition-wrapper">
     <!-- Main Content -->
     <main class="proyectos-container">
-      <!-- Header de la página -->
-      <header class="page-header">
-        <h1>Proyectos</h1>
-        <p class="page-subtitle">Trabajos destacados</p>
-      </header>
+      <!-- Fondo Vanta.js -->
+      <div class="vanta-bg" id="vanta-proyectos"></div>
 
-      <!-- Grid de proyectos con filtros -->
-      <section class="projects-grid" x-data="{ filter: 'all' }">
-        <!-- Filtros opcionales -->
-        <div class="filters">
-          <button @click="filter = 'all'" :class="{ active: filter === 'all' }">
-            Todos
-          </button>
-          <button @click="filter = 'backend'" :class="{ active: filter === 'backend' }">
-            Backend
-          </button>
-          <button @click="filter = 'fullstack'" :class="{ active: filter === 'fullstack' }">
-            Full Stack
-          </button>
-        </div>
-
-        <!-- Grid de proyectos (placeholders) -->
-        <div class="projects-list">
-          <!-- Proyecto placeholder 1 -->
-          <article class="project-card">
-            <div class="project-logo-placeholder"></div>
-            <h3>Proyecto de ejemplo 1</h3>
-            <p class="project-company">Empresa</p>
-            <p class="project-description">
-              Descripción breve del proyecto y las tecnologías utilizadas.
-            </p>
-            <div class="project-tags">
-              <span class="badge">Node.js</span>
-              <span class="badge">Express</span>
-              <span class="badge">SQL Server</span>
-            </div>
-          </article>
-
-          <!-- Proyecto placeholder 2 -->
-          <article class="project-card">
-            <div class="project-logo-placeholder"></div>
-            <h3>Proyecto de ejemplo 2</h3>
-            <p class="project-company">Empresa</p>
-            <p class="project-description">
-              Descripción breve del proyecto y las tecnologías utilizadas.
-            </p>
-            <div class="project-tags">
-              <span class="badge">React</span>
-              <span class="badge">TypeScript</span>
-              <span class="badge">MongoDB</span>
-            </div>
-          </article>
-
-          <!-- Proyecto placeholder 3 -->
-          <article class="project-card">
-            <div class="project-logo-placeholder"></div>
-            <h3>Proyecto de ejemplo 3</h3>
-            <p class="project-company">Empresa</p>
-            <p class="project-description">
-              Descripción breve del proyecto y las tecnologías utilizadas.
-            </p>
-            <div class="project-tags">
-              <span class="badge">PHP</span>
-              <span class="badge">Laravel</span>
-              <span class="badge">MySQL</span>
-            </div>
-          </article>
-        </div>
+      <!-- Texto introductorio -->
+      <section class="proyectos-about animate-fade-in-up">
+        <p class="proyectos-text">
+          Una selección de proyectos profesionales en los que he participado, desde aplicaciones web completas hasta APIs RESTful y soluciones de automatización industrial.
+        </p>
       </section>
+
+      <!-- Indicador pulsante izquierdo: Aplicaciones Web -->
+      <button class="proyectos-trigger proyectos-trigger--left animate-fade-in reveal-delay-1"
+        :class="{ 'is-active': panel === 'webapp' }"
+        @click="panel = panel === 'webapp' ? null : 'webapp'"
+        aria-label="Ver aplicaciones web">
+        <span class="proyectos-trigger-dot"></span>
+        <span class="proyectos-trigger-label">Aplicaciones Web</span>
+      </button>
+
+      <!-- Indicador pulsante derecho superior: APIs y Servicios -->
+      <button class="proyectos-trigger proyectos-trigger--right proyectos-trigger--right-top animate-fade-in reveal-delay-1"
+        :class="{ 'is-active': panel === 'api' }"
+        @click="panel = panel === 'api' ? null : 'api'"
+        aria-label="Ver APIs y servicios">
+        <span class="proyectos-trigger-label">APIs y Servicios</span>
+        <span class="proyectos-trigger-dot"></span>
+      </button>
+
+      <!-- Indicador pulsante derecho inferior: Automatización -->
+      <button class="proyectos-trigger proyectos-trigger--right proyectos-trigger--right-bottom animate-fade-in reveal-delay-2"
+        :class="{ 'is-active': panel === 'automation' }"
+        @click="panel = panel === 'automation' ? null : 'automation'"
+        aria-label="Ver automatización">
+        <span class="proyectos-trigger-label">Automatización</span>
+        <span class="proyectos-trigger-dot"></span>
+      </button>
 
       <!-- Bordes decorativos -->
       <%- include('../partials/components/decorative-borders') %>
     </main>
   </div>
+
+  <!-- Overlay -->
+  <div class="proyectos-overlay"
+    x-show="panel !== null"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+    @click="panel = null"
+    style="display: none;">
+  </div>
+
+  <!-- Panel izquierdo: Aplicaciones Web -->
+  <div class="proyectos-panel proyectos-panel--left"
+    :class="{ 'is-open': panel === 'webapp' }">
+    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <h2 class="proyectos-section-title">Aplicaciones Web</h2>
+    <div class="proyectos-timeline">
+      <% data.projects.featured.filter(p => p.category === 'webapp').forEach(function(proj) { %>
+        <div class="proyectos-item">
+          <div class="proyectos-item-content">
+            <span class="proyectos-project-title"><%= proj.title %></span>
+            <span class="proyectos-company">
+              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
+              <%= proj.company %>
+            </span>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Panel derecho: APIs y Servicios -->
+  <div class="proyectos-panel proyectos-panel--right"
+    :class="{ 'is-open': panel === 'api' }">
+    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <h2 class="proyectos-section-title">APIs y Servicios</h2>
+    <div class="proyectos-timeline">
+      <% data.projects.featured.filter(p => p.category === 'api').forEach(function(proj) { %>
+        <div class="proyectos-item">
+          <div class="proyectos-item-content">
+            <span class="proyectos-project-title"><%= proj.title %></span>
+            <span class="proyectos-company">
+              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
+              <%= proj.company %>
+            </span>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Panel derecho: Automatización -->
+  <div class="proyectos-panel proyectos-panel--right"
+    :class="{ 'is-open': panel === 'automation' }">
+    <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <h2 class="proyectos-section-title">Automatización</h2>
+    <div class="proyectos-timeline">
+      <% data.projects.featured.filter(p => p.category === 'automation').forEach(function(proj) { %>
+        <div class="proyectos-item">
+          <div class="proyectos-item-content">
+            <span class="proyectos-project-title"><%= proj.title %></span>
+            <span class="proyectos-company">
+              <img src="<%= proj.logo %>" alt="" class="proyectos-company-logo" width="20" height="20" loading="lazy">
+              <%= proj.company %>
+            </span>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <!-- Sección de tecnologías -->
+  <section class="proyectos-tech animate-fade-in reveal-delay-2">
+    <h2 class="proyectos-tech-title">Tecnologías</h2>
+    <div class="proyectos-tech-list">
+      <% data.projects.libraries.forEach(function(lib, i) { %>
+        <span class="proyectos-tech-badge" style="animation-delay: <%= 0.8 + (i * 0.08) %>s"><%= lib %></span>
+      <% }); %>
+    </div>
+  </section>
 
   <!-- Footer -->
   <%- include('../partials/footer') %>
@@ -102,5 +165,11 @@
   <script src="/js/alpine-setup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
   <script type="module" src="/js/main.js"></script>
+
+  <!-- Vanta.js Topology (solo proyectos) — requiere three.js (base) + p5.js (renderizado) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
+  <script type="module" src="/js/vanta-topology.js"></script>
 </body>
 </html>
