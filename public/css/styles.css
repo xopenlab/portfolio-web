@@ -189,9 +189,14 @@
 /* Componentes personalizados */
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold 
-           hover:bg-primary-700 active:scale-95 transition-all duration-200 
+    @apply px-6 py-3 text-white rounded-lg font-semibold
+           active:scale-95 transition-all duration-300
            shadow-lg hover:shadow-xl;
+    background-color: var(--color-theme-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-theme-secondary);
   }
 
   .btn-secondary {
@@ -201,10 +206,15 @@
   }
 
   .btn-outline {
-    @apply px-6 py-3 border-2 border-primary-600 text-primary-600 
-           dark:border-primary-400 dark:text-primary-400 rounded-lg font-semibold 
-           hover:bg-primary-600 hover:text-white dark:hover:bg-primary-500 
-           active:scale-95 transition-all duration-200;
+    @apply px-6 py-3 border-2 rounded-lg font-semibold
+           active:scale-95 transition-all duration-300;
+    border-color: var(--color-theme-primary);
+    color: var(--color-theme-primary);
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-theme-primary);
+    @apply text-white;
   }
 
   .card {
@@ -279,8 +289,9 @@
   }
 
   .badge {
-    @apply inline-block px-3 py-1 text-sm font-semibold rounded-full 
-           bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100;
+    @apply inline-block px-3 py-1 text-sm font-semibold rounded-full;
+    background-color: color-mix(in srgb, var(--color-theme-primary) 15%, transparent);
+    color: var(--color-theme-primary);
   }
 
   .gradient-bg {
@@ -305,7 +316,7 @@
   }
 
   .theme-bar.active {
-    @apply opacity-100 h-1;
+    @apply opacity-100 h-1.5 scale-110;
   }
 
   /* Toggle de animaciones - Diseño minimalista */
@@ -332,7 +343,8 @@
     @apply text-7xl md:text-9xl lg:text-[12rem] font-semibold mb-6 md:mb-8;
     line-height: 0.9;
     letter-spacing: -0.03em;
-    @apply text-gray-800 dark:text-gray-100;
+    color: var(--color-theme-primary);
+    transition: color 0.5s ease;
   }
 
   .name-line {
@@ -365,7 +377,8 @@
     @apply text-xl md:text-3xl mb-16 md:mb-24;
     font-style: italic;
     font-weight: 400;
-    @apply text-gray-600 dark:text-gray-400;
+    color: var(--color-theme-secondary);
+    transition: color 0.5s ease;
     letter-spacing: 0.01em;
     padding-left: 0.5rem;
     animation: fadeIn 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
@@ -394,7 +407,7 @@
   .link-number {
     @apply text-sm font-sans;
     color: var(--color-theme-primary);
-    opacity: 0.6;
+    opacity: 0.8;
     font-weight: 500;
   }
 
@@ -482,7 +495,7 @@
       transform: scaleX(0);
     }
     to {
-      opacity: 0.3;
+      opacity: 0.45;
       transform: scaleX(1);
     }
   }
@@ -493,7 +506,7 @@
       transform: scaleY(0);
     }
     to {
-      opacity: 0.3;
+      opacity: 0.45;
       transform: scaleY(1);
     }
   }
