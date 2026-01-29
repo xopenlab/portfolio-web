@@ -3,6 +3,7 @@
  */
 
 import { portfolioData } from '../data/portfolio.data.js';
+import { colorThemes, defaultTheme } from '../data/colorThemes.data.js';
 
 export const getPerfil = (req, res) => {
   try {
@@ -10,7 +11,9 @@ export const getPerfil = (req, res) => {
       pageState: 'is-perfil',
       title: 'Perfil Profesional - Josevi Pérez',
       currentYear: new Date().getFullYear(),
-      data: portfolioData
+      data: portfolioData,
+      colorThemes,
+      defaultTheme
     });
   } catch (error) {
     console.error('Error al renderizar perfil:', error);

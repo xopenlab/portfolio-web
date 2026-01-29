@@ -53,42 +53,15 @@ document.addEventListener('alpine:init', () => {
     }
   });
 
-  // Store de temas de color
-  Alpine.store('colorTheme', {
-    current: localStorage.getItem('colorTheme') || 'blue-dusk',
+  // Store de temas de color (datos centralizados desde data-attributes del HTML)
+  const root = document.documentElement;
+  const colorThemes = JSON.parse(root.dataset.colorThemes || '{}');
+  const defaultTheme = root.dataset.defaultTheme || 'blue-dusk';
 
-    themes: {
-      'blue-dusk': {
-        primary: '#7d97b8',
-        secondary: '#0369a1',
-        accent: '#d946ef'
-      },
-      'golden-hour': {
-        primary: '#dfb255',
-        secondary: '#f59e0b',
-        accent: '#d946ef'
-      },
-      'forest-green': {
-        primary: '#52a47e',
-        secondary: '#059669',
-        accent: '#ec4899'
-      },
-      'sage-mist': {
-        primary: '#9eaf92',
-        secondary: '#10b981',
-        accent: '#8b5cf6'
-      },
-      'stone-gray': {
-        primary: '#a7b6b0',
-        secondary: '#6b7280',
-        accent: '#ec4899'
-      },
-      'charcoal-night': {
-        primary: '#2a2927',
-        secondary: '#1f2937',
-        accent: '#f59e0b'
-      }
-    },
+  Alpine.store('colorTheme', {
+    current: localStorage.getItem('colorTheme') || defaultTheme,
+
+    themes: colorThemes,
 
     setTheme(themeName) {
       if (!this.themes[themeName]) {

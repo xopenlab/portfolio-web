@@ -3,6 +3,7 @@
  */
 
 import { portfolioData } from '../data/portfolio.data.js';
+import { colorThemes, defaultTheme } from '../data/colorThemes.data.js';
 
 export const getIndex = (req, res) => {
   try {
@@ -10,7 +11,9 @@ export const getIndex = (req, res) => {
       pageState: 'is-index',
       title: 'Josevi Pérez - Programador Web Senior',
       data: portfolioData,
-      currentYear: new Date().getFullYear()
+      currentYear: new Date().getFullYear(),
+      colorThemes,
+      defaultTheme
     });
   } catch (error) {
     console.error('Error al renderizar index:', error);

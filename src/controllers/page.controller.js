@@ -1,5 +1,6 @@
 // Importar datos del portfolio desde archivo centralizado
 import { portfolioData } from '../data/portfolio.data.js';
+import { colorThemes, defaultTheme } from '../data/colorThemes.data.js';
 
 // Controlador para la página principal
 export const getHome = (req, res) => {
@@ -8,6 +9,8 @@ export const getHome = (req, res) => {
       title: `${portfolioData.personalInfo.name} - ${portfolioData.personalInfo.title}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,
+      colorThemes,
+      defaultTheme,
     });
   } catch (error) {
     console.error("Error al renderizar home:", error);
@@ -22,6 +25,8 @@ export const getLegalNotice = (req, res) => {
       title: `Aviso Legal - ${portfolioData.personalInfo.name}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,
+      colorThemes,
+      defaultTheme,
     });
   } catch (error) {
     console.error("Error al renderizar aviso legal:", error);
@@ -36,6 +41,8 @@ export const getPrivacyPolicy = (req, res) => {
       title: `Política de Privacidad - ${portfolioData.personalInfo.name}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,
+      colorThemes,
+      defaultTheme,
     });
   } catch (error) {
     console.error("Error al renderizar política de privacidad:", error);
@@ -50,6 +57,8 @@ export const getCookiesPolicy = (req, res) => {
       title: `Política de Cookies - ${portfolioData.personalInfo.name}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,
+      colorThemes,
+      defaultTheme,
     });
   } catch (error) {
     console.error("Error al renderizar política de cookies:", error);

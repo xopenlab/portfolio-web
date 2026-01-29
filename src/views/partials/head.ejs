@@ -40,13 +40,25 @@
 <script>
   // Aplicar tema inmediatamente para evitar flash
   (function() {
-    const isDark = localStorage.getItem('darkMode') === 'true' || 
-                   (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
+    var isDark = localStorage.getItem('darkMode') === 'true' ||
+                 (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+
+    // Pre-inicializar paleta de color antes de que Alpine cargue
+    var root = document.documentElement;
+    var themes = JSON.parse(root.dataset.colorThemes || '{}');
+    var defaultTheme = root.dataset.defaultTheme || 'blue-dusk';
+    var saved = localStorage.getItem('colorTheme') || defaultTheme;
+    var t = themes[saved] || themes[defaultTheme];
+    if (t) {
+      root.style.setProperty('--active-theme-primary', t.primary);
+      root.style.setProperty('--active-theme-secondary', t.secondary);
+      root.style.setProperty('--active-theme-accent', t.accent);
     }
   })();
 </script>

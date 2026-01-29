@@ -82,7 +82,7 @@ function addNameHoverEffect() {
       anime({
         targets: letter,
         translateY: -10,
-        color: getComputedStyle(document.documentElement).getPropertyValue('--active-theme-primary') || '#7d97b8',
+        scale: 1.15,
         duration: 300,
         easing: 'easeOutQuad'
       });
@@ -92,7 +92,7 @@ function addNameHoverEffect() {
       anime({
         targets: letter,
         translateY: 0,
-        color: getComputedStyle(document.documentElement).getPropertyValue('--color-theme-primary') || '#7d97b8',
+        scale: 1,
         duration: 300,
         easing: 'easeOutQuad'
       });
