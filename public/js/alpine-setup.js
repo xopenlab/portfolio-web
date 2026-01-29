@@ -7,8 +7,7 @@
  * Detección inmediata del tema (ejecutado antes de que Alpine esté listo)
  */
 (function() {
-  const isDark = localStorage.getItem('darkMode') === 'true' ||
-                 (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isDark = localStorage.getItem('darkMode') !== 'false';
 
   if (isDark) {
     document.documentElement.classList.add('dark');

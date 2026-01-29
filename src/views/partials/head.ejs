@@ -40,8 +40,7 @@
 <script>
   // Aplicar tema inmediatamente para evitar flash
   (function() {
-    var isDark = localStorage.getItem('darkMode') === 'true' ||
-                 (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var isDark = localStorage.getItem('darkMode') !== 'false';
 
     if (isDark) {
       document.documentElement.classList.add('dark');
