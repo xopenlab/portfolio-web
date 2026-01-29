@@ -35,8 +35,8 @@ export const colorThemes = {
     label: 'Gris Piedra'
   },
   'charcoal-night': {
-    primary: '#d6d3d1',
-    secondary: '#a8a29e',
+    primary: '#78716c',
+    secondary: '#57534e',
     accent: '#f59e0b',
     label: 'Noche Carbón'
   }
