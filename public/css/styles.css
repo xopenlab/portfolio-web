@@ -1896,6 +1896,13 @@
   @apply fixed top-24 left-8 right-8 z-40;
   @apply flex items-center justify-between gap-8;
   @apply max-w-6xl mx-auto;
+  @apply py-3 px-6 rounded-full;
+  @apply transition-all duration-300;
+}
+
+.internal-navigation.is-glass {
+  @apply backdrop-blur-md bg-white/70 dark:bg-gray-900/70;
+  @apply shadow-sm;
 }
 
 .nav-home {

@@ -82,6 +82,21 @@ document.addEventListener('alpine:init', () => {
     }
   });
 
+  // Componente internalNav: aplica fondo glass al hacer scroll
+  Alpine.data('internalNav', () => ({
+    scrolled: false,
+
+    init() {
+      this.onScroll = () => { this.scrolled = window.scrollY > 60; };
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      this.onScroll();
+    },
+
+    destroy() {
+      window.removeEventListener('scroll', this.onScroll);
+    }
+  }));
+
   // Componente heroReveal: gestiona el reveal de la imagen al hacer hover en el nombre
   Alpine.data('heroReveal', () => ({
     imageRevealed: false,

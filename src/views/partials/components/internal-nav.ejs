@@ -1,5 +1,7 @@
 <!-- Navegación para páginas internas -->
 <nav class="internal-navigation"
+  x-data="internalNav"
+  :class="{ 'is-glass': scrolled }"
   :style="$store.panel.current ? 'z-index: 0; pointer-events: none' : ''"
   aria-label="Navegación principal">
   <a href="/" class="nav-home" aria-label="Volver a inicio" title="Inicio (Esc)">
