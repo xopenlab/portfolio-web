@@ -85,5 +85,36 @@ document.addEventListener('alpine:init', () => {
     }
   });
 
+  // Store de paneles laterales (compartido entre header y páginas con paneles)
+  Alpine.store('panel', {
+    current: null,
+
+    /**
+     * Inicializar store: registrar listener de tecla ESC
+     */
+    init() {
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.current) {
+          this.close();
+        }
+      });
+    },
+
+    /**
+     * Alternar panel: abrir si está cerrado, cerrar si está abierto
+     * @param {string} name - Nombre del panel
+     */
+    toggle(name) {
+      this.current = this.current === name ? null : name;
+    },
+
+    /**
+     * Cerrar panel activo
+     */
+    close() {
+      this.current = null;
+    }
+  });
+
   console.log('✓ Alpine.js stores registrados correctamente');
 });

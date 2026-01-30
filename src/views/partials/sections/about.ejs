@@ -5,9 +5,11 @@
     </div>
 
     <div class="animate-on-scroll">
-      <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-light">
-        <%= data.about.description %>
-      </p>
+      <% data.about.description.forEach(function(paragraph) { %>
+        <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed font-light">
+          <%= paragraph %>
+        </p>
+      <% }); %>
     </div>
   </div>
 </section>

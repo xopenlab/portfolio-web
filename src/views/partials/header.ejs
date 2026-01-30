@@ -4,7 +4,11 @@
     scrolled: false
   }"
   @scroll.window="scrolled = window.scrollY > 20"
-  :class="scrolled ? 'glass shadow-lg' : 'bg-transparent'"
+  :class="[
+    scrolled ? 'glass shadow-lg' : 'bg-transparent',
+    $store.panel.current ? 'pointer-events-none' : ''
+  ]"
+  :style="$store.panel.current ? 'z-index: 0' : ''"
   class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
 >
   <nav class="container mx-auto px-4 py-4">

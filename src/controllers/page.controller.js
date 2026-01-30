@@ -19,25 +19,25 @@ export const getHome = (req, res) => {
 };
 
 // Controlador para la página de Aviso Legal
-export const getLegalNotice = (req, res) => {
-  try {
-    res.render("pages/legal-notice", {
-      title: `Aviso Legal - ${portfolioData.personalInfo.name}`,
-      currentYear: new Date().getFullYear(),
-      data: portfolioData,
-      colorThemes,
-      defaultTheme,
-    });
-  } catch (error) {
-    console.error("Error al renderizar aviso legal:", error);
-    res.status(500).send("Error al cargar la página");
-  }
+export const getLegalNotice = (req, res, next) => {
+  res.render("pages/legal-notice", {
+    pageState: 'is-legal',
+    title: `Aviso Legal - ${portfolioData.personalInfo.name}`,
+    currentYear: new Date().getFullYear(),
+    data: portfolioData,
+    colorThemes,
+    defaultTheme,
+  }, (err, html) => {
+    if (err) { console.error("DEBUG LEGAL RENDER ERROR:", err); return next(err); }
+    res.send(html);
+  });
 };
 
 // Controlador para la página de Política de Privacidad
 export const getPrivacyPolicy = (req, res) => {
   try {
     res.render("pages/privacy-policy", {
+      pageState: 'is-legal',
       title: `Política de Privacidad - ${portfolioData.personalInfo.name}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,
@@ -54,6 +54,7 @@ export const getPrivacyPolicy = (req, res) => {
 export const getCookiesPolicy = (req, res) => {
   try {
     res.render("pages/cookies-policy", {
+      pageState: 'is-legal',
       title: `Política de Cookies - ${portfolioData.personalInfo.name}`,
       currentYear: new Date().getFullYear(),
       data: portfolioData,

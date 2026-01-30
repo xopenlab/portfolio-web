@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es" data-color-themes='<%- JSON.stringify(colorThemes) %>' data-default-theme="<%= defaultTheme %>">
 <head>
-  <%- include('../partials/head') %>
-  <title>Política de Privacidad - <%= data.personalInfo.name %></title>
+  <%- include('../partials/head', { title }) %>
 </head>
-<body class="antialiased" x-data>
-  <%- include('../partials/header') %>
+<body class="<%= pageState %> antialiased" x-data x-cloak>
+  <%- include('../partials/header', { pageState }) %>
+
+  <!-- Navegación interna -->
+  <%- include('../partials/components/internal-nav') %>
 
   <main class="pt-20 legal-page">
     <section class="section">

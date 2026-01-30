@@ -93,6 +93,11 @@ export function initCurtainTransitions() {
  */
 async function navigateToPage(url, curtain, pushState = true) {
   try {
+    // 0. Cerrar panel activo antes de navegar
+    if (window.Alpine && Alpine.store('panel')) {
+      Alpine.store('panel').close();
+    }
+
     // 1. Bajar cortina
     await hidePage(curtain);
 

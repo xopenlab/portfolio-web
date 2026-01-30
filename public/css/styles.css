@@ -826,6 +826,10 @@
     @apply text-lg md:text-xl leading-relaxed font-light;
     font-family: var(--font-serif);
     color: var(--color-gray-700);
+
+    & + & {
+      @apply mt-4;
+    }
   }
 
   .dark .perfil-text {
@@ -1380,15 +1384,13 @@
 
   /* Transiciones entre páginas */
   .page-transition-wrapper {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInPage 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: fadeInPage 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @keyframes fadeInPage {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    from {
+      opacity: 0;
+      transform: translateY(10px);
     }
   }
 

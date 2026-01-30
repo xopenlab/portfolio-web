@@ -7,27 +7,26 @@
   <!-- Header/Navigation -->
   <%- include('../partials/header', { pageState }) %>
 
-  <!-- Navegación interna -->
-  <%- include('../partials/components/internal-nav') %>
-
   <!-- Page Transition Wrapper -->
   <div class="page-transition-wrapper">
+    <!-- Navegación interna -->
+    <%- include('../partials/components/internal-nav') %>
     <!-- Main Content -->
-    <main class="proyectos-container" x-data="{ panel: null }" @keydown.escape.window="panel = null">
+    <main class="proyectos-container">
       <!-- Fondo Vanta.js -->
       <div class="vanta-bg" id="vanta-proyectos"></div>
 
       <!-- Texto introductorio -->
       <section class="proyectos-about animate-fade-in-up">
         <p class="proyectos-text">
-          Una selección de proyectos profesionales en los que he participado, desde aplicaciones web completas hasta APIs RESTful y soluciones de automatización industrial.
+          Una selección de proyectos profesionales de entre los que he desarrollado, desde aplicaciones web completas hasta APIs RESTful y soluciones de automatización industrial.
         </p>
       </section>
 
       <!-- Indicador pulsante izquierdo: Aplicaciones Web -->
       <button class="proyectos-trigger proyectos-trigger--left animate-fade-in reveal-delay-1"
-        :class="{ 'is-active': panel === 'webapp' }"
-        @click="panel = panel === 'webapp' ? null : 'webapp'"
+        :class="{ 'is-active': $store.panel.current === 'webapp' }"
+        @click="$store.panel.toggle('webapp')"
         aria-label="Ver aplicaciones web">
         <span class="proyectos-trigger-dot"></span>
         <span class="proyectos-trigger-label">Aplicaciones Web</span>
@@ -35,8 +34,8 @@
 
       <!-- Indicador pulsante derecho superior: APIs y Servicios -->
       <button class="proyectos-trigger proyectos-trigger--right proyectos-trigger--right-top animate-fade-in reveal-delay-1"
-        :class="{ 'is-active': panel === 'api' }"
-        @click="panel = panel === 'api' ? null : 'api'"
+        :class="{ 'is-active': $store.panel.current === 'api' }"
+        @click="$store.panel.toggle('api')"
         aria-label="Ver APIs y servicios">
         <span class="proyectos-trigger-label">APIs y Servicios</span>
         <span class="proyectos-trigger-dot"></span>
@@ -44,8 +43,8 @@
 
       <!-- Indicador pulsante derecho inferior: Automatización -->
       <button class="proyectos-trigger proyectos-trigger--right proyectos-trigger--right-bottom animate-fade-in reveal-delay-2"
-        :class="{ 'is-active': panel === 'automation' }"
-        @click="panel = panel === 'automation' ? null : 'automation'"
+        :class="{ 'is-active': $store.panel.current === 'automation' }"
+        @click="$store.panel.toggle('automation')"
         aria-label="Ver automatización">
         <span class="proyectos-trigger-label">Automatización</span>
         <span class="proyectos-trigger-dot"></span>
@@ -56,21 +55,21 @@
 
       <!-- Overlay -->
       <div class="proyectos-overlay"
-        x-show="panel !== null"
+        x-show="$store.panel.current !== null"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        @click="panel = null"
+        @click="$store.panel.close()"
         style="display: none;">
       </div>
 
       <!-- Panel izquierdo: Aplicaciones Web -->
       <div class="proyectos-panel proyectos-panel--left"
-        :class="{ 'is-open': panel === 'webapp' }">
-        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+        :class="{ 'is-open': $store.panel.current === 'webapp' }">
+        <button class="proyectos-panel-close" @click="$store.panel.close()" aria-label="Cerrar panel">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
@@ -80,7 +79,11 @@
           <% data.projects.featured.filter(p => p.category === 'webapp').forEach(function(proj) { %>
             <div class="proyectos-item">
               <div class="proyectos-item-content">
-                <span class="proyectos-project-title"><%= proj.title %></span>
+                <% if (proj.link) { %>
+                  <a href="<%= proj.link %>" target="_blank" rel="noopener noreferrer" class="proyectos-project-title proyectos-project-link"><%= proj.title %></a>
+                <% } else { %>
+                  <span class="proyectos-project-title"><%= proj.title %></span>
+                <% } %>
                 <span class="proyectos-company"><%= proj.company %></span>
               </div>
             </div>
@@ -90,8 +93,8 @@
 
       <!-- Panel derecho: APIs y Servicios -->
       <div class="proyectos-panel proyectos-panel--right"
-        :class="{ 'is-open': panel === 'api' }">
-        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+        :class="{ 'is-open': $store.panel.current === 'api' }">
+        <button class="proyectos-panel-close" @click="$store.panel.close()" aria-label="Cerrar panel">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
@@ -111,8 +114,8 @@
 
       <!-- Panel derecho: Automatización -->
       <div class="proyectos-panel proyectos-panel--right"
-        :class="{ 'is-open': panel === 'automation' }">
-        <button class="proyectos-panel-close" @click="panel = null" aria-label="Cerrar panel">
+        :class="{ 'is-open': $store.panel.current === 'automation' }">
+        <button class="proyectos-panel-close" @click="$store.panel.close()" aria-label="Cerrar panel">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
