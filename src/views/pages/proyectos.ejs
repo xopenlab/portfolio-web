@@ -23,6 +23,19 @@
         </p>
       </section>
 
+      <!-- Botones móviles para paneles (visible solo en móvil) -->
+      <div class="proyectos-mobile-triggers animate-fade-in reveal-delay-1">
+        <button class="proyectos-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'webapp' }"
+          @click="$store.panel.toggle('webapp')">Aplicaciones Web</button>
+        <button class="proyectos-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'api' }"
+          @click="$store.panel.toggle('api')">APIs</button>
+        <button class="proyectos-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'automation' }"
+          @click="$store.panel.toggle('automation')">Automatización</button>
+      </div>
+
       <!-- Indicador pulsante izquierdo: Aplicaciones Web -->
       <button class="proyectos-trigger proyectos-trigger--left animate-fade-in reveal-delay-1"
         :class="{ 'is-active': $store.panel.current === 'webapp' }"

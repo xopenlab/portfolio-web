@@ -135,6 +135,9 @@
     setTimeout(function () {
       if (map) map.invalidateSize();
     }, 100);
+    setTimeout(function () {
+      if (map) map.invalidateSize();
+    }, 500);
   }
 
   /**

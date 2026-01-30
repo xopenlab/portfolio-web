@@ -522,6 +522,20 @@
     @apply min-h-screen flex items-center justify-center px-8 py-20 relative overflow-hidden;
   }
 
+  @media (max-width: 768px) {
+    .proyectos-container {
+      @apply flex-col items-center justify-start px-6 pt-32 pb-20;
+    }
+
+    .proyectos-about {
+      @apply text-center;
+    }
+
+    .proyectos-text {
+      @apply text-base;
+    }
+  }
+
   .proyectos-about {
     @apply max-w-2xl mx-auto relative;
     z-index: 1;
@@ -799,7 +813,39 @@
 
 
 
+  /* Botones móviles para paneles (proyectos) */
+  .proyectos-mobile-triggers {
+    @apply flex-col items-center gap-3 mt-8;
+    display: none;
+    z-index: 1;
+    position: relative;
+  }
+
+  .proyectos-mobile-btn {
+    @apply text-xs uppercase tracking-[0.15em] font-medium px-4 py-2 rounded-full;
+    border: 1px solid var(--color-gray-300);
+    color: var(--color-gray-500);
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .dark .proyectos-mobile-btn {
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-400);
+  }
+
+  .proyectos-mobile-btn:hover,
+  .proyectos-mobile-btn.is-active {
+    border-color: var(--active-theme-primary);
+    color: var(--active-theme-primary);
+  }
+
   /* Responsive: paneles proyectos en móvil */
+  @media (max-width: 768px) {
+    .proyectos-trigger { display: none; }
+    .proyectos-mobile-triggers { display: flex; }
+  }
+
   @media (max-width: 768px) {
     .proyectos-panel {
       width: 85%;
@@ -809,6 +855,20 @@
   /* Página de Perfil */
   .perfil-container {
     @apply min-h-screen flex items-center justify-center px-8 py-20 relative overflow-hidden;
+  }
+
+  @media (max-width: 768px) {
+    .perfil-container {
+      @apply flex-col items-center justify-start px-6 pt-32 pb-20;
+    }
+
+    .perfil-about {
+      @apply text-center;
+    }
+
+    .perfil-text {
+      @apply text-base;
+    }
   }
 
   /* Fondo Vanta.js */
@@ -1137,7 +1197,8 @@
 
   /* Responsive: móvil */
   .perfil-mobile-triggers {
-    @apply flex gap-4 mt-10 justify-center;
+    @apply flex-col items-center gap-3 mt-8;
+    display: none;
     z-index: 1;
     position: relative;
   }
@@ -1161,7 +1222,9 @@
     color: var(--active-theme-primary);
   }
 
-  @media (max-width: 639px) {
+  @media (max-width: 768px) {
+    .perfil-trigger { display: none; }
+    .perfil-mobile-triggers { display: flex; }
     .perfil-panel {
       width: 85%;
     }
@@ -1170,6 +1233,37 @@
   /* Página de Contacto */
   .contacto-container {
     @apply min-h-screen flex flex-col items-center justify-center px-8 py-20 relative overflow-hidden;
+  }
+
+  @media (max-width: 768px) {
+    .contacto-container {
+      @apply items-center px-4 pt-32 pb-20;
+    }
+  }
+
+  .contacto-about {
+    @apply max-w-2xl mx-auto relative;
+    z-index: 1;
+  }
+
+  .contacto-text {
+    @apply text-lg md:text-xl leading-relaxed font-light;
+    font-family: var(--font-serif);
+    color: var(--color-gray-700);
+  }
+
+  .dark .contacto-text {
+    color: var(--color-gray-300);
+  }
+
+  @media (max-width: 768px) {
+    .contacto-about {
+      @apply text-center;
+    }
+
+    .contacto-text {
+      @apply text-base;
+    }
   }
 
   /* Trigger del panel de contacto */
@@ -1221,6 +1315,38 @@
 
   .contacto-trigger.is-active .contacto-trigger-label {
     color: var(--active-theme-primary);
+  }
+
+  /* Botones móviles para panel (contacto) */
+  .contacto-mobile-triggers {
+    @apply gap-4 mt-10 justify-center;
+    display: none;
+    z-index: 1;
+    position: relative;
+  }
+
+  .contacto-mobile-btn {
+    @apply text-xs uppercase tracking-[0.15em] font-medium px-4 py-2 rounded-full;
+    border: 1px solid var(--color-gray-300);
+    color: var(--color-gray-500);
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .dark .contacto-mobile-btn {
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-400);
+  }
+
+  .contacto-mobile-btn:hover,
+  .contacto-mobile-btn.is-active {
+    border-color: var(--active-theme-primary);
+    color: var(--active-theme-primary);
+  }
+
+  @media (max-width: 768px) {
+    .contacto-trigger { display: none; }
+    .contacto-mobile-triggers { display: flex; }
   }
 
   /* Panel lateral de contacto */
@@ -1339,89 +1465,6 @@
 
   .dark .contacto-panel-close:hover {
     color: var(--color-gray-200);
-  }
-
-  .contacto-map-wrapper {
-    @apply relative w-full max-w-2xl rounded-lg;
-    z-index: 2;
-    background-color: #f5f0eb;
-    padding: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.06),
-      0 8px 24px rgba(0, 0, 0, 0.04);
-  }
-
-  .contacto-map-wrapper #contacto-map {
-    @apply rounded;
-    overflow: hidden;
-  }
-
-  .dark .contacto-map-wrapper {
-    background-color: #111827;
-    border-color: rgba(255, 255, 255, 0.06);
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.2),
-      0 8px 24px rgba(0, 0, 0, 0.15);
-  }
-
-  #contacto-map {
-    @apply w-full;
-    height: 380px;
-    opacity: 0.85;
-  }
-
-  .dark #contacto-map {
-    opacity: 0.7;
-    filter: brightness(0.8) contrast(1.1);
-  }
-
-  /* Botón fullscreen del mapa */
-  .contacto-map-fullscreen-btn {
-    @apply absolute bottom-2 right-2 flex items-center justify-center w-8 h-8 rounded;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid var(--color-gray-300);
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .contacto-map-fullscreen-btn:hover {
-    background: rgba(255, 255, 255, 1);
-  }
-
-  .dark .contacto-map-fullscreen-btn {
-    background: rgba(31, 41, 55, 0.85);
-    border-color: var(--color-gray-600);
-    color: var(--color-gray-300);
-  }
-
-  .dark .contacto-map-fullscreen-btn:hover {
-    background: rgba(31, 41, 55, 1);
-  }
-
-  /* Mapa en pantalla completa */
-  .contacto-map-wrapper.is-fullscreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    border-radius: 0;
-    z-index: 9999;
-    padding: 0;
-    border: none;
-    box-shadow: none;
-  }
-
-  .contacto-map-wrapper.is-fullscreen #contacto-map {
-    height: 100%;
-  }
-
-  /* Control de capas Leaflet */
-  .leaflet-control-layers {
-    border-radius: 6px !important;
   }
 
   /* Header Modular */

@@ -2,7 +2,7 @@
 <html lang="es" data-color-themes='<%- JSON.stringify(colorThemes) %>' data-default-theme="<%= defaultTheme %>">
 <head>
   <%- include('../partials/head', { title }) %>
-  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+
 </head>
 <body class="<%= pageState %> antialiased" x-data x-cloak>
   <!-- Header/Navigation -->
@@ -17,9 +17,18 @@
       <!-- Fondo Vanta.js -->
       <div class="vanta-bg" id="vanta-contacto"></div>
 
-      <!-- Mapa Leaflet -->
-      <div class="contacto-map-wrapper animate-fade-in-up">
-        <div id="contacto-map"></div>
+      <!-- Texto introductorio -->
+      <section class="contacto-about animate-fade-in-up">
+        <p class="contacto-text">
+          Si tienes un proyecto en mente o simplemente quieres ponerte en contacto, no dudes en escribirme. Estoy abierto a conversar tranquilamente.
+        </p>
+      </section>
+
+      <!-- Botón móvil para panel de contacto (visible solo en móvil) -->
+      <div class="contacto-mobile-triggers animate-fade-in reveal-delay-1">
+        <button class="contacto-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'contacto' }"
+          @click="$store.panel.toggle('contacto')">Contacto</button>
       </div>
 
       <!-- Indicador pulsante derecho: Contacto -->
@@ -85,10 +94,6 @@
   <script src="/js/alpine-setup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
   <script type="module" src="/js/main.js"></script>
-
-  <!-- Leaflet + Mapa de contacto -->
-  <script src="/vendor/leaflet/leaflet.js"></script>
-  <script src="/js/contacto-map.js"></script>
 
   <!-- Vanta.js Cells (fondo contacto) -->
   <script src="/vendor/three/three.min.js"></script>

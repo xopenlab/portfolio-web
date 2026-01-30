@@ -23,6 +23,19 @@
         <% }); %>
       </section>
 
+      <!-- Botones móviles para paneles (visible solo en móvil) -->
+      <div class="perfil-mobile-triggers animate-fade-in reveal-delay-1">
+        <button class="perfil-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'experiencia' }"
+          @click="$store.panel.toggle('experiencia')">Experiencia</button>
+        <button class="perfil-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'titulaciones' }"
+          @click="$store.panel.toggle('titulaciones')">Titulaciones</button>
+        <button class="perfil-mobile-btn"
+          :class="{ 'is-active': $store.panel.current === 'cursos' }"
+          @click="$store.panel.toggle('cursos')">Cursos</button>
+      </div>
+
       <!-- Indicador pulsante izquierdo: Experiencia -->
       <button class="perfil-trigger perfil-trigger--left animate-fade-in reveal-delay-1"
         :class="{ 'is-active': $store.panel.current === 'experiencia' }"
