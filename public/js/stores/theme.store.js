@@ -32,7 +32,6 @@ document.addEventListener('alpine:init', () => {
         // Solo aplicar si el usuario no ha establecido preferencia manual
         if (!localStorage.getItem('darkMode')) {
           this.setTheme(e.matches);
-          console.log('✓ Tema automático:', e.matches ? 'oscuro' : 'claro', '(preferencia del sistema)');
         }
       });
     },
@@ -42,7 +41,6 @@ document.addEventListener('alpine:init', () => {
      */
     toggle() {
       this.setTheme(!this.isDark);
-      console.log('✓ Tema cambiado a:', this.isDark ? 'oscuro' : 'claro');
     },
 
     /**

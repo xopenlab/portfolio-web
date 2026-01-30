@@ -36,10 +36,7 @@ const transitionConfig = {
 export function initCurtainTransitions() {
   const curtain = document.getElementById('page-curtain');
 
-  if (!curtain) {
-    console.warn('⚠️ No se encontró el elemento #page-curtain');
-    return;
-  }
+  if (!curtain) return;
 
   // Aplicar configuración inicial
   applyCurtainEffect(curtain, transitionConfig.activeEffect);
@@ -81,8 +78,6 @@ export function initCurtainTransitions() {
     }
   });
 
-  console.log('✓ Sistema SPA con transiciones inicializado');
-  console.log(`  Efecto activo: ${transitionConfig.activeEffect}`);
 }
 
 /**
@@ -174,8 +169,6 @@ async function navigateToPage(url, curtain, pushState = true) {
 
     // 12. Revelar contenido (cortina sube)
     await revealPage(curtain);
-
-    console.log(`✓ Navegación SPA completada: ${url}`);
 
   } catch (error) {
     console.error('❌ Error en navegación SPA:', error);
@@ -276,7 +269,6 @@ export function updateTransitionConfig(newConfig) {
     applyCurtainEffect(curtain, newConfig.activeEffect);
   }
 
-  console.log('✓ Configuración de transiciones actualizada:', newConfig);
 }
 
 /**
@@ -296,8 +288,7 @@ const SKIP_SCRIPTS = [
 const VENDOR_GLOBALS = {
   '/vendor/three/three': 'THREE',
   '/vendor/p5/p5': 'p5',
-  '/vendor/leaflet/leaflet': 'L',
-  '/vendor/animejs/anime': 'anime'
+  '/vendor/leaflet/leaflet': 'L'
 };
 
 /**

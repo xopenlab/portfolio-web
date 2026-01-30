@@ -7,8 +7,6 @@ import { initFloatingScrollTop } from './utils/floating-scroll-top.js';
 
 // JavaScript principal de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Portfolio cargado correctamente');
-
   // Pequeño delay para asegurar que todos los elementos están renderizados
   setTimeout(() => {
     // Inicializar sistemas después de que el DOM esté listo
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const activateEasterEgg = () => {
     // Efecto de confetti o algo divertido
-    console.log('🎉 ¡Easter egg activado!');
     document.body.style.animation = 'rainbow 2s linear infinite';
     
     setTimeout(() => {
@@ -121,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
       maxScroll = Math.round(scrollPercent);
       // Aquí podrías enviar datos a analytics
       if (maxScroll === 25 || maxScroll === 50 || maxScroll === 75 || maxScroll === 100) {
-        console.log(`📊 Scroll depth: ${maxScroll}%`);
+        // Aquí podrías enviar datos a analytics
       }
     }
   }, { passive: true });
@@ -132,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const perfObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'navigation') {
-            console.log(`⚡ Tiempo de carga: ${entry.loadEventEnd - entry.fetchStart}ms`);
+            // Performance: entry.loadEventEnd - entry.fetchStart
           }
         }
       });
@@ -165,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const updateNetworkStatus = () => {
       if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-        console.warn('⚠️ Conexión lenta detectada');
         // Aquí podrías mostrar un mensaje al usuario o cargar versiones optimizadas
       }
     };
@@ -176,11 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Detectar modo offline
   window.addEventListener('online', () => {
-    console.log('✅ Conexión restaurada');
+    // Conexión restaurada
   });
 
   window.addEventListener('offline', () => {
-    console.warn('⚠️ Sin conexión a internet');
+    // Sin conexión a internet
   });
 
   // Accesibilidad: Agregar skip links

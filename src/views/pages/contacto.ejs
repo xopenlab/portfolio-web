@@ -14,10 +14,8 @@
     <%- include('../partials/components/internal-nav') %>
     <!-- Main Content -->
     <main class="contacto-container">
-      <!-- Fondo anime.js -->
-      <div class="anime-bg" id="anime-contacto">
-        <div class="anime-creature" id="anime-creature"></div>
-      </div>
+      <!-- Fondo Vanta.js -->
+      <div class="vanta-bg" id="vanta-contacto"></div>
 
       <!-- Mapa Leaflet -->
       <div class="contacto-map-wrapper animate-fade-in-up">
@@ -92,8 +90,9 @@
   <script src="/vendor/leaflet/leaflet.js"></script>
   <script src="/js/contacto-map.js"></script>
 
-  <!-- Anime.js - Fondo animado -->
-  <script src="/vendor/animejs/anime.umd.min.js"></script>
-  <script src="/js/anime-creature.js"></script>
+  <!-- Vanta.js Cells (fondo contacto) -->
+  <script src="/vendor/three/three.min.js"></script>
+  <script src="/vendor/vanta/vanta.cells.min.js"></script>
+  <script src="/js/vanta-cells.js"></script>
 </body>
 </html>

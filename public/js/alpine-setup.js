@@ -28,14 +28,12 @@ document.addEventListener('alpine:init', () => {
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
         if (!localStorage.getItem('darkMode')) {
           this.setTheme(e.matches);
-          console.log('✓ Tema automático:', e.matches ? 'oscuro' : 'claro', '(preferencia del sistema)');
         }
       });
     },
 
     toggle() {
       this.setTheme(!this.isDark);
-      console.log('✓ Tema cambiado a:', this.isDark ? 'oscuro' : 'claro');
     },
 
     setTheme(dark) {
@@ -77,7 +75,6 @@ document.addEventListener('alpine:init', () => {
 
       localStorage.setItem('colorTheme', themeName);
 
-      console.log(`✓ Tema de color cambiado a: ${themeName}`);
     },
 
     init() {
@@ -116,5 +113,4 @@ document.addEventListener('alpine:init', () => {
     }
   });
 
-  console.log('✓ Alpine.js stores registrados correctamente');
 });
