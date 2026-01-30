@@ -120,6 +120,7 @@ document.addEventListener('alpine:init', () => {
     init() {
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && this.current) {
+          e.stopImmediatePropagation();
           this.close();
         }
       });

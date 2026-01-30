@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 0);
 
   // Tecla ESC para volver a la página principal (solo en páginas internas)
+  // Si hay un panel abierto, el store panel captura ESC con stopImmediatePropagation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && window.location.pathname !== '/') {
       const homeLink = document.querySelector('.nav-home');
