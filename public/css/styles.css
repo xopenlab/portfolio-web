@@ -838,17 +838,27 @@
 
   /* Indicadores pulsantes flotantes */
   .perfil-trigger {
-    @apply fixed top-1/2 -translate-y-1/2 flex flex-col items-center gap-3 cursor-pointer;
+    @apply fixed flex flex-col items-center gap-3 cursor-pointer;
     z-index: 50;
     transition: opacity 0.3s ease;
   }
 
   .perfil-trigger--left {
-    @apply left-6 lg:left-10;
+    @apply left-6 lg:left-10 top-1/2 -translate-y-1/2;
   }
 
   .perfil-trigger--right {
     @apply right-6 lg:right-10;
+  }
+
+  .perfil-trigger--right-top {
+    top: 30%;
+    transform: translateY(-50%);
+  }
+
+  .perfil-trigger--right-bottom {
+    top: 70%;
+    transform: translateY(-50%);
   }
 
   .perfil-trigger-label {

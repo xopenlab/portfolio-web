@@ -32,12 +32,21 @@
         <span class="perfil-trigger-label">Experiencia</span>
       </button>
 
-      <!-- Indicador pulsante derecho: Formación -->
-      <button class="perfil-trigger perfil-trigger--right animate-fade-in reveal-delay-1"
-        :class="{ 'is-active': $store.panel.current === 'formacion' }"
-        @click="$store.panel.toggle('formacion')"
-        aria-label="Ver formación">
-        <span class="perfil-trigger-label">Formación</span>
+      <!-- Indicador pulsante derecho superior: Titulaciones -->
+      <button class="perfil-trigger perfil-trigger--right perfil-trigger--right-top animate-fade-in reveal-delay-1"
+        :class="{ 'is-active': $store.panel.current === 'titulaciones' }"
+        @click="$store.panel.toggle('titulaciones')"
+        aria-label="Ver titulaciones">
+        <span class="perfil-trigger-label">Titulaciones</span>
+        <span class="perfil-trigger-dot"></span>
+      </button>
+
+      <!-- Indicador pulsante derecho inferior: Cursos -->
+      <button class="perfil-trigger perfil-trigger--right perfil-trigger--right-bottom animate-fade-in reveal-delay-2"
+        :class="{ 'is-active': $store.panel.current === 'cursos' }"
+        @click="$store.panel.toggle('cursos')"
+        aria-label="Ver cursos">
+        <span class="perfil-trigger-label">Cursos</span>
         <span class="perfil-trigger-dot"></span>
       </button>
 
@@ -79,17 +88,39 @@
         </div>
       </div>
 
-      <!-- Panel derecho: Formación -->
+      <!-- Panel derecho: Titulaciones -->
       <div class="perfil-panel perfil-panel--right"
-        :class="{ 'is-open': $store.panel.current === 'formacion' }">
+        :class="{ 'is-open': $store.panel.current === 'titulaciones' }">
         <button class="perfil-panel-close" @click="$store.panel.close()" aria-label="Cerrar panel">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
-        <h2 class="perfil-section-title">Formación</h2>
+        <h2 class="perfil-section-title">Titulaciones</h2>
         <div class="perfil-timeline">
-          <% data.education.forEach(function(edu) { %>
+          <% data.education.filter(e => e.type === 'degree').forEach(function(edu) { %>
+            <div class="perfil-item">
+              <span class="perfil-year"><%= edu.year %></span>
+              <div class="perfil-item-content">
+                <span class="perfil-role"><%= edu.title %></span>
+                <span class="perfil-company"><%= edu.institution %></span>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <!-- Panel derecho: Cursos -->
+      <div class="perfil-panel perfil-panel--right"
+        :class="{ 'is-open': $store.panel.current === 'cursos' }">
+        <button class="perfil-panel-close" @click="$store.panel.close()" aria-label="Cerrar panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <h2 class="perfil-section-title">Cursos</h2>
+        <div class="perfil-timeline">
+          <% data.education.filter(e => e.type === 'course').forEach(function(edu) { %>
             <div class="perfil-item">
               <span class="perfil-year"><%= edu.year %></span>
               <div class="perfil-item-content">

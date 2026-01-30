@@ -30,20 +30,6 @@ export const portfolioData = {
 
   education: [
     {
-      year: "2024",
-      title: "Curso Formativo Inglés B1",
-      institution: "Servei Valencià d'Ocupació i Formació",
-      duration: "240 horas",
-      type: "course",
-    },
-    {
-      year: "2021",
-      title: "Fast Master en Dirección de Transformación Digital",
-      institution: "Nunsys",
-      duration: "90 horas",
-      type: "course",
-    },
-    {
       year: "2018",
       title: "Técnico Superior en Desarrollo de Aplicaciones Multiplataforma",
       institution: "Florida Universitaria",
@@ -53,13 +39,18 @@ export const portfolioData = {
       year: "2018",
       title: "Certificado en Oracle DataBase Foundations (1Z0-006)",
       institution: "Centro SERVEF de Formación CRNFP de Paterna",
-      type: "certification",
+      type: "degree",
     },
     {
       year: "2016",
-      title:
-        "Técnico Superior Iluminación, Captación y Tratamiento de la imagen",
+      title: "Técnico Superior Iluminación, Captación y Tratamiento de la imagen",
       institution: "Instituto Educación Secundaria La Marxadella",
+      type: "degree",
+    },
+    {
+      year: "2003",
+      title: "Certificado de Aptitud Pedagógica (CAP)",
+      institution: "Universidad Politécnica de Valencia",
       type: "degree",
     },
     {
@@ -67,6 +58,36 @@ export const portfolioData = {
       title: "Ingeniero Técnico Forestal",
       institution: "Universidad Politécnica de Valencia",
       type: "degree",
+    },
+    {
+      year: "2026",
+      title: "Inteligencia Artificial Aplicada con Node.js (60 horas)",
+      institution: "Universidad Politécnica de Valencia",
+      type: "course",
+    },
+    {
+      year: "2024",
+      title: "Curso Formativo Inglés B1 (240 horas)",
+      institution: "Servei Valencià d'Ocupació i Formació",
+      type: "course",
+    },
+    {
+      year: "2021",
+      title: "Fast Master en Dirección de Transformación Digital (90 horas)",
+      institution: "Nunsys",
+      type: "course",
+    },
+    {
+      year: "2018",
+      title: "Curso de Introducción a las BBDD Relacionales Oracle (80 horas)",
+      institution: "Centro SERVEF de Formación CRNFP de Paterna",
+      type: "course",
+    },
+    {
+      year: "2018",
+      title: "Curso de Desarrollo de Aplicaciones Web con PHP y MySQL (80 horas)",
+      institution: "Centro SERVEF de Formación CRNFP de Paterna",
+      type: "course",
     },
   ],
 
