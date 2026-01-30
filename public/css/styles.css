@@ -1169,67 +1169,109 @@
 
   /* Página de Contacto */
   .contacto-container {
-    @apply max-w-6xl mx-auto px-4 py-20 pt-32;
+    @apply min-h-screen flex flex-col items-center justify-center px-8 py-20 relative overflow-hidden;
   }
 
-  .contacto-content {
-    @apply grid grid-cols-1 md:grid-cols-3 gap-12;
+  /* Fondo anime.js */
+  .anime-bg {
+    @apply absolute inset-0;
+    z-index: -1;
+    pointer-events: none;
+    isolation: isolate;
+  }
+
+  #anime-contacto {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.3;
+  }
+
+  .dark #anime-contacto {
+    opacity: 0.2;
+  }
+
+  #anime-creature {
+    font-size: 0.2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #anime-creature div {
+    transform-style: preserve-3d;
+    position: relative;
+    width: 4em;
+    height: 4em;
+    margin: 3em;
+    border-radius: 2em;
+    will-change: transform;
+    mix-blend-mode: plus-lighter;
+  }
+
+  .dark #anime-creature div {
+    mix-blend-mode: screen;
   }
 
   .contacto-info {
-    @apply md:col-span-1;
+    @apply relative flex flex-col items-center gap-3 mb-8;
+    z-index: 1;
+    isolation: isolate;
   }
 
-  .info-item {
-    @apply flex gap-4 mb-6;
+  .contacto-data {
+    @apply text-center;
   }
 
-  .info-icon {
-    @apply text-3xl;
+  .contacto-data-label {
+    @apply text-sm uppercase tracking-[0.15em] font-light;
+    color: var(--color-gray-600);
   }
 
-  .info-label {
-    @apply text-sm text-gray-500 dark:text-gray-400 mb-1;
+  .dark .contacto-data-label {
+    color: var(--color-gray-400);
   }
 
-  .info-value {
-    @apply font-semibold;
+  .contacto-data-link {
+    @apply text-sm uppercase tracking-[0.15em] font-light;
+    color: var(--color-gray-600);
+    transition: color 0.3s ease;
   }
 
-  .info-link {
-    @apply font-semibold;
-    color: var(--color-theme-primary);
+  .dark .contacto-data-link {
+    color: var(--color-gray-400);
   }
 
-  .info-link:hover {
-    @apply underline;
+  .contacto-data-link:hover {
+    color: var(--active-theme-primary);
   }
 
-  .contacto-form-section {
-    @apply md:col-span-2;
+  .contacto-map-wrapper {
+    @apply relative w-full max-w-lg rounded-lg overflow-hidden;
+    z-index: 2;
+    background-color: #f5f0eb;
   }
 
-  .contacto-form {
-    @apply space-y-6;
+  .dark .contacto-map-wrapper {
+    background-color: #111827;
   }
 
-  .form-group {
-    @apply flex flex-col;
+  #contacto-map {
+    @apply w-full;
+    height: 280px;
+    opacity: 0.85;
   }
 
-  .form-label {
-    @apply mb-2 font-medium text-gray-700 dark:text-gray-300;
-  }
-
-  .form-input {
-    @apply px-4 py-3 rounded-lg border-2 border-gray-300 dark:border-gray-700
-           bg-white dark:bg-gray-800
-           transition-colors duration-300
-           focus:outline-none;
-  }
-
-  .form-input:focus {
-    border-color: var(--color-theme-primary);
+  .dark #contacto-map {
+    opacity: 0.7;
+    filter: brightness(0.8) contrast(1.1);
   }
 
   /* Header Modular */

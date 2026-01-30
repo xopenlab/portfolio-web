@@ -2,6 +2,7 @@
 <html lang="es" data-color-themes='<%- JSON.stringify(colorThemes) %>' data-default-theme="<%= defaultTheme %>">
 <head>
   <%- include('../partials/head', { title }) %>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
 </head>
 <body class="<%= pageState %> antialiased" x-data x-cloak>
   <!-- Header/Navigation -->
@@ -13,100 +14,27 @@
     <%- include('../partials/components/internal-nav') %>
     <!-- Main Content -->
     <main class="contacto-container">
-      <!-- Header de la página -->
-      <header class="page-header">
-        <h1>Contacto</h1>
-        <p class="page-subtitle">¿Hablamos de tu proyecto?</p>
-      </header>
+      <!-- Fondo anime.js -->
+      <div class="anime-bg" id="anime-contacto">
+        <div class="anime-creature" id="anime-creature"></div>
+      </div>
 
-      <!-- Contenido principal: Info + Formulario -->
-      <div class="contacto-content">
-        <!-- Información de contacto -->
-        <aside class="contacto-info">
-          <h2 class="section-title">Información</h2>
+      <!-- Datos de contacto -->
+      <section class="contacto-info animate-fade-in-up">
+        <div class="contacto-data">
+          <span class="contacto-data-label">Almussafes (Valencia) cp. 46440</span>
+        </div>
+        <div class="contacto-data">
+          <a href="tel:+34667701362" class="contacto-data-link">+34 667 70 13 62</a>
+        </div>
+        <div class="contacto-data">
+          <a href="mailto:jperegir@gmail.com" class="contacto-data-link">jperegir@gmail.com</a>
+        </div>
+      </section>
 
-          <div class="info-item">
-            <span class="info-icon">📧</span>
-            <div>
-              <p class="info-label">Email</p>
-              <p class="info-value">tu@email.com</p>
-            </div>
-          </div>
-
-          <div class="info-item">
-            <span class="info-icon">📍</span>
-            <div>
-              <p class="info-label">Ubicación</p>
-              <p class="info-value">Tu ciudad, País</p>
-            </div>
-          </div>
-
-          <div class="info-item">
-            <span class="info-icon">💼</span>
-            <div>
-              <p class="info-label">LinkedIn</p>
-              <a href="#" class="info-link">Ver perfil</a>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Formulario de contacto -->
-        <section class="contacto-form-section">
-          <h2 class="section-title">Envía un mensaje</h2>
-          <p class="mb-6 text-gray-600 dark:text-gray-400">
-            Rellena el formulario y me pondré en contacto contigo lo antes posible.
-          </p>
-
-          <!-- Formulario -->
-          <form class="contacto-form" x-data="{ sending: false }">
-            <div class="form-group">
-              <label for="name" class="form-label">Nombre</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                class="form-input"
-                placeholder="Tu nombre"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="email" class="form-label">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="form-input"
-                placeholder="tu@email.com"
-                required>
-            </div>
-
-            <div class="form-group">
-              <label for="message" class="form-label">Mensaje</label>
-              <textarea
-                id="message"
-                name="message"
-                rows="5"
-                class="form-input"
-                placeholder="Cuéntame sobre tu proyecto..."
-                required></textarea>
-            </div>
-
-            <div class="form-group">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="privacy" required>
-                <span class="text-sm text-gray-600 dark:text-gray-400">
-                  Acepto la <a href="/privacy-policy" class="text-primary-600 hover:underline">política de privacidad</a>
-                </span>
-              </label>
-            </div>
-
-            <button type="submit" class="btn-primary w-full" :disabled="sending">
-              <span x-show="!sending">Enviar mensaje</span>
-              <span x-show="sending">Enviando...</span>
-            </button>
-          </form>
-        </section>
+      <!-- Mapa Leaflet -->
+      <div class="contacto-map-wrapper animate-fade-in-up">
+        <div id="contacto-map"></div>
       </div>
 
       <!-- Bordes decorativos -->
@@ -127,5 +55,13 @@
   <script src="/js/alpine-setup.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.1/dist/cdn.min.js"></script>
   <script type="module" src="/js/main.js"></script>
+
+  <!-- Leaflet + Mapa de contacto -->
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/js/contacto-map.js"></script>
+
+  <!-- Anime.js - Fondo animado -->
+  <script src="/vendor/animejs/anime.umd.min.js"></script>
+  <script src="/js/anime-creature.js"></script>
 </body>
 </html>

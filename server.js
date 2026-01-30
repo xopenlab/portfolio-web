@@ -51,6 +51,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/vendor/three', express.static(path.join(__dirname, 'node_modules', 'three', 'build')));
 app.use('/vendor/vanta', express.static(path.join(__dirname, 'node_modules', 'vanta', 'dist')));
 app.use('/vendor/p5', express.static(path.join(__dirname, 'node_modules', 'p5', 'lib')));
+app.use('/vendor/leaflet', express.static(path.join(__dirname, 'node_modules', 'leaflet', 'dist')));
+app.use('/vendor/animejs', express.static(path.join(__dirname, 'node_modules', 'animejs', 'dist', 'bundles')));
 
 // Rutas
 app.use('/', indexRoutes);

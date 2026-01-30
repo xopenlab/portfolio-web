@@ -295,7 +295,9 @@ const SKIP_SCRIPTS = [
  */
 const VENDOR_GLOBALS = {
   '/vendor/three/three': 'THREE',
-  '/vendor/p5/p5': 'p5'
+  '/vendor/p5/p5': 'p5',
+  '/vendor/leaflet/leaflet': 'L',
+  '/vendor/animejs/anime': 'anime'
 };
 
 /**
