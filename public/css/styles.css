@@ -1512,6 +1512,31 @@
   .nav-link.active {
     color: var(--color-theme-primary);
   }
+
+  /* Efecto clip-path reveal para imagen del hero */
+  .hero-image-reveal {
+    @apply absolute inset-0 pointer-events-none;
+    z-index: 5;
+    clip-path: circle(0% at 50% 40%);
+    opacity: 0;
+    transition: clip-path 1s ease-in-out, opacity 0.8s ease-in;
+  }
+
+  .hero-image-reveal.is-revealed {
+    clip-path: circle(75% at 50% 40%);
+    opacity: 1;
+    transition: clip-path 1s ease-in-out, opacity 0.4s ease-out;
+  }
+
+  .hero-image-reveal img {
+    @apply w-full h-full object-cover;
+    opacity: 0.35;
+  }
+
+  .dark .hero-image-reveal img {
+    opacity: 0.25;
+    filter: brightness(0.8);
+  }
 }
 
 /* Utilidades personalizadas */

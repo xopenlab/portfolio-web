@@ -10,11 +10,16 @@
   <!-- Page Transition Wrapper -->
   <div class="page-transition-wrapper">
     <!-- Main Content -->
-    <main class="landing-container-artistic">
+    <main class="landing-container-artistic" x-data="heroReveal">
+      <!-- Imagen revelada con clip-path al hacer hover en el nombre -->
+      <div class="hero-image-reveal" :class="{ 'is-revealed': imageRevealed }">
+        <img src="/assets/images/self_craft.png" alt="" aria-hidden="true">
+      </div>
+
       <div class="landing-content">
         <!-- Columna izquierda: Nombre y título -->
         <div class="landing-left">
-          <h1 class="name-artistic">
+          <h1 class="name-artistic" @mouseenter="revealImage()" @mouseleave="hideImage()">
             <span class="name-line">Josevi</span>
             <span class="name-line">Pérez</span>
           </h1>

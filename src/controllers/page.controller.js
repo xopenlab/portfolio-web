@@ -2,22 +2,6 @@
 import { portfolioData } from '../data/portfolio.data.js';
 import { colorThemes, defaultTheme } from '../data/colorThemes.data.js';
 
-// Controlador para la página principal
-export const getHome = (req, res) => {
-  try {
-    res.render("pages/home", {
-      title: `${portfolioData.personalInfo.name} - ${portfolioData.personalInfo.title}`,
-      currentYear: new Date().getFullYear(),
-      data: portfolioData,
-      colorThemes,
-      defaultTheme,
-    });
-  } catch (error) {
-    console.error("Error al renderizar home:", error);
-    res.status(500).send("Error al cargar la página");
-  }
-};
-
 // Controlador para la página de Aviso Legal
 export const getLegalNotice = (req, res, next) => {
   res.render("pages/legal-notice", {

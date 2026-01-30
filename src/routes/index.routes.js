@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-  getHome,
   sendContactForm,
   getLegalNotice,
   getPrivacyPolicy,
@@ -19,9 +18,6 @@ router.get('/', getIndex);              // Presentación/Landing
 router.get('/proyectos', getProyectos); // Galería de proyectos
 router.get('/perfil', getPerfil);       // Perfil curricular
 router.get('/contacto', getContacto);   // Formulario de contacto
-
-// Ruta legacy (mantener por compatibilidad mientras migramos)
-router.get('/home', getHome);
 
 // Rutas de páginas legales
 router.get('/legal-notice', getLegalNotice);

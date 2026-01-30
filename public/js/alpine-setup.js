@@ -82,6 +82,19 @@ document.addEventListener('alpine:init', () => {
     }
   });
 
+  // Componente heroReveal: gestiona el reveal de la imagen al hacer hover en el nombre
+  Alpine.data('heroReveal', () => ({
+    imageRevealed: false,
+
+    revealImage() {
+      this.imageRevealed = true;
+    },
+
+    hideImage() {
+      this.imageRevealed = false;
+    }
+  }));
+
   // Store de paneles laterales (compartido entre header y páginas con paneles)
   Alpine.store('panel', {
     current: null,
