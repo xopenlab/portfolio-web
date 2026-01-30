@@ -6,6 +6,24 @@
   var debounceTimer = null;
 
   /**
+   * Mezclar un color hex con blanco o negro para generar tintes/sombras
+   * @param {string} hex - Color en formato CSS hex (#rrggbb)
+   * @param {number} factor - 0 = color original, 1 = blanco/negro puro
+   * @param {boolean} darken - true para oscurecer, false para aclarar
+   * @returns {number} Color resultante como número
+   */
+  function blendColor(hex, factor, darken) {
+    var r = parseInt(hex.slice(1, 3), 16);
+    var g = parseInt(hex.slice(3, 5), 16);
+    var b = parseInt(hex.slice(5, 7), 16);
+    var target = darken ? 0 : 255;
+    r = Math.round(r + (target - r) * factor);
+    g = Math.round(g + (target - g) * factor);
+    b = Math.round(b + (target - b) * factor);
+    return (r << 16) | (g << 8) | b;
+  }
+
+  /**
    * Obtener colores actuales del tema
    * @returns {{ bgColor: number, color1: string|number, color2: string|number }}
    */
@@ -14,8 +32,9 @@
     var primary = style.getPropertyValue('--active-theme-primary').trim();
     var secondary = style.getPropertyValue('--active-theme-secondary').trim();
     var isDark = document.documentElement.classList.contains('dark');
+    var fallbackBg = isDark ? 0x111827 : 0xf5f0eb;
     return {
-      bgColor: isDark ? 0x111827 : 0xf5f0eb,
+      bgColor: primary ? blendColor(primary, isDark ? 0.85 : 0.92, isDark) : fallbackBg,
       color1: primary || 0x6b8ba4,
       color2: secondary || 0xa3b8cc
     };

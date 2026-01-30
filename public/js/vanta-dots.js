@@ -1,5 +1,5 @@
 /**
- * Inicialización de Vanta.js Halo para la página de proyectos
+ * Inicialización de Vanta.js Dots para la página de contacto
  */
 (function() {
   var vantaEffect = null;
@@ -35,7 +35,7 @@
 
   /**
    * Obtener colores actuales del tema
-   * @returns {{ bgColor: number, baseColor: number, color2: number, isDark: boolean }}
+   * @returns {{ bgColor: number, color1: number, color2: number, isDark: boolean }}
    */
   function getThemeColors() {
     var style = getComputedStyle(document.documentElement);
@@ -45,22 +45,22 @@
     var fallbackBg = isDark ? 0x111827 : 0xf5f0eb;
     return {
       bgColor: primary ? blendColor(primary, isDark ? 0.85 : 0.92, isDark) : fallbackBg,
-      baseColor: primary ? hexToNum(primary) : 0x6b8ba4,
+      color1: primary ? hexToNum(primary) : 0x6b8ba4,
       color2: secondary ? hexToNum(secondary) : 0xa3b8cc,
       isDark: isDark
     };
   }
 
   /**
-   * Crear efecto Vanta Halo
+   * Crear efecto Vanta Dots
    */
   function create() {
-    var el = document.getElementById('vanta-proyectos');
+    var el = document.getElementById('vanta-contacto');
     if (!el || typeof VANTA === 'undefined' || vantaEffect) return;
 
     var colors = getThemeColors();
 
-    vantaEffect = VANTA.HALO({
+    vantaEffect = VANTA.DOTS({
       el: el,
       THREE: THREE,
       mouseControls: true,
@@ -68,35 +68,42 @@
       gyroControls: false,
       scale: 1.0,
       scaleMobile: 1.0,
-      backgroundColor: colors.bgColor,
-      baseColor: colors.baseColor,
+      color: colors.color1,
       color2: colors.color2,
-      amplitudeFactor: 0.8,
-      size: 1.2,
-      speed: 0.8
+      backgroundColor: colors.bgColor,
+      size: 3.0,
+      spacing: 20.0,
+      showLines: false
     });
 
-    // Mayor opacidad en modo claro para compensar menor contraste
+    // Opacidad reducida para efecto sutil
     var canvas = el.querySelector('canvas');
-    if (canvas) canvas.style.opacity = colors.isDark ? '0.2' : '0.5';
+    if (canvas) canvas.style.opacity = colors.isDark ? '0.35' : '0.3';
   }
 
   /**
-   * Recrear efecto con los colores actuales del tema
-   * Halo usa shaders GLSL que no actualizan colores vía setOptions,
-   * por lo que es necesario destruir y recrear el efecto.
+   * Actualizar colores del efecto sin destruirlo
    */
-  function recreate() {
-    if (vantaEffect) {
-      vantaEffect.destroy();
-      vantaEffect = null;
+  function updateColors() {
+    if (!vantaEffect) return;
+    var colors = getThemeColors();
+    vantaEffect.setOptions({
+      color: colors.color1,
+      color2: colors.color2,
+      backgroundColor: colors.bgColor
+    });
+
+    // Ajustar opacidad según modo
+    var el = document.getElementById('vanta-contacto');
+    if (el) {
+      var canvas = el.querySelector('canvas');
+      if (canvas) canvas.style.opacity = colors.isDark ? '0.35' : '0.3';
     }
-    create();
   }
 
   function debouncedUpdate() {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(recreate, 300);
+    debounceTimer = setTimeout(updateColors, 300);
   }
 
   document.addEventListener('curtainRevealed', create, { once: true });
