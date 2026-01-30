@@ -1,6 +1,7 @@
 /**
  * Inicialización del mapa Leaflet para la página de contacto
  * Muestra un círculo sobre la ubicación aproximada (Almussafes, Valencia)
+ * Incluye selector de capas (mapa / ortofoto) y modo pantalla completa
  */
 (function () {
   var map = null;
@@ -8,12 +9,17 @@
   var styleObserver = null;
   var classObserver = null;
   var debounceTimer = null;
+  var isFullscreen = false;
 
   // Coordenadas del centro de Almussafes
   var LAT = 39.29243391373898;
   var LNG = -0.41436730342555517;
   var ZOOM = 13;
   var CIRCLE_RADIUS = 900;
+
+  // Iconos SVG para el botón fullscreen
+  var ICON_EXPAND = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>';
+  var ICON_COLLAPSE = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6m10-10h-6V4m0 6 7-7M3 21l7-7"/></svg>';
 
   /**
    * Obtener el color primario del tema activo
@@ -22,6 +28,31 @@
   function getThemeColor() {
     var style = getComputedStyle(document.documentElement);
     return style.getPropertyValue('--active-theme-primary').trim() || '#6b8ba4';
+  }
+
+  /**
+   * Alternar modo pantalla completa del mapa
+   */
+  function toggleFullscreen() {
+    var wrapper = document.querySelector('.contacto-map-wrapper');
+    if (!wrapper) return;
+
+    isFullscreen = !isFullscreen;
+    wrapper.classList.toggle('is-fullscreen', isFullscreen);
+
+    // Actualizar icono del botón
+    var btn = wrapper.querySelector('.contacto-map-fullscreen-btn');
+    if (btn) btn.innerHTML = isFullscreen ? ICON_COLLAPSE : ICON_EXPAND;
+
+    // Activar/desactivar scroll zoom en fullscreen
+    if (map) {
+      if (isFullscreen) {
+        map.scrollWheelZoom.enable();
+      } else {
+        map.scrollWheelZoom.disable();
+      }
+      setTimeout(function () { map.invalidateSize(); }, 100);
+    }
   }
 
   /**
@@ -51,12 +82,26 @@
       zoom: ZOOM,
       scrollWheelZoom: false,
       zoomControl: true,
-      attributionControl: true
+      attributionControl: false
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    // Capas base
+    var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    });
+
+    var orthoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; Esri'
+    });
+
+    // Añadir capa por defecto
+    osmLayer.addTo(map);
+
+    // Control de capas
+    L.control.layers({
+      'Mapa': osmLayer,
+      'Ortofoto': orthoLayer
+    }, null, { position: 'topright', collapsed: true }).addTo(map);
 
     circle = L.circle([LAT, LNG], {
       color: color,
@@ -65,6 +110,26 @@
       radius: CIRCLE_RADIUS,
       weight: 2
     }).addTo(map);
+
+    // Botón fullscreen (fuera del mapa, en el wrapper)
+    var wrapper = el.closest('.contacto-map-wrapper');
+    if (wrapper && !wrapper.querySelector('.contacto-map-fullscreen-btn')) {
+      var btn = document.createElement('button');
+      btn.className = 'contacto-map-fullscreen-btn';
+      btn.setAttribute('aria-label', 'Pantalla completa');
+      btn.innerHTML = ICON_EXPAND;
+      btn.addEventListener('click', toggleFullscreen);
+      wrapper.appendChild(btn);
+    }
+
+    // Cerrar fullscreen con Escape (fase de captura para ejecutarse antes que main.js)
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && isFullscreen) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    }, true);
 
     // Forzar recálculo de dimensiones tras renderizado
     setTimeout(function () {

@@ -1220,41 +1220,177 @@
     mix-blend-mode: screen;
   }
 
-  .contacto-info {
-    @apply relative flex flex-col items-center gap-3 mb-8;
-    z-index: 1;
-    isolation: isolate;
+  /* Trigger del panel de contacto */
+  .contacto-trigger {
+    @apply fixed flex flex-col items-center gap-3 cursor-pointer;
+    z-index: 50;
+    transition: opacity 0.3s ease;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  .contacto-data {
-    @apply text-center;
+  @media (min-width: 1024px) {
+    .contacto-trigger {
+      right: 2.5rem;
+    }
   }
 
-  .contacto-data-label {
-    @apply text-sm uppercase tracking-[0.15em] font-light;
-    color: var(--color-gray-600);
-  }
-
-  .dark .contacto-data-label {
+  .contacto-trigger-label {
+    @apply text-[0.65rem] uppercase tracking-[0.2em] font-medium select-none;
+    writing-mode: vertical-lr;
     color: var(--color-gray-400);
-  }
-
-  .contacto-data-link {
-    @apply text-sm uppercase tracking-[0.15em] font-light;
-    color: var(--color-gray-600);
     transition: color 0.3s ease;
   }
 
-  .dark .contacto-data-link {
-    color: var(--color-gray-400);
+  .contacto-trigger:hover .contacto-trigger-label {
+    color: var(--color-gray-700);
   }
 
-  .contacto-data-link:hover {
+  .dark .contacto-trigger:hover .contacto-trigger-label {
+    color: var(--color-gray-200);
+  }
+
+  .contacto-trigger-dot {
+    @apply w-3 h-3 rounded-full relative;
+    background-color: var(--active-theme-primary);
+  }
+
+  .contacto-trigger-dot::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background-color: var(--active-theme-primary);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .contacto-trigger.is-active .contacto-trigger-dot::before {
+    animation: none;
+  }
+
+  .contacto-trigger.is-active .contacto-trigger-label {
     color: var(--active-theme-primary);
   }
 
+  /* Panel lateral de contacto */
+  .contacto-panel {
+    @apply fixed top-0 right-0 bottom-0 overflow-y-auto;
+    z-index: 70;
+    width: 55%;
+    max-width: 40rem;
+    padding: 5rem 3rem 3rem;
+    background-color: var(--color-gray-50);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.1);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    will-change: transform;
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  .dark .contacto-panel {
+    background-color: var(--color-gray-900);
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .contacto-panel.is-open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .contacto-panel .contacto-section-title {
+    @apply text-xs uppercase tracking-[0.25em] mb-10 font-medium;
+    color: var(--color-gray-400);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+  }
+
+  .dark .contacto-panel .contacto-section-title {
+    color: var(--color-gray-500);
+  }
+
+  .contacto-panel.is-open .contacto-section-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Items del panel de contacto */
+  .contacto-item {
+    @apply py-4;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  .dark .contacto-item {
+    border-bottom-color: var(--color-gray-700);
+  }
+
+  .contacto-panel.is-open .contacto-item {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .contacto-panel.is-open .contacto-item:nth-child(1) { transition-delay: 0.55s; }
+  .contacto-panel.is-open .contacto-item:nth-child(2) { transition-delay: 0.65s; }
+  .contacto-panel.is-open .contacto-item:nth-child(3) { transition-delay: 0.75s; }
+
+  .contacto-item-label {
+    @apply text-[0.65rem] uppercase tracking-[0.15em] block mb-1;
+    color: var(--color-gray-400);
+  }
+
+  .dark .contacto-item-label {
+    color: var(--color-gray-500);
+  }
+
+  .contacto-item-value {
+    @apply text-sm font-light;
+    color: var(--color-gray-700);
+  }
+
+  .dark .contacto-item-value {
+    color: var(--color-gray-300);
+  }
+
+  a.contacto-item-value {
+    transition: color 0.3s ease;
+  }
+
+  a.contacto-item-value:hover {
+    color: var(--active-theme-primary);
+  }
+
+  /* Overlay del panel */
+  .contacto-overlay {
+    @apply fixed inset-0;
+    z-index: 60;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .contacto-overlay {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Botón cerrar panel */
+  .contacto-panel-close {
+    @apply absolute top-6 cursor-pointer;
+    right: 2rem;
+    color: var(--color-gray-400);
+    transition: color 0.2s ease;
+  }
+
+  .contacto-panel-close:hover {
+    color: var(--color-gray-700);
+  }
+
+  .dark .contacto-panel-close:hover {
+    color: var(--color-gray-200);
+  }
+
   .contacto-map-wrapper {
-    @apply relative w-full max-w-lg rounded-lg overflow-hidden;
+    @apply relative w-full max-w-2xl rounded-lg overflow-hidden;
     z-index: 2;
     background-color: #f5f0eb;
   }
@@ -1265,13 +1401,58 @@
 
   #contacto-map {
     @apply w-full;
-    height: 280px;
+    height: 380px;
     opacity: 0.85;
   }
 
   .dark #contacto-map {
     opacity: 0.7;
     filter: brightness(0.8) contrast(1.1);
+  }
+
+  /* Botón fullscreen del mapa */
+  .contacto-map-fullscreen-btn {
+    @apply absolute bottom-2 right-2 flex items-center justify-center w-8 h-8 rounded;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--color-gray-300);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .contacto-map-fullscreen-btn:hover {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .dark .contacto-map-fullscreen-btn {
+    background: rgba(31, 41, 55, 0.85);
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-300);
+  }
+
+  .dark .contacto-map-fullscreen-btn:hover {
+    background: rgba(31, 41, 55, 1);
+  }
+
+  /* Mapa en pantalla completa */
+  .contacto-map-wrapper.is-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    border-radius: 0;
+    z-index: 9999;
+  }
+
+  .contacto-map-wrapper.is-fullscreen #contacto-map {
+    height: 100%;
+  }
+
+  /* Control de capas Leaflet */
+  .leaflet-control-layers {
+    border-radius: 6px !important;
   }
 
   /* Header Modular */
