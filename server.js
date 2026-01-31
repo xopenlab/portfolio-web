@@ -53,6 +53,7 @@ app.use('/vendor/vanta', express.static(path.join(__dirname, 'node_modules', 'va
 app.use('/vendor/p5', express.static(path.join(__dirname, 'node_modules', 'p5', 'lib')));
 app.use('/vendor/leaflet', express.static(path.join(__dirname, 'node_modules', 'leaflet', 'dist')));
 app.use('/vendor/animejs', express.static(path.join(__dirname, 'node_modules', 'animejs', 'dist', 'bundles')));
+app.use('/vendor/tsparticles', express.static(path.join(__dirname, 'node_modules', '@tsparticles', 'slim')));
 
 // Rutas
 app.use('/', indexRoutes);
