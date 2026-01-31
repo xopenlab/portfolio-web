@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "build:css": "npx tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --watch",
+    "build": "npx tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --minify",
     "build:css:prod": "npx tailwindcss -i ./public/css/styles.css -o ./public/css/output.css --minify",
     "dev:all": "concurrently \"npm run dev\" \"npm run build:css\""
   },
