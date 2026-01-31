@@ -6,6 +6,16 @@
   var debounceTimer = null;
 
   /**
+   * Convertir color CSS hex (#rrggbb) a número (0xrrggbb)
+   * @param {string} hex - Color en formato CSS hex
+   * @returns {number} Color como número
+   */
+  function hexToNum(hex) {
+    if (!hex || typeof hex !== 'string') return 0;
+    return parseInt(hex.replace('#', ''), 16);
+  }
+
+  /**
    * Mezclar un color hex con blanco o negro para generar tintes/sombras
    * @param {string} hex - Color en formato CSS hex (#rrggbb)
    * @param {number} factor - 0 = color original, 1 = blanco/negro puro
@@ -35,8 +45,8 @@
     var fallbackBg = isDark ? 0x111827 : 0xf5f0eb;
     return {
       bgColor: primary ? blendColor(primary, isDark ? 0.85 : 0.92, isDark) : fallbackBg,
-      color1: primary || 0x6b8ba4,
-      color2: secondary || 0xa3b8cc
+      color1: primary ? hexToNum(primary) : 0x6b8ba4,
+      color2: secondary ? hexToNum(secondary) : 0xa3b8cc
     };
   }
 
@@ -75,21 +85,21 @@
   }
 
   /**
-   * Actualizar colores del efecto sin destruirlo
+   * Recrear efecto con los colores actuales del tema
+   * Birds usa shaders GLSL que no actualizan colores vía setOptions,
+   * por lo que es necesario destruir y recrear el efecto.
    */
-  function updateColors() {
-    if (!vantaEffect) return;
-    var colors = getThemeColors();
-    vantaEffect.setOptions({
-      backgroundColor: colors.bgColor,
-      color1: colors.color1,
-      color2: colors.color2
-    });
+  function recreate() {
+    if (vantaEffect) {
+      vantaEffect.destroy();
+      vantaEffect = null;
+    }
+    create();
   }
 
   function debouncedUpdate() {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateColors, 300);
+    debounceTimer = setTimeout(recreate, 300);
   }
 
   document.addEventListener('curtainRevealed', create, { once: true });
