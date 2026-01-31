@@ -524,7 +524,7 @@
 
   @media (max-width: 768px) {
     .proyectos-container {
-      @apply flex-col items-center justify-start px-6 pt-32 pb-20;
+      @apply flex-col items-center justify-center px-6 py-20;
     }
 
     .proyectos-about {
@@ -861,7 +861,7 @@
 
   @media (max-width: 768px) {
     .perfil-container {
-      @apply flex-col items-center justify-start px-6 pt-32 pb-20;
+      @apply flex-col items-center justify-center px-6 pt-28 pb-20;
     }
 
     .perfil-about {
