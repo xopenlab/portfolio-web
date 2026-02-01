@@ -97,9 +97,10 @@ document.addEventListener('alpine:init', () => {
     }
   }));
 
-  // Componente heroReveal: gestiona el reveal de la imagen al hacer hover en el nombre
+  // Componente heroReveal: gestiona el reveal de la imagen al hacer hover/tap en el nombre
   Alpine.data('heroReveal', () => ({
     imageRevealed: false,
+    _lastTap: 0,
 
     revealImage() {
       this.imageRevealed = true;
@@ -107,6 +108,20 @@ document.addEventListener('alpine:init', () => {
 
     hideImage() {
       this.imageRevealed = false;
+    },
+
+    toggleImage() {
+      // Detectar doble tap para abrir Tetris
+      var now = Date.now();
+      if (now - this._lastTap < 350) {
+        this._lastTap = 0;
+        if (window.__tetris) window.__tetris.open();
+        return;
+      }
+      this._lastTap = now;
+
+      // Tap simple: toggle de la imagen
+      this.imageRevealed = !this.imageRevealed;
     }
   }));
 

@@ -19,7 +19,7 @@
       <div class="landing-content">
         <!-- Columna izquierda: Nombre y título -->
         <div class="landing-left">
-          <h1 class="name-artistic" @mouseenter="revealImage()" @mouseleave="hideImage()">
+          <h1 class="name-artistic" @mouseenter="revealImage()" @mouseleave="hideImage()" @touchstart.prevent="toggleImage()">
             <span class="name-line">Josevi</span>
             <span class="name-line">Pérez</span>
           </h1>
