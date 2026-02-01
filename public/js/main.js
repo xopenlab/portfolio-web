@@ -90,6 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Easter egg: Tetris al hacer doble click en el nombre (solo landing)
+  var nameEl = document.querySelector('.name-artistic');
+  if (nameEl) {
+    nameEl.addEventListener('dblclick', function () {
+      if (window.__tetris) window.__tetris.open();
+    });
+  }
+
   const activateEasterEgg = () => {
     // Efecto de confetti o algo divertido
     document.body.style.animation = 'rainbow 2s linear infinite';
