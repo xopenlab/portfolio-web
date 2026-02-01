@@ -2116,5 +2116,7 @@
   font-size: 0.75rem;
   font-family: monospace;
   letter-spacing: 0.05em;
+  text-align: center;
+  max-width: calc(var(--tetris-cols, 10) * var(--tetris-block, 28px));
 }
 
