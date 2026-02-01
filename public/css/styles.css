@@ -854,6 +854,20 @@
     }
   }
 
+  /* Landscape móvil: contenido scrollable, sin triggers laterales */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .proyectos-container {
+      @apply flex-col items-center justify-start px-6;
+      min-height: auto;
+      overflow-y: auto;
+      padding-top: 5rem;
+      padding-bottom: 3rem;
+    }
+
+    .proyectos-trigger { display: none; }
+    .proyectos-mobile-triggers { display: flex; }
+  }
+
   /* Página de Perfil */
   .perfil-container {
     @apply min-h-screen flex items-center justify-center px-8 py-20 relative overflow-hidden;
@@ -1232,6 +1246,20 @@
     }
   }
 
+  /* Landscape móvil: permitir scroll natural */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .perfil-container {
+      @apply flex-col items-center justify-start;
+      min-height: auto;
+      overflow-y: auto;
+      padding-top: 5rem;
+      padding-bottom: 3rem;
+    }
+
+    .perfil-trigger { display: none; }
+    .perfil-mobile-triggers { display: flex; }
+  }
+
   /* Página de Contacto */
   .contacto-container {
     @apply min-h-screen flex flex-col items-center justify-center px-8 py-20 relative overflow-hidden;
@@ -1347,6 +1375,20 @@
   }
 
   @media (max-width: 768px) {
+    .contacto-trigger { display: none; }
+    .contacto-mobile-triggers { display: flex; }
+  }
+
+  /* Landscape móvil: permitir scroll natural */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .contacto-container {
+      @apply items-center justify-start;
+      min-height: auto;
+      overflow-y: auto;
+      padding-top: 5rem;
+      padding-bottom: 3rem;
+    }
+
     .contacto-trigger { display: none; }
     .contacto-mobile-triggers { display: flex; }
   }
@@ -1957,6 +1999,31 @@
 
   .nav-links a {
     @apply text-xs;
+  }
+}
+
+/* Landscape móvil: navegación compacta integrada en una sola franja */
+@media (max-height: 500px) and (orientation: landscape) {
+  .internal-navigation {
+    @apply top-0 left-0 right-0 py-1 px-3 gap-3 rounded-none z-50;
+    @apply backdrop-blur-md bg-white/80 dark:bg-gray-900/80 shadow-sm;
+  }
+
+  .nav-number {
+    display: none;
+  }
+
+  .nav-links a {
+    @apply text-[0.6rem];
+  }
+
+  .nav-home svg {
+    @apply w-3 h-3;
+  }
+
+  /* Ocultar header (theme controls) para evitar doble barra */
+  header.fixed {
+    display: none;
   }
 }
 
