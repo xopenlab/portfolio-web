@@ -2002,11 +2002,35 @@
   }
 }
 
+/* Controles de tema en nav interna: ocultos por defecto */
+.nav-theme-controls {
+  display: none;
+}
+
+.nav-theme-toggle {
+  @apply p-1 rounded-md transition-colors;
+  color: var(--color-gray-500);
+}
+
+.nav-theme-toggle:hover {
+  color: var(--color-gray-700);
+}
+
+.dark .nav-theme-toggle:hover {
+  color: var(--color-gray-200);
+}
+
 /* Landscape móvil: navegación compacta integrada en una sola franja */
 @media (max-height: 500px) and (orientation: landscape) {
   .internal-navigation {
     @apply top-0 left-0 right-0 py-1 px-3 gap-3 rounded-none z-50;
     @apply backdrop-blur-md bg-white/80 dark:bg-gray-900/80 shadow-sm;
+    justify-content: flex-start;
+  }
+
+  .nav-theme-controls {
+    @apply flex items-center gap-2;
+    margin-left: auto;
   }
 
   .nav-number {
@@ -2019,6 +2043,14 @@
 
   .nav-home svg {
     @apply w-3 h-3;
+  }
+
+  .nav-theme-controls .theme-selector-minimal {
+    @apply gap-1;
+  }
+
+  .nav-theme-controls .theme-bar {
+    @apply w-2.5 h-2.5;
   }
 
   /* Ocultar header (theme controls) para evitar doble barra */
