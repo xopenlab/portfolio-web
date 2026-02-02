@@ -17,6 +17,7 @@
   var COLS = 10;
   var ROWS = 20;
   var BLOCK_SIZE = 28;
+  var BASE_BLOCK_SIZE = 28;
   var COLORS = [
     null,
     '#FF0D72', // T
@@ -325,6 +326,41 @@
   }
 
   /**
+   * Calcula el tamaño de bloque óptimo según el viewport disponible
+   * En portrait: canvas + controles táctiles deben caber en alto
+   * En landscape: canvas debe caber en alto
+   */
+  function calcBlockSize() {
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var isLandscape = vw > vh;
+    var isTouch = isTouchDevice();
+
+    // Margen para puntuación (30px) + gaps + botón cerrar
+    var extraVertical = 30;
+
+    if (isTouch) {
+      if (isLandscape) {
+        // Landscape: controles al lado, canvas ocupa todo el alto disponible
+        var availH = vh - 40; // márgenes superior/inferior
+        extraVertical += 0;
+      } else {
+        // Portrait: canvas + controles apilados (~160px para controles)
+        var availH = vh - 200;
+      }
+    } else {
+      // Desktop: texto de controles debajo (~40px)
+      var availH = vh - 80;
+    }
+
+    var maxByHeight = Math.floor((availH - extraVertical) / ROWS);
+    var maxByWidth = Math.floor((vw - 40) / COLS); // 40px margen lateral
+
+    var size = Math.min(maxByHeight, maxByWidth, BASE_BLOCK_SIZE);
+    return Math.max(size, 12); // mínimo 12px para que sea jugable
+  }
+
+  /**
    * Detecta si el dispositivo es táctil
    */
   function isTouchDevice() {
@@ -492,6 +528,15 @@
       '</div>';
 
     document.body.appendChild(overlay);
+
+    // Calcular tamaño de bloque óptimo según viewport
+    BLOCK_SIZE = calcBlockSize();
+
+    // Añadir clase landscape si corresponde
+    var isLandscape = window.innerWidth > window.innerHeight;
+    if (isLandscape && isTouchDevice()) {
+      overlay.querySelector('.tetris-container').classList.add('tetris-container--landscape');
+    }
 
     // Configurar canvas
     canvas = document.getElementById('tetris-canvas');
