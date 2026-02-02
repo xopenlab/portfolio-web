@@ -16,9 +16,9 @@ export const portfolioData = {
 
   about: {
     description: [
-      "Programador de aplicaciones web de profesión, fotógrafo en sus ratos libres y, siempre, apasionado por el campo y la Naturaleza.",
-      "Cuando trabajo en un proyecto, parto del análisis de las necesidades reales del negocio y me enfoco en la eficiencia y en la usabilidad de las soluciones implementadas.",
-      "Me considero agnóstico a la tecnología, por lo que trato de aplicar soluciones \"sensatas\", tras analizar primero los problemas, siempre antes de definir cualquier posible solución.",
+      "Programador de aplicaciones web de profesión, fotógrafo en sus ratos libres y apasionado por el campo y la Naturaleza.",
+      "Cuando trabajo en un proyecto, parto del análisis de las necesidades reales del negocio y diseño soluciones eficientes, usables y sostenibles.",
+      "Apuesto siempre por un enfoque tecnológicamente agnóstico, donde la herramienta nunca va por delante del problema.",
     ],
     highlights: [
       "Desarrollo de API RESTful e integraciones de servicios web",
