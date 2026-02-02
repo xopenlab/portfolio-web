@@ -325,6 +325,102 @@
   }
 
   /**
+   * Detecta si el dispositivo es táctil
+   */
+  function isTouchDevice() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  /**
+   * Crea los botones táctiles para dispositivos móviles
+   */
+  function createTouchControls(container) {
+    var controls = document.createElement('div');
+    controls.className = 'tetris-touch-controls';
+
+    // Fila superior: rotar
+    var rowTop = document.createElement('div');
+    rowTop.className = 'tetris-touch-row';
+    rowTop.innerHTML = '<button class="tetris-touch-btn" data-action="rotate" aria-label="Rotar">&#8593;</button>';
+
+    // Fila central: izquierda, hard drop, derecha
+    var rowMid = document.createElement('div');
+    rowMid.className = 'tetris-touch-row';
+    rowMid.innerHTML =
+      '<button class="tetris-touch-btn" data-action="left" aria-label="Mover izquierda">&#8592;</button>' +
+      '<button class="tetris-touch-btn tetris-touch-btn--drop" data-action="hard-drop" aria-label="Hard drop">&#9660;</button>' +
+      '<button class="tetris-touch-btn" data-action="right" aria-label="Mover derecha">&#8594;</button>';
+
+    // Fila inferior: bajar
+    var rowBot = document.createElement('div');
+    rowBot.className = 'tetris-touch-row';
+    rowBot.innerHTML = '<button class="tetris-touch-btn" data-action="down" aria-label="Bajar">&#8595;</button>';
+
+    controls.appendChild(rowTop);
+    controls.appendChild(rowMid);
+    controls.appendChild(rowBot);
+    container.appendChild(controls);
+
+    // Manejar eventos touch con repetición al mantener pulsado
+    var repeatTimer = null;
+    var repeatInterval = null;
+
+    /**
+     * Ejecuta la acción correspondiente al botón
+     */
+    function execAction(action) {
+      if (!isOpen) return;
+      if (gameOver) return;
+      switch (action) {
+        case 'left': move(-1); break;
+        case 'right': move(1); break;
+        case 'down': drop(); score += 1; break;
+        case 'rotate': rotatePiece(); break;
+        case 'hard-drop': hardDrop(); break;
+      }
+    }
+
+    /**
+     * Limpia los timers de repetición
+     */
+    function clearRepeat() {
+      clearTimeout(repeatTimer);
+      clearInterval(repeatInterval);
+      repeatTimer = null;
+      repeatInterval = null;
+    }
+
+    controls.addEventListener('touchstart', function (e) {
+      var btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      e.preventDefault();
+      var action = btn.getAttribute('data-action');
+      execAction(action);
+
+      // Repetición para movimiento lateral y bajar
+      if (action === 'left' || action === 'right' || action === 'down') {
+        clearRepeat();
+        repeatTimer = setTimeout(function () {
+          repeatInterval = setInterval(function () {
+            execAction(action);
+          }, 80);
+        }, 200);
+      }
+    }, { passive: false });
+
+    controls.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      clearRepeat();
+    }, { passive: false });
+
+    controls.addEventListener('touchcancel', function () {
+      clearRepeat();
+    });
+
+    return controls;
+  }
+
+  /**
    * Maneja las teclas del juego
    */
   function handleKeydown(e) {
@@ -411,12 +507,25 @@
       if (e.target === overlay) close();
     });
 
-    // Doble click en canvas para reiniciar si game over
+    // Doble click/tap en canvas para reiniciar si game over
     canvas.addEventListener('dblclick', function () {
-      if (gameOver) {
+      if (gameOver) resetGame();
+    });
+
+    var lastCanvasTap = 0;
+    canvas.addEventListener('touchend', function (e) {
+      var now = Date.now();
+      if (now - lastCanvasTap < 350 && gameOver) {
+        e.preventDefault();
         resetGame();
       }
+      lastCanvasTap = now;
     });
+
+    // Crear controles táctiles en móvil
+    if (isTouchDevice()) {
+      createTouchControls(overlay.querySelector('.tetris-container'));
+    }
 
     // Listeners de teclado
     document.addEventListener('keydown', handleEscape, true);

@@ -2120,3 +2120,42 @@
   max-width: calc(var(--tetris-cols, 10) * var(--tetris-block, 28px));
 }
 
+/* Controles táctiles para móvil */
+.tetris-touch-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.tetris-touch-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.tetris-touch-btn {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: background 0.15s;
+}
+
+.tetris-touch-btn:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.tetris-touch-btn--drop {
+  background: rgba(255, 255, 255, 0.15);
+}
+
