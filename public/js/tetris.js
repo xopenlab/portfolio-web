@@ -499,6 +499,29 @@
   }
 
   /**
+   * Adapta el juego al cambiar orientación o tamaño de ventana
+   */
+  function handleResize() {
+    if (!isOpen || !canvas || !overlay) return;
+
+    BLOCK_SIZE = calcBlockSize();
+    canvas.width = COLS * BLOCK_SIZE;
+    canvas.height = ROWS * BLOCK_SIZE + 30;
+    ctx = canvas.getContext('2d');
+
+    // Actualizar clase landscape en el contenedor
+    var container = overlay.querySelector('.tetris-container');
+    var isLandscape = window.innerWidth > window.innerHeight;
+    if (isLandscape && isTouchDevice()) {
+      container.classList.add('tetris-container--landscape');
+    } else {
+      container.classList.remove('tetris-container--landscape');
+    }
+
+    draw();
+  }
+
+  /**
    * Reinicia el estado del juego
    */
   function resetGame() {
@@ -576,6 +599,9 @@
     document.addEventListener('keydown', handleEscape, true);
     document.addEventListener('keydown', handleKeydown);
 
+    // Listener de cambio de orientación/tamaño
+    window.addEventListener('resize', handleResize);
+
     // Bloquear scroll del body
     document.body.style.overflow = 'hidden';
 
@@ -599,6 +625,7 @@
 
     document.removeEventListener('keydown', handleEscape, true);
     document.removeEventListener('keydown', handleKeydown);
+    window.removeEventListener('resize', handleResize);
 
     if (overlay && overlay.parentNode) {
       overlay.parentNode.removeChild(overlay);
