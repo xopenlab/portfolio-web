@@ -526,7 +526,7 @@
 
   @media (max-width: 768px) {
     .proyectos-container {
-      @apply flex-col items-center justify-center px-6 py-20;
+      @apply flex-col items-center justify-center px-6 pt-36 pb-20;
     }
 
     .proyectos-about {
@@ -877,7 +877,7 @@
 
   @media (max-width: 768px) {
     .perfil-container {
-      @apply flex-col items-center justify-center px-6 pt-28 pb-20;
+      @apply flex-col items-center justify-center px-6 pt-36 pb-20;
     }
 
     .perfil-about {
@@ -1269,7 +1269,7 @@
 
   @media (max-width: 768px) {
     .contacto-container {
-      @apply items-center px-4 pt-32 pb-20;
+      @apply items-center px-4 pt-36 pb-20;
     }
   }
 
@@ -1780,6 +1780,12 @@
 .legal-page .prose th,
 .legal-page .prose td {
   @apply text-sm;
+}
+
+@media (max-width: 768px) {
+  .legal-page {
+    padding-top: 9rem; /* pt-36 equivalente, coherente con el resto de páginas internas */
+  }
 }
 
 /* ===========================
